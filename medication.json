@@ -1,0 +1,371 @@
+{
+    "fungal infection": {
+        "medication": [
+            "Antifungal Cream",
+            "Fluconazole",
+            "Terbinafine",
+            "Clotrimazole",
+            "Ketoconazole"
+        ]
+    },
+    "allergy": {
+        "medication": [
+            "Antihistamines",
+            "Decongestants",
+            "Epinephrine",
+            "Corticosteroids",
+            "Immunotherapy"
+        ]
+    },
+    "gerd": {
+        "medication": [
+            "Proton Pump Inhibitors (PPIs)",
+            "H2 Blockers",
+            "Antacids",
+            "Prokinetics",
+            "Antibiotics"
+        ]
+    },
+    "chronic cholestasis": {
+        "medication": [
+            "Ursodeoxycholic acid",
+            "Cholestyramine",
+            "Methotrexate",
+            "Corticosteroids",
+            "Liver transplant"
+        ]
+    },
+    "drug reaction": {
+        "medication": [
+            "Antihistamines",
+            "Epinephrine",
+            "Corticosteroids",
+            "Antibiotics",
+            "Antifungal Cream"
+        ]
+    },
+    "peptic ulcer disease": {
+        "medication": [
+            "Antibiotics",
+            "Proton Pump Inhibitors (PPIs)",
+            "H2 Blockers",
+            "Antacids",
+            "Cytoprotective agents"
+        ]
+    },
+    "aids": {
+        "medication": [
+            "Antiretroviral drugs",
+            "Protease inhibitors",
+            "Integrase inhibitors",
+            "Entry inhibitors",
+            "Fusion inhibitors"
+        ]
+    },
+    "diabetes": {
+        "medication": [
+            "Insulin",
+            "Metformin",
+            "Sulfonylureas",
+            "DPP-4 inhibitors",
+            "GLP-1 receptor agonists"
+        ]
+    },
+    "gastroenteritis": {
+        "medication": [
+            "Antibiotics",
+            "Antiemetic drugs",
+            "Antidiarrheal drugs",
+            "IV fluids",
+            "Probiotics"
+        ]
+    },
+    "bronchial asthma": {
+        "medication": [
+            "Bronchodilators",
+            "Inhaled corticosteroids",
+            "Leukotriene modifiers",
+            "Mast cell stabilizers",
+            "Anticholinergics"
+        ]
+    },
+    "hypertension": {
+        "medication": [
+            "Antihypertensive medications",
+            "Diuretics",
+            "Beta-blockers",
+            "ACE inhibitors",
+            "Calcium channel blockers"
+        ]
+    },
+    "migraine": {
+        "medication": [
+            "Analgesics",
+            "Triptans",
+            "Ergotamine derivatives",
+            "Preventive medications",
+            "Botox injections"
+        ]
+    },
+    "cervical spondylosis": {
+        "medication": [
+            "Pain relievers",
+            "Muscle relaxants",
+            "Corticosteroids",
+            "Physical therapy",
+            "Surgery"
+        ]
+    },
+    "paralysis (brain hemorrhage)": {
+        "medication": [
+            "Blood thinners",
+            "Clot-busting drugs",
+            "Anticonvulsants",
+            "Physical therapy",
+            "Occupational therapy"
+        ]
+    },
+    "jaundice": {
+        "medication": [
+            "IV fluids",
+            "Blood transfusions",
+            "Phototherapy",
+            "Exchange transfusion",
+            "Medications for underlying cause"
+        ]
+    },
+    "malaria": {
+        "medication": [
+            "Antimalarial drugs",
+            "Antipyretics",
+            "Antiemetic drugs",
+            "IV fluids",
+            "Blood transfusions"
+        ]
+    },
+    "chicken pox": {
+        "medication": [
+            "Antiviral drugs",
+            "Pain relievers",
+            "Antihistamines",
+            "Calamine lotion",
+            "Oatmeal baths"
+        ]
+    },
+    "dengue": {
+        "medication": [
+            "Antibiotics",
+            "Antipyretics",
+            "Analgesics",
+            "IV fluids",
+            "Blood transfusions"
+        ]
+    },
+    "typhoid": {
+        "medication": [
+            "Antibiotics",
+            "Antipyretics",
+            "Rehydration therapy",
+            "IV fluids",
+            "Blood transfusions"
+        ]
+    },
+    "hepatitis a": {
+        "medication": [
+            "Vaccination",
+            "Immunoglobulin",
+            "Supportive care",
+            "Rest",
+            "Hydration"
+        ]
+    },
+    "hepatitis b": {
+        "medication": [
+            "Antiviral drugs",
+            "Interferon injections",
+            "Liver transplant",
+            "Vaccination",
+            "Supportive care"
+        ]
+    },
+    "hepatitis c": {
+        "medication": [
+            "Antiviral drugs",
+            "Interferon injections",
+            "Liver transplant",
+            "Vaccination",
+            "Supportive care"
+        ]
+    },
+    "hepatitis d": {
+        "medication": [
+            "Interferon injections",
+            "Antiviral drugs",
+            "Liver transplant",
+            "Vaccination",
+            "Supportive care"
+        ]
+    },
+    "hepatitis e": {
+        "medication": [
+            "Supportive care",
+            "Rest",
+            "Hydration",
+            "Avoid alcohol",
+            "Medications for symptoms"
+        ]
+    },
+    "alcoholic hepatitis": {
+        "medication": [
+            "Corticosteroids",
+            "Pentoxifylline",
+            "Liver transplant",
+            "Nutritional support",
+            "Abstinence from alcohol"
+        ]
+    },
+    "tuberculosis": {
+        "medication": [
+            "Antibiotics",
+            "Isoniazid",
+            "Rifampin",
+            "Ethambutol",
+            "Pyrazinamide"
+        ]
+    },
+    "common cold": {
+        "medication": [
+            "Pain relievers",
+            "Decongestants",
+            "Antihistamines",
+            "Cough suppressants",
+            "Expectorants"
+        ]
+    },
+    "pneumonia": {
+        "medication": [
+            "Antibiotics",
+            "Antiviral drugs",
+            "Antifungal drugs",
+            "Pain relievers",
+            "Fever reducers"
+        ]
+    },
+    "dimorphic hemmorhoids(piles)": {
+        "medication": [
+            "Stool softeners",
+            "Topical creams",
+            "Pain relievers",
+            "Fiber supplements",
+            "Sitz baths"
+        ]
+    },
+    "heart attack": {
+        "medication": [
+            "Nitroglycerin",
+            "Aspirin",
+            "Beta-blockers",
+            "Calcium channel blockers",
+            "Thrombolytic drugs"
+        ]
+    },
+    "varicose veins": {
+        "medication": [
+            "Compression stockings",
+            "Exercise",
+            "Elevating the legs",
+            "Sclerotherapy",
+            "Laser treatments"
+        ]
+    },
+    "hypothyroidism": {
+        "medication": [
+            "Levothyroxine",
+            "Antithyroid medications",
+            "Beta-blockers",
+            "Radioactive iodine",
+            "Thyroid surgery"
+        ]
+    },
+    "hyperthyroidism": {
+        "medication": [
+            "Antithyroid medications",
+            "Radioactive iodine",
+            "Thyroid surgery",
+            "Beta-blockers",
+            "Corticosteroids"
+        ]
+    },
+    "hypoglycemia": {
+        "medication": [
+            "Glucose tablets",
+            "Candy or juice",
+            "Glucagon injection",
+            "IV dextrose",
+            "Diazoxide"
+        ]
+    },
+    "osteoarthristis": {
+        "medication": [
+            "Pain relievers",
+            "Exercise",
+            "Hot and cold packs",
+            "Joint protection",
+            "Physical therapy"
+        ]
+    },
+    "arthritis": {
+        "medication": [
+            "NSAIDs",
+            "Disease-modifying antirheumatic drugs (DMARDs)",
+            "Biologics",
+            "Corticosteroids",
+            "Joint replacement surgery"
+        ]
+    },
+    "(vertigo) paroymsal positional vertigo": {
+        "medication": [
+            "Vestibular rehabilitation",
+            "Canalith repositioning",
+            "Medications for nausea",
+            "Surgery",
+            "Home exercises"
+        ]
+    },
+    "acne": {
+        "medication": [
+            "Topical treatments",
+            "Antibiotics",
+            "Oral medications",
+            "Hormonal treatments",
+            "Isotretinoin"
+        ]
+    },
+    "urinary tract infection": {
+        "medication": [
+            "Antibiotics",
+            "Pain relievers",
+            "Antihistamines",
+            "Corticosteroids",
+            "Topical treatments"
+        ]
+    },
+    "psoriasis": {
+        "medication": [
+            "Antibiotics",
+            "Urinary analgesics",
+            "Phenazopyridine",
+            "Antispasmodics",
+            "Probiotics"
+        ]
+    },
+    "impetigo": {
+        "medication": [
+            "Topical creams",
+            "Phototherapy",
+            "Systemic medications",
+            "Biologics",
+            "Coal tar preparations"
+        ]
+    }
+}
