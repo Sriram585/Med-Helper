@@ -1,0 +1,650 @@
+{
+    "(vertigo) paroymsal positional vertigo": {
+        "medication": [
+            "Vestibular rehabilitation",
+            "Canalith repositioning",
+            "Medications for nausea",
+            "Surgery",
+            "Home exercises"
+        ],
+        "symptoms": [
+            "headache",
+            "loss of balance",
+            "nausea",
+            "spinning movements",
+            "vomiting"
+        ]
+    },
+    "acne": {
+        "medication": [
+            "Topical treatments",
+            "Antibiotics",
+            "Oral medications",
+            "Hormonal treatments",
+            "Isotretinoin"
+        ],
+        "symptoms": [
+            "blackheads",
+            "pus filled pimples",
+            "scurring",
+            "skin rash"
+        ]
+    },
+    "aids": {
+        "medication": [
+            "Antiretroviral drugs",
+            "Protease inhibitors",
+            "Integrase inhibitors",
+            "Entry inhibitors",
+            "Fusion inhibitors"
+        ],
+        "symptoms": [
+            "extra marital contacts",
+            "high fever",
+            "muscle wasting",
+            "patches in throat"
+        ]
+    },
+    "alcoholic hepatitis": {
+        "medication": [
+            "Alcohol cessation",
+            "Corticosteroids",
+            "IV fluids",
+            "Liver transplant",
+            "Nutritional support"
+        ],
+        "symptoms": [
+            "abdominal pain",
+            "distention of abdomen",
+            "swelling of stomach",
+            "vomiting",
+            "yellowish skin"
+        ]
+    },
+    "allergy": {
+        "medication": [
+            "Antihistamines",
+            "Decongestants",
+            "Epinephrine",
+            "Corticosteroids",
+            "Immunotherapy"
+        ],
+        "symptoms": [
+            "chills",
+            "continuous sneezing",
+            "shivering",
+            "watering from eyes"
+        ]
+    },
+    "arthritis": {
+        "medication": [
+            "NSAIDs",
+            "Disease-modifying antirheumatic drugs (DMARDs)",
+            "Biologics",
+            "Corticosteroids",
+            "Joint replacement surgery"
+        ],
+        "symptoms": [
+            "movement stiffness",
+            "muscle weakness",
+            "painful walking",
+            "stiff neck",
+            "swelling joints"
+        ]
+    },
+    "bronchial asthma": {
+        "medication": [
+            "Bronchodilators",
+            "Inhaled corticosteroids",
+            "Leukotriene modifiers",
+            "Mast cell stabilizers",
+            "Anticholinergics"
+        ],
+        "symptoms": [
+            "breathlessness",
+            "cough",
+            "family history",
+            "fatigue",
+            "high fever"
+        ]
+    },
+    "cervical spondylosis": {
+        "medication": [
+            "Pain relievers",
+            "Muscle relaxants",
+            "Physical therapy",
+            "Neck braces",
+            "Corticosteroids"
+        ],
+        "symptoms": [
+            "back pain",
+            "dizziness",
+            "loss of balance",
+            "neck pain",
+            "weakness in limbs"
+        ]
+    },
+    "chicken pox": {
+        "medication": [
+            "Antiviral drugs",
+            "Pain relievers",
+            "IV fluids",
+            "Blood transfusions",
+            "Platelet transfusions"
+        ],
+        "symptoms": [
+            "fatigue",
+            "high fever",
+            "itching",
+            "lethargy",
+            "skin rash"
+        ]
+    },
+    "chronic cholestasis": {
+        "medication": [
+            "Ursodeoxycholic acid",
+            "Cholestyramine",
+            "Methotrexate",
+            "Corticosteroids",
+            "Liver transplant"
+        ],
+        "symptoms": [
+            "itching",
+            "loss of appetite",
+            "nausea",
+            "vomiting",
+            "yellowish skin"
+        ]
+    },
+    "common cold": {
+        "medication": [
+            "Antipyretics",
+            "Decongestants",
+            "Cough suppressants",
+            "Antihistamines",
+            "Pain relievers"
+        ],
+        "symptoms": [
+            "chills",
+            "continuous sneezing",
+            "cough",
+            "fatigue",
+            "high fever"
+        ]
+    },
+    "dengue": {
+        "medication": [
+            "Antiviral drugs",
+            "Pain relievers",
+            "IV fluids",
+            "Blood transfusions",
+            "Platelet transfusions"
+        ],
+        "symptoms": [
+            "chills",
+            "fatigue",
+            "joint pain",
+            "skin rash",
+            "vomiting"
+        ]
+    },
+    "diabetes": {
+        "medication": [
+            "Insulin",
+            "Metformin",
+            "Sulfonylureas",
+            "DPP-4 inhibitors",
+            "GLP-1 receptor agonists"
+        ],
+        "symptoms": [
+            "fatigue",
+            "irregular sugar level",
+            "lethargy",
+            "restlessness",
+            "weight loss"
+        ]
+    },
+    "dimorphic hemmorhoids(piles)": {
+        "medication": [
+            "Laxatives",
+            "Pain relievers",
+            "Warm baths",
+            "Cold compresses",
+            "High-fiber diet"
+        ],
+        "symptoms": [
+            "bloody stool",
+            "constipation",
+            "irritation in anus",
+            "pain during bowel movements",
+            "pain in anal region"
+        ]
+    },
+    "drug reaction": {
+        "medication": [
+            "Antihistamines",
+            "Epinephrine",
+            "Corticosteroids",
+            "Antibiotics",
+            "Antifungal Cream"
+        ],
+        "symptoms": [
+            "burning micturition",
+            "itching",
+            "skin rash",
+            "spotting urination",
+            "stomach pain"
+        ]
+    },
+    "fungal infection": {
+        "medication": [
+            "Antifungal Cream",
+            "Fluconazole",
+            "Terbinafine",
+            "Clotrimazole",
+            "Ketoconazole"
+        ],
+        "symptoms": [
+            "dischromic patches",
+            "itching",
+            "nodal skin eruptions",
+            "skin rash"
+        ]
+    },
+    "gastroenteritis": {
+        "medication": [
+            "Antibiotics",
+            "Antiemetic drugs",
+            "Antidiarrheal drugs",
+            "IV fluids",
+            "Probiotics"
+        ],
+        "symptoms": [
+            "dehydration",
+            "diarrhoea",
+            "sunken eyes",
+            "vomiting"
+        ]
+    },
+    "gerd": {
+        "medication": [
+            "Proton Pump Inhibitors (PPIs)",
+            "H2 Blockers",
+            "Antacids",
+            "Prokinetics",
+            "Antibiotics"
+        ],
+        "symptoms": [
+            "acidity",
+            "cough",
+            "stomach pain",
+            "ulcers on tongue",
+            "vomiting"
+        ]
+    },
+    "heart attack": {
+        "medication": [
+            "Nitroglycerin",
+            "Aspirin",
+            "Beta-blockers",
+            "Calcium channel blockers",
+            "Thrombolytic drugs"
+        ],
+        "symptoms": [
+            "breathlessness",
+            "chest pain",
+            "sweating",
+            "vomiting"
+        ]
+    },
+    "hepatitis a": {
+        "medication": [
+            "Vaccination",
+            "Antiviral drugs",
+            "IV fluids",
+            "Blood transfusions",
+            "Liver transplant"
+        ],
+        "symptoms": [
+            "dark urine",
+            "joint pain",
+            "nausea",
+            "vomiting",
+            "yellowish skin"
+        ]
+    },
+    "hepatitis b": {
+        "medication": [
+            "Vaccination",
+            "Antiviral drugs",
+            "IV fluids",
+            "Blood transfusions",
+            "Liver transplant"
+        ],
+        "symptoms": [
+            "dark urine",
+            "fatigue",
+            "itching",
+            "lethargy",
+            "yellowish skin"
+        ]
+    },
+    "hepatitis c": {
+        "medication": [
+            "Antiviral drugs",
+            "IV fluids",
+            "Blood transfusions",
+            "Platelet transfusions",
+            "Liver transplant"
+        ],
+        "symptoms": [
+            "fatigue",
+            "loss of appetite",
+            "nausea",
+            "yellowing of eyes",
+            "yellowish skin"
+        ]
+    },
+    "hepatitis d": {
+        "medication": [
+            "Antiviral drugs",
+            "IV fluids",
+            "Blood transfusions",
+            "Platelet transfusions",
+            "Liver transplant"
+        ],
+        "symptoms": [
+            "dark urine",
+            "fatigue",
+            "joint pain",
+            "vomiting",
+            "yellowish skin"
+        ]
+    },
+    "hepatitis e": {
+        "medication": [
+            "Antiviral drugs",
+            "IV fluids",
+            "Blood transfusions",
+            "Platelet transfusions",
+            "Liver transplant"
+        ],
+        "symptoms": [
+            "fatigue",
+            "high fever",
+            "joint pain",
+            "vomiting",
+            "yellowish skin"
+        ]
+    },
+    "hypertension": {
+        "medication": [
+            "Antihypertensive medications",
+            "Diuretics",
+            "Beta-blockers",
+            "ACE inhibitors",
+            "Calcium channel blockers"
+        ],
+        "symptoms": [
+            "chest pain",
+            "dizziness",
+            "headache",
+            "lack of concentration",
+            "loss of balance"
+        ]
+    },
+    "hyperthyroidism": {
+        "medication": [
+            "Antithyroid medications",
+            "Radioactive iodine",
+            "Thyroid surgery",
+            "Beta-blockers",
+            "Corticosteroids"
+        ],
+        "symptoms": [
+            "fatigue",
+            "mood swings",
+            "restlessness",
+            "sweating",
+            "weight loss"
+        ]
+    },
+    "hypoglycemia": {
+        "medication": [
+            "Glucose tablets",
+            "Candy or juice",
+            "Glucagon injection",
+            "IV dextrose",
+            "Diazoxide"
+        ],
+        "symptoms": [
+            "anxiety",
+            "fatigue",
+            "headache",
+            "sweating",
+            "vomiting"
+        ]
+    },
+    "hypothyroidism": {
+        "medication": [
+            "Levothyroxine",
+            "Antithyroid medications",
+            "Beta-blockers",
+            "Radioactive iodine",
+            "Thyroid surgery"
+        ],
+        "symptoms": [
+            "cold hands and feets",
+            "fatigue",
+            "lethargy",
+            "mood swings",
+            "weight gain"
+        ]
+    },
+    "impetigo": {
+        "medication": [
+            "Topical antibiotics",
+            "Oral antibiotics",
+            "Antiseptics",
+            "Ointments",
+            "Warm compresses"
+        ],
+        "symptoms": [
+            "blister",
+            "high fever",
+            "red sore around nose",
+            "skin rash",
+            "yellow crust ooze"
+        ]
+    },
+    "jaundice": {
+        "medication": [
+            "IV fluids",
+            "Blood transfusions",
+            "Liver transplant",
+            "Medications for itching",
+            "Antiviral medications"
+        ],
+        "symptoms": [
+            "fatigue",
+            "high fever",
+            "itching",
+            "vomiting",
+            "weight loss"
+        ]
+    },
+    "malaria": {
+        "medication": [
+            "Antimalarial drugs",
+            "Antipyretics",
+            "Antiemetic drugs",
+            "IV fluids",
+            "Blood transfusions"
+        ],
+        "symptoms": [
+            "chills",
+            "headache",
+            "high fever",
+            "sweating",
+            "vomiting"
+        ]
+    },
+    "migraine": {
+        "medication": [
+            "Analgesics",
+            "Triptans",
+            "Ergotamine derivatives",
+            "Preventive medications",
+            "Biofeedback"
+        ],
+        "symptoms": [
+            "acidity",
+            "blurred and distorted vision",
+            "excessive hunger",
+            "headache",
+            "indigestion"
+        ]
+    },
+    "osteoarthristis": {
+        "medication": [
+            "Pain relievers",
+            "Exercise",
+            "Hot and cold packs",
+            "Joint protection",
+            "Physical therapy"
+        ],
+        "symptoms": [
+            "hip joint pain",
+            "joint pain",
+            "knee pain",
+            "neck pain",
+            "swelling joints"
+        ]
+    },
+    "paralysis (brain hemorrhage)": {
+        "medication": [
+            "Blood thinners",
+            "Clot-dissolving medications",
+            "Anticonvulsants",
+            "Physical therapy",
+            "Occupational therapy"
+        ],
+        "symptoms": [
+            "altered sensorium",
+            "headache",
+            "vomiting",
+            "weakness of one body side"
+        ]
+    },
+    "peptic ulcer disease": {
+        "medication": [
+            "Antibiotics",
+            "Proton Pump Inhibitors (PPIs)",
+            "H2 Blockers",
+            "Antacids",
+            "Cytoprotective agents"
+        ],
+        "symptoms": [
+            "abdominal pain",
+            "indigestion",
+            "loss of appetite",
+            "passage of gases",
+            "vomiting"
+        ]
+    },
+    "pneumonia": {
+        "medication": [
+            "Antibiotics",
+            "Antiviral drugs",
+            "Antifungal drugs",
+            "IV fluids",
+            "Oxygen therapy"
+        ],
+        "symptoms": [
+            "breathlessness",
+            "chills",
+            "cough",
+            "fatigue",
+            "high fever"
+        ]
+    },
+    "psoriasis": {
+        "medication": [
+            "Topical treatments",
+            "Phototherapy",
+            "Systemic medications",
+            "Biologics",
+            "Coal tar"
+        ],
+        "symptoms": [
+            "joint pain",
+            "silver like dusting",
+            "skin peeling",
+            "skin rash",
+            "small dents in nails"
+        ]
+    },
+    "tuberculosis": {
+        "medication": [
+            "Antibiotics",
+            "Isoniazid",
+            "Rifampin",
+            "Ethambutol",
+            "Pyrazinamide"
+        ],
+        "symptoms": [
+            "chills",
+            "cough",
+            "fatigue",
+            "vomiting",
+            "weight loss"
+        ]
+    },
+    "typhoid": {
+        "medication": [
+            "Antibiotics",
+            "Antipyretics",
+            "Analgesics",
+            "IV fluids",
+            "Corticosteroids"
+        ],
+        "symptoms": [
+            "chills",
+            "fatigue",
+            "headache",
+            "high fever",
+            "vomiting"
+        ]
+    },
+    "urinary tract infection": {
+        "medication": [
+            "Antibiotics",
+            "Urinary analgesics",
+            "Phenazopyridine",
+            "Antispasmodics",
+            "Probiotics"
+        ],
+        "symptoms": [
+            "bladder discomfort",
+            "burning micturition",
+            "continuous feel of urine",
+            "foul smell of urine"
+        ]
+    },
+    "varicose veins": {
+        "medication": [
+            "Compression stockings",
+            "Exercise",
+            "Elevating the legs",
+            "Sclerotherapy",
+            "Laser treatments"
+        ],
+        "symptoms": [
+            "bruising",
+            "cramps",
+            "fatigue",
+            "obesity",
+            "swollen legs"
+        ]
+    }
+}

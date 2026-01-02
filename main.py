@@ -1,6 +1,6 @@
 import os
 import json
-import difflib
+import re
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,89 +27,130 @@ client = AsyncGroq(
 class SymptomRequest(BaseModel):
     symptoms: str
 
-# --- LOAD DATABASE ---
+# --- 1. LOAD DATABASE (For Medication Lookup) ---
 def load_medical_db():
     try:
+        # We try to load the file to get the medications
         with open("medical_data.json", "r") as f:
-            return json.load(f)
+            data = json.load(f)
+            print(f"✅ Database loaded: {len(data)} entries found.")
+            return data
     except FileNotFoundError:
-        print("WARNING: medical_data.json not found. Database features disabled.")
+        print("❌ ERROR: medical_data.json not found.")
         return {}
 
 MEDICAL_DB = load_medical_db()
 
-# --- SMART MATCHING LOGIC ---
-def find_best_match(user_input):
-    user_input = user_input.lower()
-    known_symptoms = list(MEDICAL_DB.keys())
+# --- 2. MATCHING LOGIC ---
+def find_best_match(user_text):
+    """
+    Finds the disease in the DB to retrieve the correct medications.
+    """
+    user_text = user_text.lower().strip()
+    best_disease = None
+    highest_score = 0
+
+    # A. Exact Match
+    for disease in MEDICAL_DB.keys():
+        if disease in user_text:
+            return disease, MEDICAL_DB[disease]
+
+    # B. Symptom Keyword Match
+    user_words = set(re.findall(r'\w+', user_text))
     
-    # 1. Exact/Partial Match
-    for symptom in known_symptoms:
-        if symptom in user_input:
-            return symptom, MEDICAL_DB[symptom]
-            
-    # 2. Fuzzy Match (Typo tolerance)
-    matches = difflib.get_close_matches(user_input, known_symptoms, n=1, cutoff=0.6)
-    if matches:
-        return matches[0], MEDICAL_DB[matches[0]]
+    for disease, data in MEDICAL_DB.items():
+        # We check the symptoms list in the DB to find the disease
+        db_symptoms = data.get('symptoms', [])
         
+        score = 0
+        disease_symptoms_str = " ".join(db_symptoms).lower()
+        
+        for word in user_words:
+            if len(word) > 3 and word in disease_symptoms_str:
+                score += 1
+        
+        if score > highest_score:
+            highest_score = score
+            best_disease = disease
+
+    if highest_score >= 1:
+        return best_disease, MEDICAL_DB[best_disease]
+    
     return None, None
 
+def clean_json_string(json_string):
+    cleaned = re.sub(r"```json\s*", "", json_string)
+    cleaned = re.sub(r"```", "", cleaned)
+    return cleaned.strip()
+
+# --- 3. API ENDPOINT ---
 @app.post("/analyze")
 async def analyze_symptoms(request: SymptomRequest):
-    if not request.symptoms.strip():
-        raise HTTPException(status_code=400, detail="Symptoms cannot be empty")
+    print(f"\n📩 Input: {request.symptoms}")
+    
+    # Step A: Identify Disease & Fetch Meds from File
+    matched_disease, db_data = find_best_match(request.symptoms)
 
-    try:
-        # 1. Read the Prompt File
-        try:
-            with open("prompt.txt", "r") as f:
-                prompt_template = f.read()
-        except FileNotFoundError:
-            raise HTTPException(status_code=500, detail="prompt.txt file missing")
-
-        # 2. Check Database for Matches
-        matched_symptom, db_data = find_best_match(request.symptoms)
+    if matched_disease:
+        print(f"✅ MATCH: {matched_disease.upper()}")
         
-        # 3. Construct the Context Block
-        if matched_symptom:
-            # We found data! Format it for the AI.
-            print(f"DEBUG: Database hit for '{matched_symptom}'")
-            context_block = f"""
-            **TRUSTED DATABASE MATCH FOUND:** {matched_symptom.upper()}
-            - Required Medications: {", ".join(db_data['medication'])}
-            - Required Diet Focus: {db_data['diet_focus']}
-            - Required Workout: {db_data['workout_type']}
-            
-            Instruction: You MUST prioritize these recommendations in your final JSON output.
-            """
-        else:
-            # No data found. Give general instructions.
-            print("DEBUG: Database miss. Using General AI.")
-            context_block = "No specific database match found. Use general medical safety protocols. Prioritize conservative treatments (e.g., Rest, Hydration)."
+        # 1. GET MEDS FROM FILE (Strict)
+        file_meds = db_data.get('medication', [])
+        
+        # 2. CONSTRUCT PROMPT (Hybrid)
+        # We give the AI the file meds, but ask it to generate the rest.
+        final_prompt = f"""
+        You are a medical expert API.
+        
+        **Patient Diagnosis:** {matched_disease.upper()}
+        **Patient Symptoms:** "{request.symptoms}"
+        
+        **INSTRUCTIONS:**
+        1. **MEDICATION (Strict):** You MUST output the following list exactly. Do not add or remove anything: 
+           {json.dumps(file_meds)}
+           
+        2. **OTHER FIELDS (Generative):** Use your own medical knowledge to generate:
+           - A short 'description' of the disease.
+           - A 'diet' plan (list of foods).
+           - 'workout' or lifestyle tips (list).
+           - 'precautions' (list).
 
-        # 4. Inject Data into Prompt (File Handling)
-        final_prompt = prompt_template.replace("{{SYMPTOMS}}", request.symptoms)
-        final_prompt = final_prompt.replace("{{CONTEXT_BLOCK}}", context_block)
+        **OUTPUT FORMAT (JSON ONLY):**
+        {{
+            "description": "string",
+            "medication": ["string", "string"],
+            "diet": ["string", "string"],
+            "workout": ["string", "string"],
+            "precautions": ["string", "string"]
+        }}
+        """
+    else:
+        # Fallback if disease not in JSON
+        print("⚠️ No Match. Using pure AI.")
+        final_prompt = f"""
+        User symptoms: "{request.symptoms}".
+        Identify the likely condition. 
+        Generate valid JSON with: description, medication (general advice only), diet, workout, precautions.
+        """
 
-        # 5. Call Groq
+    # Step B: Call Groq
+    try:
         chat_completion = await client.chat.completions.create(
             messages=[
-                {"role": "system", "content": "You are a medical API that outputs only valid raw JSON."},
+                {"role": "system", "content": "You are a medical API. Return valid JSON only."},
                 {"role": "user", "content": final_prompt}
             ],
             model="llama-3.3-70b-versatile",
-            temperature=0.3, # Keep it low to ensure it follows the Context
+            temperature=0.3, # Slight creativity allowed for diet/workout
             response_format={"type": "json_object"}
         )
 
-        ai_response = chat_completion.choices[0].message.content
-        result = json.loads(ai_response)
-        return result
+        response_text = chat_completion.choices[0].message.content
+        return json.loads(clean_json_string(response_text))
 
     except Exception as e:
-        print(f"Error: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"❌ Error: {e}")
+        return {"error": str(e)}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
