@@ -8,241 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
-    <style>
-      :root {
-        --primary: #2563eb;
-        --secondary: #10b981;
-        --accent: #f59e0b;
-        --dark: #1e293b;
-        --light: #f8fafc;
-        --glass: rgba(255, 255, 255, 0.95);
-        --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Poppins", sans-serif;
-      }
-
-      body {
-        background: linear-gradient(135deg, #e0f2fe 0%, #dcfce7 100%);
-        color: var(--dark);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 2rem;
-      }
-
-      /* --- Header Section --- */
-      header {
-        text-align: center;
-        margin-bottom: 3rem;
-        animation: fadeInDown 0.8s ease;
-      }
-
-      h1 {
-        font-size: 3.5rem;
-        font-weight: 700;
-        background: linear-gradient(to right, var(--primary), var(--secondary));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-        letter-spacing: -1px;
-      }
-
-      p.subtitle {
-        font-size: 1.2rem;
-        color: #64748b;
-      }
-
-      /* --- Main Container --- */
-      .container {
-        width: 100%;
-        max-width: 900px;
-      }
-
-      /* --- Input Section --- */
-      .input-card {
-        background: var(--glass);
-        padding: 2.5rem;
-        border-radius: 24px;
-        box-shadow: var(--shadow);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        margin-bottom: 2rem;
-        transition: transform 0.3s ease;
-      }
-
-      .input-card:hover {
-        transform: translateY(-2px);
-      }
-
-      textarea {
-        width: 100%;
-        height: 120px;
-        padding: 1.5rem;
-        border: 2px solid #e2e8f0;
-        border-radius: 16px;
-        font-size: 1.1rem;
-        resize: none;
-        outline: none;
-        transition: border-color 0.3s ease;
-        margin-bottom: 1.5rem;
-        background: #fff;
-      }
-
-      textarea:focus {
-        border-color: var(--primary);
-      }
-
-      .btn-analyze {
-        width: 100%;
-        padding: 1rem;
-        background: linear-gradient(to right, var(--primary), #3b82f6);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 1.2rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .btn-analyze:hover {
-        box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
-        transform: translateY(-2px);
-      }
-
-      /* --- Results Grid --- */
-      .results-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5rem;
-        opacity: 0;
-        transform: translateY(20px);
-        pointer-events: none;
-        transition: all 0.5s ease;
-      }
-
-      .results-grid.active {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: all;
-      }
-
-      .result-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: var(--shadow);
-        border-left: 6px solid; /* Moved border to left for cleaner look */
-        transition: transform 0.3s ease;
-      }
-
-      .result-card:hover {
-        transform: translateY(-5px);
-      }
-
-      .card-header {
-        margin-bottom: 1rem;
-        border-bottom: 1px solid #f1f5f9;
-        padding-bottom: 0.5rem;
-      }
-
-      .card-header h3 {
-        font-size: 1.3rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .card-content {
-        color: #475569;
-        line-height: 1.6;
-        font-size: 0.95rem;
-      }
-
-      /* Card Specific Colors */
-      .card-desc {
-        border-color: var(--primary);
-      }
-      .card-desc h3 {
-        color: var(--primary);
-      }
-
-      .card-diet {
-        border-color: var(--secondary);
-      }
-      .card-diet h3 {
-        color: var(--secondary);
-      }
-
-      .card-med {
-        border-color: #ef4444;
-      }
-      .card-med h3 {
-        color: #ef4444;
-      }
-
-      .card-prec {
-        border-color: var(--accent);
-      }
-      .card-prec h3 {
-        color: var(--accent);
-      }
-
-      .card-workout {
-        border-color: #8b5cf6;
-      }
-      .card-workout h3 {
-        color: #8b5cf6;
-      }
-
-      /* --- Loading Spinner --- */
-      .loader {
-        display: none;
-        width: 24px;
-        height: 24px;
-        border: 3px solid #ffffff;
-        border-bottom-color: transparent;
-        border-radius: 50%;
-        animation: rotation 1s linear infinite;
-      }
-
-      @keyframes rotation {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      @keyframes fadeInDown {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      /* Disclaimer */
-      .disclaimer {
-        margin-top: 3rem;
-        font-size: 0.8rem;
-        color: #94a3b8;
-        text-align: center;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header>
@@ -256,7 +22,7 @@
           id="symptomsInput"
           placeholder="Describe your symptoms (e.g., severe headache, nausea, fatigue)..."
         ></textarea>
-        <button class="btn-analyze" onclick="generatePlan()">
+        <button class="btn-analyze" id="analyzeBtn">
           <span id="btnText">Generate Health Plan</span>
           <span class="loader" id="loader"></span>
         </button>
@@ -265,40 +31,30 @@
       <div class="results-grid" id="resultsArea">
         <div class="result-card card-desc">
           <div class="card-header">
-            <h3>Analysis</h3>
+            <h3>Description</h3>
           </div>
-          <div class="card-content" id="descContent">
-            Based on your symptoms, this appears to be a migraine...
-          </div>
+          <div class="card-content" id="descContent">Analysis pending...</div>
         </div>
 
         <div class="result-card card-diet">
           <div class="card-header">
-            <h3>Dietary Advice</h3>
+            <h3>Diet</h3>
           </div>
-          <div class="card-content" id="dietContent">
-            • Drink plenty of water<br />• Avoid caffeine<br />• Eat ginger...
-          </div>
+          <div class="card-content" id="dietContent">Analysis pending...</div>
         </div>
 
         <div class="result-card card-med">
           <div class="card-header">
-            <h3>Potential Medication</h3>
+            <h3>Medication</h3>
           </div>
-          <div class="card-content" id="medContent">
-            • Paracetamol (500mg)<br />• Ibuprofen<br />*(Consult a doctor
-            first)*
-          </div>
+          <div class="card-content" id="medContent">Analysis pending...</div>
         </div>
 
         <div class="result-card card-prec">
           <div class="card-header">
             <h3>Precautions</h3>
           </div>
-          <div class="card-content" id="precContent">
-            • Avoid bright lights<br />• Rest in a dark room<br />• Limit screen
-            time
-          </div>
+          <div class="card-content" id="precContent">Analysis pending...</div>
         </div>
 
         <div class="result-card card-workout">
@@ -306,50 +62,17 @@
             <h3>Workout Plan</h3>
           </div>
           <div class="card-content" id="workoutContent">
-            • Light stretching only<br />• Yoga (Child's pose)<br />• Avoid
-            heavy lifting
+            Analysis pending...
           </div>
         </div>
       </div>
 
       <div class="disclaimer">
         <strong>Note:</strong> AI-generated suggestions are for informational
-        purposes only. Always consult a certified medical professional for
-        diagnosis and treatment.
+        purposes only. Always consult a certified medical professional.
       </div>
     </div>
 
-    <script>
-      function generatePlan() {
-        const input = document.getElementById("symptomsInput").value;
-        const btnText = document.getElementById("btnText");
-        const loader = document.getElementById("loader");
-        const results = document.getElementById("resultsArea");
-
-        if (input.trim() === "") {
-          alert("Please describe your symptoms first.");
-          return;
-        }
-
-        // UI Loading State
-        btnText.style.display = "none";
-        loader.style.display = "inline-block";
-        results.classList.remove("active");
-
-        // SIMULATING API CALL (Replace this with your GROQ fetch logic)
-        setTimeout(() => {
-          // Reset UI
-          btnText.style.display = "inline-block";
-          loader.style.display = "none";
-          btnText.innerText = "Regenerate Plan";
-
-          // Show Results with Animation
-          results.classList.add("active");
-
-          // NOTE: This is where you will inject the real data from GROQ
-          // document.getElementById('descContent').innerHTML = response.description;
-        }, 2000);
-      }
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
