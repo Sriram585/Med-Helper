@@ -21,7 +21,7 @@ async function generatePlan() {
     results.classList.remove('active');
 
     try {
-        // CHANGED: Port is now 8000 for FastAPI
+        // Fetch from FastAPI Backend
         const response = await fetch('http://127.0.0.1:8000/analyze', {
             method: 'POST',
             headers: {
@@ -64,5 +64,7 @@ function formatText(text) {
     if (Array.isArray(text)) {
         return text.map(item => `• ${item}`).join('<br>');
     }
+    // Safety check for null/undefined
+    if (!text) return "No information provided.";
     return text.replace(/\n/g, '<br>').replace(/- /g, '• ');
 }

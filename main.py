@@ -4,30 +4,27 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from groq import AsyncGroq # Using the Async client
+from groq import AsyncGroq
 from dotenv import load_dotenv
 
 # Load Environment Variables
 load_dotenv()
 
-# Initialize FastAPI App
 app = FastAPI()
 
-# Enable CORS (Allows your HTML file to talk to this API)
+# Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins (for development)
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Initialize Async Groq Client
 client = AsyncGroq(
     api_key=os.environ.get("GROQ_API_KEY"),
 )
 
-# Define Request Model (Data Validation)
 class SymptomRequest(BaseModel):
     symptoms: str
 
@@ -37,21 +34,20 @@ async def analyze_symptoms(request: SymptomRequest):
         raise HTTPException(status_code=400, detail="Symptoms cannot be empty")
 
     try:
-        # Prompt Engineering
-        prompt = f"""
-        You are a medical AI assistant. The user is describing these symptoms: "{request.symptoms}".
-        
-        Provide a helpful response structured STRICTLY as a JSON object with exactly these 5 keys:
-        1. "description": A brief medical assessment of what might be happening.
-        2. "diet": Bullet points of recommended foods or drinks.
-        3. "medication": Common over-the-counter medications (include a disclaimer).
-        4. "precautions": Immediate steps to avoid worsening the condition.
-        5. "workout": A safe workout or movement plan (or advice to rest).
+        # --- FILE HANDLING START ---
+        # 1. Open the text file
+        try:
+            with open("prompt.txt", "r") as file:
+                prompt_template = file.read()
+        except FileNotFoundError:
+            raise HTTPException(status_code=500, detail="prompt.txt file not found")
 
-        Do not use Markdown formatting. Return raw JSON only.
-        """
+        # 2. Inject user symptoms into the text
+        # We use replace() instead of f-strings to avoid issues with JSON curly braces
+        final_prompt = prompt_template.replace("{{SYMPTOMS}}", request.symptoms)
+        # --- FILE HANDLING END ---
 
-        # Async API Call to Groq
+        # API Call
         chat_completion = await client.chat.completions.create(
             messages=[
                 {
@@ -60,23 +56,25 @@ async def analyze_symptoms(request: SymptomRequest):
                 },
                 {
                     "role": "user",
-                    "content": prompt,
+                    "content": final_prompt,
                 }
             ],
-            model="llama3-70b-8192",
+            model="llama-3.3-70b-versatile",
             temperature=0.5,
             response_format={"type": "json_object"}
         )
 
-        # Parse Response
         ai_response = chat_completion.choices[0].message.content
-        result = json.loads(ai_response)
         
+        if ai_response is None:
+            raise HTTPException(status_code=500, detail="AI returned an empty response")
+
+        result = json.loads(ai_response)
         return result
 
     except Exception as e:
         print(f"Error: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to process request")
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
