@@ -1,242 +1,6 @@
 {
-    "(vertigo) paroymsal positional vertigo": {
-        "medication": [
-            "Vestibular rehabilitation",
-            "Canalith repositioning",
-            "Medications for nausea",
-            "Surgery",
-            "Home exercises"
-        ],
-        "symptoms": [
-            "headache",
-            "loss of balance",
-            "nausea",
-            "spinning movements",
-            "vomiting"
-        ]
-    },
-    "acne": {
-        "medication": [
-            "Topical treatments",
-            "Antibiotics",
-            "Oral medications",
-            "Hormonal treatments",
-            "Isotretinoin"
-        ],
-        "symptoms": [
-            "blackheads",
-            "pus filled pimples",
-            "scurring",
-            "skin rash"
-        ]
-    },
-    "aids": {
-        "medication": [
-            "Antiretroviral drugs",
-            "Protease inhibitors",
-            "Integrase inhibitors",
-            "Entry inhibitors",
-            "Fusion inhibitors"
-        ],
-        "symptoms": [
-            "extra marital contacts",
-            "high fever",
-            "muscle wasting",
-            "patches in throat"
-        ]
-    },
-    "alcoholic hepatitis": {
-        "medication": [
-            "Alcohol cessation",
-            "Corticosteroids",
-            "IV fluids",
-            "Liver transplant",
-            "Nutritional support"
-        ],
-        "symptoms": [
-            "abdominal pain",
-            "distention of abdomen",
-            "swelling of stomach",
-            "vomiting",
-            "yellowish skin"
-        ]
-    },
-    "allergy": {
-        "medication": [
-            "Antihistamines",
-            "Decongestants",
-            "Epinephrine",
-            "Corticosteroids",
-            "Immunotherapy"
-        ],
-        "symptoms": [
-            "chills",
-            "continuous sneezing",
-            "shivering",
-            "watering from eyes"
-        ]
-    },
-    "arthritis": {
-        "medication": [
-            "NSAIDs",
-            "Disease-modifying antirheumatic drugs (DMARDs)",
-            "Biologics",
-            "Corticosteroids",
-            "Joint replacement surgery"
-        ],
-        "symptoms": [
-            "movement stiffness",
-            "muscle weakness",
-            "painful walking",
-            "stiff neck",
-            "swelling joints"
-        ]
-    },
-    "bronchial asthma": {
-        "medication": [
-            "Bronchodilators",
-            "Inhaled corticosteroids",
-            "Leukotriene modifiers",
-            "Mast cell stabilizers",
-            "Anticholinergics"
-        ],
-        "symptoms": [
-            "breathlessness",
-            "cough",
-            "family history",
-            "fatigue",
-            "high fever"
-        ]
-    },
-    "cervical spondylosis": {
-        "medication": [
-            "Pain relievers",
-            "Muscle relaxants",
-            "Physical therapy",
-            "Neck braces",
-            "Corticosteroids"
-        ],
-        "symptoms": [
-            "back pain",
-            "dizziness",
-            "loss of balance",
-            "neck pain",
-            "weakness in limbs"
-        ]
-    },
-    "chicken pox": {
-        "medication": [
-            "Antiviral drugs",
-            "Pain relievers",
-            "IV fluids",
-            "Blood transfusions",
-            "Platelet transfusions"
-        ],
-        "symptoms": [
-            "fatigue",
-            "high fever",
-            "itching",
-            "lethargy",
-            "skin rash"
-        ]
-    },
-    "chronic cholestasis": {
-        "medication": [
-            "Ursodeoxycholic acid",
-            "Cholestyramine",
-            "Methotrexate",
-            "Corticosteroids",
-            "Liver transplant"
-        ],
-        "symptoms": [
-            "itching",
-            "loss of appetite",
-            "nausea",
-            "vomiting",
-            "yellowish skin"
-        ]
-    },
-    "common cold": {
-        "medication": [
-            "Antipyretics",
-            "Decongestants",
-            "Cough suppressants",
-            "Antihistamines",
-            "Pain relievers"
-        ],
-        "symptoms": [
-            "chills",
-            "continuous sneezing",
-            "cough",
-            "fatigue",
-            "high fever"
-        ]
-    },
-    "dengue": {
-        "medication": [
-            "Antiviral drugs",
-            "Pain relievers",
-            "IV fluids",
-            "Blood transfusions",
-            "Platelet transfusions"
-        ],
-        "symptoms": [
-            "chills",
-            "fatigue",
-            "joint pain",
-            "skin rash",
-            "vomiting"
-        ]
-    },
-    "diabetes": {
-        "medication": [
-            "Insulin",
-            "Metformin",
-            "Sulfonylureas",
-            "DPP-4 inhibitors",
-            "GLP-1 receptor agonists"
-        ],
-        "symptoms": [
-            "fatigue",
-            "irregular sugar level",
-            "lethargy",
-            "restlessness",
-            "weight loss"
-        ]
-    },
-    "dimorphic hemmorhoids(piles)": {
-        "medication": [
-            "Laxatives",
-            "Pain relievers",
-            "Warm baths",
-            "Cold compresses",
-            "High-fiber diet"
-        ],
-        "symptoms": [
-            "bloody stool",
-            "constipation",
-            "irritation in anus",
-            "pain during bowel movements",
-            "pain in anal region"
-        ]
-    },
-    "drug reaction": {
-        "medication": [
-            "Antihistamines",
-            "Epinephrine",
-            "Corticosteroids",
-            "Antibiotics",
-            "Antifungal Cream"
-        ],
-        "symptoms": [
-            "burning micturition",
-            "itching",
-            "skin rash",
-            "spotting urination",
-            "stomach pain"
-        ]
-    },
     "fungal infection": {
+        "description": "Fungal infection is a common skin condition caused by fungi.",
         "medication": [
             "Antifungal Cream",
             "Fluconazole",
@@ -244,29 +8,68 @@
             "Clotrimazole",
             "Ketoconazole"
         ],
-        "symptoms": [
-            "dischromic patches",
-            "itching",
-            "nodal skin eruptions",
-            "skin rash"
+        "diet": [
+            "Antifungal Diet",
+            "Probiotics",
+            "Garlic",
+            "Coconut oil",
+            "Turmeric"
+        ],
+        "workout": [
+            "Avoid sugary foods",
+            "Consume probiotics",
+            "Increase intake of garlic",
+            "Include yogurt in diet",
+            "Limit processed foods",
+            "Stay hydrated",
+            "Consume green tea",
+            "Eat foods rich in zinc",
+            "Include turmeric in diet",
+            "Eat fruits and vegetables"
+        ],
+        "precautions": [
+            "bath twice",
+            "use detol or neem in bathing water",
+            "keep infected area dry",
+            "use clean cloths"
         ]
     },
-    "gastroenteritis": {
+    "allergy": {
+        "description": "Allergy is an immune system reaction to a substance in the environment.",
         "medication": [
-            "Antibiotics",
-            "Antiemetic drugs",
-            "Antidiarrheal drugs",
-            "IV fluids",
+            "Antihistamines",
+            "Decongestants",
+            "Epinephrine",
+            "Corticosteroids",
+            "Immunotherapy"
+        ],
+        "diet": [
+            "Elimination Diet",
+            "Omega-3-rich foods",
+            "Vitamin C-rich foods",
+            "Quercetin-rich foods",
             "Probiotics"
         ],
-        "symptoms": [
-            "dehydration",
-            "diarrhoea",
-            "sunken eyes",
-            "vomiting"
+        "workout": [
+            "Avoid allergenic foods",
+            "Consume anti-inflammatory foods",
+            "Include omega-3 fatty acids",
+            "Stay hydrated",
+            "Eat foods rich in vitamin C",
+            "Include quercetin-rich foods",
+            "Consume local honey",
+            "Limit processed foods",
+            "Include ginger in diet",
+            "Avoid artificial additives"
+        ],
+        "precautions": [
+            "apply calamine",
+            "cover area with bandage",
+            "use ice to compress itching"
         ]
     },
     "gerd": {
+        "description": "GERD (Gastroesophageal Reflux Disease) is a digestive disorder that affects the lower esophageal sphincter.",
         "medication": [
             "Proton Pump Inhibitors (PPIs)",
             "H2 Blockers",
@@ -274,269 +77,104 @@
             "Prokinetics",
             "Antibiotics"
         ],
-        "symptoms": [
-            "acidity",
-            "cough",
-            "stomach pain",
-            "ulcers on tongue",
-            "vomiting"
-        ]
-    },
-    "heart attack": {
-        "medication": [
-            "Nitroglycerin",
-            "Aspirin",
-            "Beta-blockers",
-            "Calcium channel blockers",
-            "Thrombolytic drugs"
+        "diet": [
+            "Low-Acid Diet",
+            "Fiber-rich foods",
+            "Ginger",
+            "Licorice",
+            "Aloe vera juice"
         ],
-        "symptoms": [
-            "breathlessness",
-            "chest pain",
-            "sweating",
-            "vomiting"
+        "workout": [
+            "Consume smaller meals",
+            "Avoid trigger foods (spicy, fatty)",
+            "Eat high-fiber foods",
+            "Limit caffeine and alcohol",
+            "Chew food thoroughly",
+            "Avoid lying down after eating",
+            "Manage weight",
+            "Elevate head while sleeping",
+            "Include ginger in diet",
+            "Avoid peppermint"
+        ],
+        "precautions": [
+            "avoid fatty spicy food",
+            "avoid lying down after eating",
+            "maintain healthy weight",
+            "exercise"
         ]
     },
-    "hepatitis a": {
+    "chronic cholestasis": {
+        "description": "Chronic cholestasis is a condition where bile flow from the liver is reduced for a prolonged period.",
         "medication": [
-            "Vaccination",
-            "Antiviral drugs",
-            "IV fluids",
-            "Blood transfusions",
+            "Ursodeoxycholic acid",
+            "Cholestyramine",
+            "Methotrexate",
+            "Corticosteroids",
             "Liver transplant"
         ],
-        "symptoms": [
-            "dark urine",
-            "joint pain",
-            "nausea",
-            "vomiting",
-            "yellowish skin"
+        "diet": [
+            "Low-Fat Diet",
+            "High-Fiber Diet",
+            "Lean proteins",
+            "Whole grains",
+            "Fresh fruits and vegetables"
+        ],
+        "workout": [
+            "Consume low-fat foods",
+            "Eat high-fiber foods",
+            "Include lean proteins",
+            "Limit processed foods",
+            "Stay hydrated",
+            "Avoid alcohol",
+            "Include fruits and vegetables",
+            "Consume whole grains",
+            "Limit saturated fats",
+            "Consult a healthcare professional"
+        ],
+        "precautions": [
+            "cold baths",
+            "anti itch medicine",
+            "consult doctor",
+            "eat healthy"
         ]
     },
-    "hepatitis b": {
+    "drug reaction": {
+        "description": "Drug Reaction occurs when the body reacts adversely to a medication.",
         "medication": [
-            "Vaccination",
-            "Antiviral drugs",
-            "IV fluids",
-            "Blood transfusions",
-            "Liver transplant"
+            "Antihistamines",
+            "Epinephrine",
+            "Corticosteroids",
+            "Antibiotics",
+            "Antifungal Cream"
         ],
-        "symptoms": [
-            "dark urine",
-            "fatigue",
-            "itching",
-            "lethargy",
-            "yellowish skin"
-        ]
-    },
-    "hepatitis c": {
-        "medication": [
-            "Antiviral drugs",
-            "IV fluids",
-            "Blood transfusions",
-            "Platelet transfusions",
-            "Liver transplant"
+        "diet": [
+            "Antihistamine Diet",
+            "Omega-3-rich foods",
+            "Vitamin C-rich foods",
+            "Quercetin-rich foods",
+            "Probiotics"
         ],
-        "symptoms": [
-            "fatigue",
-            "loss of appetite",
-            "nausea",
-            "yellowing of eyes",
-            "yellowish skin"
-        ]
-    },
-    "hepatitis d": {
-        "medication": [
-            "Antiviral drugs",
-            "IV fluids",
-            "Blood transfusions",
-            "Platelet transfusions",
-            "Liver transplant"
+        "workout": [
+            "Discontinue the offending medication",
+            "Stay hydrated",
+            "Include omega-3 fatty acids",
+            "Consume antioxidant-rich foods",
+            "Limit processed foods",
+            "Include vitamin C-rich foods",
+            "Avoid trigger foods",
+            "Consult a healthcare professional",
+            "Follow medical advice",
+            "Maintain a food diary"
         ],
-        "symptoms": [
-            "dark urine",
-            "fatigue",
-            "joint pain",
-            "vomiting",
-            "yellowish skin"
-        ]
-    },
-    "hepatitis e": {
-        "medication": [
-            "Antiviral drugs",
-            "IV fluids",
-            "Blood transfusions",
-            "Platelet transfusions",
-            "Liver transplant"
-        ],
-        "symptoms": [
-            "fatigue",
-            "high fever",
-            "joint pain",
-            "vomiting",
-            "yellowish skin"
-        ]
-    },
-    "hypertension": {
-        "medication": [
-            "Antihypertensive medications",
-            "Diuretics",
-            "Beta-blockers",
-            "ACE inhibitors",
-            "Calcium channel blockers"
-        ],
-        "symptoms": [
-            "chest pain",
-            "dizziness",
-            "headache",
-            "lack of concentration",
-            "loss of balance"
-        ]
-    },
-    "hyperthyroidism": {
-        "medication": [
-            "Antithyroid medications",
-            "Radioactive iodine",
-            "Thyroid surgery",
-            "Beta-blockers",
-            "Corticosteroids"
-        ],
-        "symptoms": [
-            "fatigue",
-            "mood swings",
-            "restlessness",
-            "sweating",
-            "weight loss"
-        ]
-    },
-    "hypoglycemia": {
-        "medication": [
-            "Glucose tablets",
-            "Candy or juice",
-            "Glucagon injection",
-            "IV dextrose",
-            "Diazoxide"
-        ],
-        "symptoms": [
-            "anxiety",
-            "fatigue",
-            "headache",
-            "sweating",
-            "vomiting"
-        ]
-    },
-    "hypothyroidism": {
-        "medication": [
-            "Levothyroxine",
-            "Antithyroid medications",
-            "Beta-blockers",
-            "Radioactive iodine",
-            "Thyroid surgery"
-        ],
-        "symptoms": [
-            "cold hands and feets",
-            "fatigue",
-            "lethargy",
-            "mood swings",
-            "weight gain"
-        ]
-    },
-    "impetigo": {
-        "medication": [
-            "Topical antibiotics",
-            "Oral antibiotics",
-            "Antiseptics",
-            "Ointments",
-            "Warm compresses"
-        ],
-        "symptoms": [
-            "blister",
-            "high fever",
-            "red sore around nose",
-            "skin rash",
-            "yellow crust ooze"
-        ]
-    },
-    "jaundice": {
-        "medication": [
-            "IV fluids",
-            "Blood transfusions",
-            "Liver transplant",
-            "Medications for itching",
-            "Antiviral medications"
-        ],
-        "symptoms": [
-            "fatigue",
-            "high fever",
-            "itching",
-            "vomiting",
-            "weight loss"
-        ]
-    },
-    "malaria": {
-        "medication": [
-            "Antimalarial drugs",
-            "Antipyretics",
-            "Antiemetic drugs",
-            "IV fluids",
-            "Blood transfusions"
-        ],
-        "symptoms": [
-            "chills",
-            "headache",
-            "high fever",
-            "sweating",
-            "vomiting"
-        ]
-    },
-    "migraine": {
-        "medication": [
-            "Analgesics",
-            "Triptans",
-            "Ergotamine derivatives",
-            "Preventive medications",
-            "Biofeedback"
-        ],
-        "symptoms": [
-            "acidity",
-            "blurred and distorted vision",
-            "excessive hunger",
-            "headache",
-            "indigestion"
-        ]
-    },
-    "osteoarthristis": {
-        "medication": [
-            "Pain relievers",
-            "Exercise",
-            "Hot and cold packs",
-            "Joint protection",
-            "Physical therapy"
-        ],
-        "symptoms": [
-            "hip joint pain",
-            "joint pain",
-            "knee pain",
-            "neck pain",
-            "swelling joints"
-        ]
-    },
-    "paralysis (brain hemorrhage)": {
-        "medication": [
-            "Blood thinners",
-            "Clot-dissolving medications",
-            "Anticonvulsants",
-            "Physical therapy",
-            "Occupational therapy"
-        ],
-        "symptoms": [
-            "altered sensorium",
-            "headache",
-            "vomiting",
-            "weakness of one body side"
+        "precautions": [
+            "stop irritation",
+            "consult nearest hospital",
+            "stop taking drug",
+            "follow up"
         ]
     },
     "peptic ulcer disease": {
+        "description": "Peptic ulcer disease involves sores that develop on the inner lining of the stomach and small intestine.",
         "medication": [
             "Antibiotics",
             "Proton Pump Inhibitors (PPIs)",
@@ -544,47 +182,699 @@
             "Antacids",
             "Cytoprotective agents"
         ],
-        "symptoms": [
-            "abdominal pain",
-            "indigestion",
-            "loss of appetite",
-            "passage of gases",
-            "vomiting"
+        "diet": [
+            "Low-Acid Diet",
+            "Fiber-rich foods",
+            "Ginger",
+            "Licorice",
+            "Aloe vera juice"
+        ],
+        "workout": [
+            "Avoid spicy and acidic foods",
+            "Consume smaller, frequent meals",
+            "Limit caffeine and alcohol",
+            "Eat high-fiber foods",
+            "Include probiotics",
+            "Manage stress",
+            "Avoid smoking",
+            "Stay hydrated",
+            "Include foods rich in flavonoids",
+            "Consult a healthcare professional"
+        ],
+        "precautions": [
+            "avoid fatty spicy food",
+            "consume probiotic food",
+            "eliminate milk",
+            "limit alcohol"
         ]
     },
-    "pneumonia": {
+    "aids": {
+        "description": "AIDS (Acquired Immunodeficiency Syndrome) is a disease caused by HIV that weakens the immune system.",
+        "medication": [
+            "Antiretroviral drugs",
+            "Protease inhibitors",
+            "Integrase inhibitors",
+            "Entry inhibitors",
+            "Fusion inhibitors"
+        ],
+        "diet": [
+            "Balanced Diet",
+            "Protein-rich foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Healthy fats"
+        ],
+        "workout": [
+            "Follow a balanced diet",
+            "Consume protein-rich foods",
+            "Include fruits and vegetables",
+            "Stay hydrated",
+            "Limit processed foods",
+            "Avoid raw or undercooked foods",
+            "Include healthy fats",
+            "Take prescribed medications",
+            "Practice safe sex",
+            "Consult a healthcare professional"
+        ],
+        "precautions": [
+            "avoid open cuts",
+            "wear ppe if possible",
+            "consult doctor",
+            "follow up"
+        ]
+    },
+    "diabetes": {
+        "description": "Diabetes is a chronic condition that affects how the body processes blood sugar.",
+        "medication": [
+            "Insulin",
+            "Metformin",
+            "Sulfonylureas",
+            "DPP-4 inhibitors",
+            "GLP-1 receptor agonists"
+        ],
+        "diet": [
+            "Low-Glycemic Diet",
+            "Fiber-rich foods",
+            "Lean proteins",
+            "Healthy fats",
+            "Low-fat dairy"
+        ],
+        "workout": [
+            "Monitor blood sugar levels",
+            "Follow a low-glycemic diet",
+            "Include fiber-rich foods",
+            "Consume lean proteins",
+            "Limit sugary foods and beverages",
+            "Stay hydrated",
+            "Include healthy fats",
+            "Exercise regularly",
+            "Consult a registered dietitian",
+            "Take prescribed medications"
+        ],
+        "precautions": [
+            "have balanced diet",
+            "exercise",
+            "consult doctor",
+            "follow up"
+        ]
+    },
+    "gastroenteritis": {
+        "description": "Gastroenteritis is an inflammation of the stomach and intestines, typically caused by a virus or bacteria.",
         "medication": [
             "Antibiotics",
-            "Antiviral drugs",
-            "Antifungal drugs",
+            "Antiemetic drugs",
+            "Antidiarrheal drugs",
             "IV fluids",
-            "Oxygen therapy"
+            "Probiotics"
         ],
-        "symptoms": [
-            "breathlessness",
-            "chills",
-            "cough",
-            "fatigue",
-            "high fever"
+        "diet": [
+            "Bland Diet",
+            "Bananas",
+            "Rice",
+            "Applesauce",
+            "Toast"
+        ],
+        "workout": [
+            "Stay hydrated",
+            "Consume clear fluids",
+            "Follow the BRAT diet (bananas, rice, applesauce, toast)",
+            "Avoid dairy products",
+            "Avoid fatty and spicy foods",
+            "Rest",
+            "Gradually reintroduce solid foods",
+            "Avoid caffeine and alcohol",
+            "Wash hands frequently",
+            "Consult a healthcare professional"
+        ],
+        "precautions": [
+            "stop eating solid food",
+            "take sip of water",
+            "rest",
+            "ease back into eating"
         ]
     },
-    "psoriasis": {
+    "bronchial asthma": {
+        "description": "Bronchial Asthma is a respiratory condition characterized by inflammation of the airways.",
         "medication": [
-            "Topical treatments",
-            "Phototherapy",
-            "Systemic medications",
-            "Biologics",
-            "Coal tar"
+            "Bronchodilators",
+            "Inhaled corticosteroids",
+            "Leukotriene modifiers",
+            "Mast cell stabilizers",
+            "Anticholinergics"
         ],
-        "symptoms": [
-            "joint pain",
-            "silver like dusting",
-            "skin peeling",
-            "skin rash",
-            "small dents in nails"
+        "diet": [
+            "Anti-Inflammatory Diet",
+            "Omega-3-rich foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Follow prescribed medication plan",
+            "Avoid triggers (smoke, allergens)",
+            "Consume anti-inflammatory foods",
+            "Include omega-3 fatty acids",
+            "Stay hydrated",
+            "Maintain a healthy weight",
+            "Breathing exercises",
+            "Consult a healthcare professional",
+            "Avoid cold air",
+            "Include fruits and vegetables"
+        ],
+        "precautions": [
+            "switch to loose cloothing",
+            "take deep breaths",
+            "get away from trigger",
+            "seek help"
+        ]
+    },
+    "hypertension": {
+        "description": "Hypertension, or high blood pressure, is a common cardiovascular condition.",
+        "medication": [
+            "Antihypertensive medications",
+            "Diuretics",
+            "Beta-blockers",
+            "ACE inhibitors",
+            "Calcium channel blockers"
+        ],
+        "diet": [
+            "DASH Diet",
+            "Low-sodium foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Follow the DASH diet",
+            "Limit sodium intake",
+            "Include potassium-rich foods",
+            "Exercise regularly",
+            "Maintain a healthy weight",
+            "Limit alcohol consumption",
+            "Manage stress",
+            "Stay hydrated",
+            "Include magnesium-rich foods",
+            "Consult a healthcare professional"
+        ],
+        "precautions": [
+            "meditation",
+            "salt baths",
+            "reduce stress",
+            "get proper sleep"
+        ]
+    },
+    "migraine": {
+        "description": "Migraine is a type of headache that often involves severe pain and sensitivity to light and sound.",
+        "medication": [
+            "Analgesics",
+            "Triptans",
+            "Ergotamine derivatives",
+            "Preventive medications",
+            "Botox injections"
+        ],
+        "diet": [
+            "Migraine Diet",
+            "Low-Tyramine Diet",
+            "Caffeine withdrawal",
+            "Hydration",
+            "Magnesium-rich foods"
+        ],
+        "workout": [
+            "Identify and avoid triggers",
+            "Stay hydrated",
+            "Maintain a regular sleep schedule",
+            "Manage stress",
+            "Eat regular meals",
+            "Limit caffeine and alcohol",
+            "Include magnesium-rich foods",
+            "Practice relaxation techniques",
+            "Consult a healthcare professional",
+            "Keep a migraine diary"
+        ],
+        "precautions": [
+            "meditation",
+            "reduce stress",
+            "use poloroid glasses in sun",
+            "consult doctor"
+        ]
+    },
+    "cervical spondylosis": {
+        "description": "Cervical spondylosis is a degenerative condition of the cervical spine.",
+        "medication": [
+            "Pain relievers",
+            "Muscle relaxants",
+            "Corticosteroids",
+            "Physical therapy",
+            "Surgery"
+        ],
+        "diet": [
+            "Arthritis Diet",
+            "Anti-Inflammatory Diet",
+            "Omega-3-rich foods",
+            "Fruits and vegetables",
+            "Whole grains"
+        ],
+        "workout": [
+            "Physical therapy exercises",
+            "Neck stretches",
+            "Maintain good posture",
+            "Ergonomic adjustments",
+            "Use a supportive pillow",
+            "Apply heat or cold packs",
+            "Stay active",
+            "Manage stress",
+            "Consult a healthcare professional",
+            "Avoid heavy lifting"
+        ],
+        "precautions": [
+            "use heating pad or cold pack",
+            "exercise",
+            "take otc pain reliver",
+            "consult doctor"
+        ]
+    },
+    "paralysis (brain hemorrhage)": {
+        "description": "Paralysis (brain hemorrhage) refers to the loss of muscle function due to bleeding in the brain.",
+        "medication": [
+            "Blood thinners",
+            "Clot-busting drugs",
+            "Anticonvulsants",
+            "Physical therapy",
+            "Occupational therapy"
+        ],
+        "diet": [
+            "Heart-Healthy Diet",
+            "Low-sodium foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Follow a heart-healthy diet",
+            "Control blood pressure",
+            "Manage cholesterol levels",
+            "Stop smoking",
+            "Limit alcohol consumption",
+            "Exercise regularly",
+            "Maintain a healthy weight",
+            "Take prescribed medications",
+            "Attend rehabilitation therapy",
+            "Consult a healthcare professional"
+        ],
+        "precautions": [
+            "massage",
+            "eat healthy",
+            "exercise",
+            "consult doctor"
+        ]
+    },
+    "jaundice": {
+        "description": "Jaundice is a condition characterized by yellowing of the skin and eyes due to high bilirubin levels.",
+        "medication": [
+            "IV fluids",
+            "Blood transfusions",
+            "Phototherapy",
+            "Exchange transfusion",
+            "Medications for underlying cause"
+        ],
+        "diet": [
+            "Liver-Healthy Diet",
+            "Low-fat foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Stay hydrated",
+            "Consume a balanced diet",
+            "Include fruits and vegetables",
+            "Limit fatty and fried foods",
+            "Avoid alcohol",
+            "Rest",
+            "Monitor bilirubin levels",
+            "Follow medical advice",
+            "Consult a healthcare professional",
+            "Avoid hepatotoxic medications"
+        ],
+        "precautions": [
+            "drink plenty of water",
+            "consume milk thistle",
+            "eat fruits and high fiberous food",
+            "medication"
+        ]
+    },
+    "malaria": {
+        "description": "Malaria is a mosquito-borne infectious disease affecting humans and other animals.",
+        "medication": [
+            "Antimalarial drugs",
+            "Antipyretics",
+            "Antiemetic drugs",
+            "IV fluids",
+            "Blood transfusions"
+        ],
+        "diet": [
+            "Malaria Diet",
+            "Hydration",
+            "High-Calorie Diet",
+            "Soft foods",
+            "Fruits"
+        ],
+        "workout": [
+            "Take prescribed antimalarial medications",
+            "Rest",
+            "Stay hydrated",
+            "Consume a nutrient-rich diet",
+            "Avoid mosquito bites",
+            "Use mosquito nets",
+            "Wear long sleeves and pants",
+            "Use insect repellent",
+            "Consult a healthcare professional",
+            "Follow up with medical tests"
+        ],
+        "precautions": [
+            "Consult nearest hospital",
+            "avoid oily food",
+            "avoid non veg food",
+            "keep mosquitos out"
+        ]
+    },
+    "chicken pox": {
+        "description": "Chicken pox is a highly contagious viral infection causing an itchy blister-like rash.",
+        "medication": [
+            "Antiviral drugs",
+            "Pain relievers",
+            "Antihistamines",
+            "Calamine lotion",
+            "Oatmeal baths"
+        ],
+        "diet": [
+            "Chicken Pox Diet",
+            "High-Calorie Diet",
+            "Soft foods",
+            "Fruits",
+            "Hydration"
+        ],
+        "workout": [
+            "Isolate the infected individual",
+            "Keep nails short to prevent scratching",
+            "Apply calamine lotion",
+            "Take oatmeal baths",
+            "Wear loose clothing",
+            "Stay hydrated",
+            "Consume soft foods",
+            "Rest",
+            "Consult a healthcare professional",
+            "Vaccination for prevention"
+        ],
+        "precautions": [
+            "use neem in bathing",
+            "consume neem leaves",
+            "take vaccine",
+            "avoid public places"
+        ]
+    },
+    "dengue": {
+        "description": "Dengue is a mosquito-borne viral infection causing severe flu-like symptoms.",
+        "medication": [
+            "Antibiotics",
+            "Antipyretics",
+            "Analgesics",
+            "IV fluids",
+            "Blood transfusions"
+        ],
+        "diet": [
+            "Dengue Diet",
+            "Hydration",
+            "High-Calorie Diet",
+            "Soft foods",
+            "Fruits"
+        ],
+        "workout": [
+            "Stay hydrated",
+            "Rest",
+            "Consume a nutrient-rich diet",
+            "Monitor platelet count",
+            "Avoid mosquito bites",
+            "Use mosquito nets",
+            "Wear long sleeves and pants",
+            "Use insect repellent",
+            "Consult a healthcare professional",
+            "Seek medical attention for severe symptoms"
+        ],
+        "precautions": [
+            "drink papaya leaf juice",
+            "avoid fatty spicy food",
+            "keep mosquitos away",
+            "keep hydrated"
+        ]
+    },
+    "typhoid": {
+        "description": "Typhoid is a bacterial infection that can lead to high fever, diarrhea, and vomiting.",
+        "medication": [
+            "Antibiotics",
+            "Antipyretics",
+            "Rehydration therapy",
+            "IV fluids",
+            "Blood transfusions"
+        ],
+        "diet": [
+            "Typhoid Diet",
+            "High-Calorie Diet",
+            "Soft foods",
+            "Fruits",
+            "Hydration"
+        ],
+        "workout": [
+            "Take prescribed antibiotics",
+            "Rest",
+            "Stay hydrated",
+            "Consume soft, easily digestible foods",
+            "Avoid raw or undercooked foods",
+            "Practice good hygiene",
+            "Wash hands frequently",
+            "Drink treated water",
+            "Consult a healthcare professional",
+            "Follow up with medical tests"
+        ],
+        "precautions": [
+            "eat high calorie vegitables",
+            "antiboitic therapy",
+            "consult doctor",
+            "medication"
+        ]
+    },
+    "hepatitis a": {
+        "description": "Hepatitis A is a highly contagious liver infection caused by the hepatitis A virus.",
+        "medication": [
+            "Vaccination",
+            "Immunoglobulin",
+            "Supportive care",
+            "Rest",
+            "Hydration"
+        ],
+        "diet": [
+            "Liver-Healthy Diet",
+            "Low-fat foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Rest",
+            "Stay hydrated",
+            "Follow a liver-friendly diet",
+            "Avoid alcohol",
+            "Practice good hygiene",
+            "Wash hands frequently",
+            "Avoid raw or undercooked foods",
+            "Vaccination for prevention",
+            "Consult a healthcare professional",
+            "Monitor liver function"
+        ],
+        "precautions": [
+            "Consult nearest hospital",
+            "wash hands through",
+            "avoid fatty spicy food",
+            "medication"
+        ]
+    },
+    "hepatitis b": {
+        "description": "Hepatitis B is a serious liver infection caused by the hepatitis B virus.",
+        "medication": [
+            "Antiviral drugs",
+            "Interferon injections",
+            "Liver transplant",
+            "Vaccination",
+            "Supportive care"
+        ],
+        "diet": [
+            "Liver-Healthy Diet",
+            "Low-fat foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Take prescribed antiviral medications",
+            "Follow a liver-friendly diet",
+            "Avoid alcohol",
+            "Practice safe sex",
+            "Avoid sharing needles",
+            "Vaccination for prevention",
+            "Monitor liver function",
+            "Consult a healthcare professional",
+            "Rest",
+            "Manage stress"
+        ],
+        "precautions": [
+            "consult nearest hospital",
+            "vaccination",
+            "eat healthy",
+            "medication"
+        ]
+    },
+    "hepatitis c": {
+        "description": "Hepatitis C is a viral infection that causes liver inflammation, sometimes leading to serious liver damage.",
+        "medication": [
+            "Antiviral drugs",
+            "Interferon injections",
+            "Liver transplant",
+            "Vaccination",
+            "Supportive care"
+        ],
+        "diet": [
+            "Liver-Healthy Diet",
+            "Low-fat foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Take prescribed antiviral medications",
+            "Follow a liver-friendly diet",
+            "Avoid alcohol",
+            "Avoid sharing needles",
+            "Practice safe sex",
+            "Monitor liver function",
+            "Consult a healthcare professional",
+            "Rest",
+            "Manage stress",
+            "Vaccination for hepatitis A and B"
+        ],
+        "precautions": [
+            "Consult nearest hospital",
+            "vaccination",
+            "eat healthy",
+            "medication"
+        ]
+    },
+    "hepatitis d": {
+        "description": "Hepatitis D is a serious liver disease caused by the hepatitis D virus.",
+        "medication": [
+            "Interferon injections",
+            "Antiviral drugs",
+            "Liver transplant",
+            "Vaccination",
+            "Supportive care"
+        ],
+        "diet": [
+            "Liver-Healthy Diet",
+            "Low-fat foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Take prescribed medications",
+            "Follow a liver-friendly diet",
+            "Avoid alcohol",
+            "Practice safe sex",
+            "Avoid sharing needles",
+            "Vaccination for hepatitis B",
+            "Monitor liver function",
+            "Consult a healthcare professional",
+            "Rest",
+            "Manage stress"
+        ],
+        "precautions": [
+            "consult doctor",
+            "medication",
+            "eat healthy",
+            "follow up"
+        ]
+    },
+    "hepatitis e": {
+        "description": "Hepatitis E is a liver disease caused by the hepatitis E virus.",
+        "medication": [
+            "Supportive care",
+            "Rest",
+            "Hydration",
+            "Avoid alcohol",
+            "Medications for symptoms"
+        ],
+        "diet": [
+            "Liver-Healthy Diet",
+            "Low-fat foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Rest",
+            "Stay hydrated",
+            "Follow a liver-friendly diet",
+            "Avoid alcohol",
+            "Practice good hygiene",
+            "Wash hands frequently",
+            "Avoid raw or undercooked foods",
+            "Drink treated water",
+            "Consult a healthcare professional",
+            "Monitor liver function"
+        ],
+        "precautions": [
+            "stop alcohol consumption",
+            "rest",
+            "consult doctor",
+            "medication"
+        ]
+    },
+    "alcoholic hepatitis": {
+        "description": "Alcoholic hepatitis is liver inflammation caused by drinking too much alcohol.",
+        "medication": [
+            "Corticosteroids",
+            "Pentoxifylline",
+            "Liver transplant",
+            "Nutritional support",
+            "Abstinence from alcohol"
+        ],
+        "diet": [
+            "Liver-Healthy Diet",
+            "Low-fat foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Stop alcohol consumption",
+            "Follow a liver-friendly diet",
+            "Take prescribed medications",
+            "Nutritional supplementation",
+            "Seek addiction support",
+            "Monitor liver function",
+            "Consult a healthcare professional",
+            "Rest",
+            "Manage stress",
+            "Avoid hepatotoxic medications"
+        ],
+        "precautions": [
+            "stop alcohol consumption",
+            "consult doctor",
+            "medication",
+            "follow up"
         ]
     },
     "tuberculosis": {
+        "description": "Tuberculosis is a potentially serious infectious disease that mainly affects the lungs.",
         "medication": [
             "Antibiotics",
             "Isoniazid",
@@ -592,46 +882,173 @@
             "Ethambutol",
             "Pyrazinamide"
         ],
-        "symptoms": [
-            "chills",
-            "cough",
-            "fatigue",
-            "vomiting",
-            "weight loss"
+        "diet": [
+            "TB Diet",
+            "High-Calorie Diet",
+            "Protein-rich foods",
+            "Fruits and vegetables",
+            "Whole grains"
+        ],
+        "workout": [
+            "Take prescribed antibiotics",
+            "Follow a nutrient-rich diet",
+            "Include protein-rich foods",
+            "Stay hydrated",
+            "Rest",
+            "Avoid smoking",
+            "Practice good hygiene",
+            "Cover mouth when coughing",
+            "Consult a healthcare professional",
+            "Follow up with medical tests"
+        ],
+        "precautions": [
+            "cover mouth",
+            "consult doctor",
+            "medication",
+            "rest"
         ]
     },
-    "typhoid": {
+    "common cold": {
+        "description": "Common Cold is a viral infection of the upper respiratory tract.",
         "medication": [
-            "Antibiotics",
-            "Antipyretics",
-            "Analgesics",
-            "IV fluids",
-            "Corticosteroids"
+            "Pain relievers",
+            "Decongestants",
+            "Antihistamines",
+            "Cough suppressants",
+            "Expectorants"
         ],
-        "symptoms": [
-            "chills",
-            "fatigue",
-            "headache",
-            "high fever",
-            "vomiting"
+        "diet": [
+            "Cold Diet",
+            "Hydration",
+            "Warm fluids",
+            "Vitamin C-rich foods",
+            "Honey"
+        ],
+        "workout": [
+            "Rest",
+            "Stay hydrated",
+            "Consume warm fluids (tea, soup)",
+            "Gargle with saltwater",
+            "Use a humidifier",
+            "Take over-the-counter medications for symptoms",
+            "Wash hands frequently",
+            "Avoid smoking",
+            "Consult a healthcare professional if symptoms worsen",
+            "Cover mouth when coughing or sneezing"
+        ],
+        "precautions": [
+            "drink vitamin c rich drinks",
+            "take vapour",
+            "avoid cold food",
+            "keep fever in check"
         ]
     },
-    "urinary tract infection": {
+    "pneumonia": {
+        "description": "Pneumonia is an inflammatory condition affecting the air sacs in the lungs.",
         "medication": [
             "Antibiotics",
-            "Urinary analgesics",
-            "Phenazopyridine",
-            "Antispasmodics",
-            "Probiotics"
+            "Antiviral drugs",
+            "Antifungal drugs",
+            "Pain relievers",
+            "Fever reducers"
         ],
-        "symptoms": [
-            "bladder discomfort",
-            "burning micturition",
-            "continuous feel of urine",
-            "foul smell of urine"
+        "diet": [
+            "Pneumonia Diet",
+            "High-Calorie Diet",
+            "Protein-rich foods",
+            "Fruits and vegetables",
+            "Hydration"
+        ],
+        "workout": [
+            "Take prescribed antibiotics or antivirals",
+            "Rest",
+            "Stay hydrated",
+            "Use a humidifier",
+            "Avoid smoking",
+            "Practice breathing exercises",
+            "Consume a nutrient-rich diet",
+            "Consult a healthcare professional",
+            "Follow up with medical tests",
+            "Vaccination for prevention"
+        ],
+        "precautions": [
+            "consult doctor",
+            "medication",
+            "rest",
+            "follow up"
+        ]
+    },
+    "dimorphic hemmorhoids(piles)": {
+        "description": "Dimorphic hemmorhoids(piles) is a condition characterized by swollen blood vessels in the rectum.",
+        "medication": [
+            "Stool softeners",
+            "Topical creams",
+            "Pain relievers",
+            "Fiber supplements",
+            "Sitz baths"
+        ],
+        "diet": [
+            "Hemorrhoids Diet",
+            "High-Fiber Diet",
+            "Hydration",
+            "Warm baths",
+            "Stool softeners"
+        ],
+        "workout": [
+            "Consume a high-fiber diet",
+            "Stay hydrated",
+            "Avoid straining during bowel movements",
+            "Take sitz baths",
+            "Use topical treatments",
+            "Exercise regularly",
+            "Avoid sitting for long periods",
+            "Consult a healthcare professional",
+            "Consider medical procedures if severe",
+            "Maintain good hygiene"
+        ],
+        "precautions": [
+            "avoid fatty spicy food",
+            "consume witch hazel",
+            "warm bath with epsom salt",
+            "consume alovera juice"
+        ]
+    },
+    "heart attack": {
+        "description": "Heart attack is a sudden and severe reduction in blood flow to the heart muscle.",
+        "medication": [
+            "Nitroglycerin",
+            "Aspirin",
+            "Beta-blockers",
+            "Calcium channel blockers",
+            "Thrombolytic drugs"
+        ],
+        "diet": [
+            "Heart-Healthy Diet",
+            "Low-sodium foods",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Lean proteins"
+        ],
+        "workout": [
+            "Call emergency services immediately",
+            "Chew aspirin if advised",
+            "Administer CPR if necessary",
+            "Follow medical interventions",
+            "Rehabilitation therapy",
+            "Follow a heart-healthy diet",
+            "Exercise as tolerated",
+            "Stop smoking",
+            "Manage stress",
+            "Consult a healthcare professional"
+        ],
+        "precautions": [
+            "call ambulance",
+            "chew or swallow asprin",
+            "keep calm"
         ]
     },
     "varicose veins": {
+        "description": "Varicose veins are enlarged, twisted veins that usually appear on the legs.",
         "medication": [
             "Compression stockings",
             "Exercise",
@@ -639,12 +1056,380 @@
             "Sclerotherapy",
             "Laser treatments"
         ],
-        "symptoms": [
-            "bruising",
-            "cramps",
-            "fatigue",
-            "obesity",
-            "swollen legs"
+        "diet": [
+            "Varicose Veins Diet",
+            "High-Fiber Diet",
+            "Fruits and vegetables",
+            "Whole grains",
+            "Low-sodium foods"
+        ],
+        "workout": [
+            "Wear compression stockings",
+            "Exercise regularly (walking, swimming)",
+            "Elevate legs",
+            "Avoid sitting or standing for long periods",
+            "Maintain a healthy weight",
+            "Follow a high-fiber diet",
+            "Avoid tight clothing",
+            "Consult a healthcare professional",
+            "Consider medical procedures if severe",
+            "Manage constipation"
+        ],
+        "precautions": [
+            "lie down flat and raise the leg",
+            "use oinments",
+            "use vein compression",
+            "dont stand still for long"
+        ]
+    },
+    "hypothyroidism": {
+        "description": "Hypothyroidism is a condition where the thyroid gland doesn't produce enough thyroid hormone.",
+        "medication": [
+            "Levothyroxine",
+            "Antithyroid medications",
+            "Beta-blockers",
+            "Radioactive iodine",
+            "Thyroid surgery"
+        ],
+        "diet": [
+            "Hypothyroidism Diet",
+            "Iodine-rich foods",
+            "Selenium-rich foods",
+            "Fruits and vegetables",
+            "Whole grains"
+        ],
+        "workout": [
+            "Take prescribed levothyroxine",
+            "Follow a balanced diet",
+            "Include iodine and selenium-rich foods",
+            "Exercise regularly",
+            "Manage stress",
+            "Monitor thyroid levels",
+            "Consult a healthcare professional",
+            "Avoid goitrogenic foods (in excess)",
+            "Stay hydrated",
+            "Get adequate sleep"
+        ],
+        "precautions": [
+            "reduce stress",
+            "exercise",
+            "eat healthy",
+            "get proper sleep"
+        ]
+    },
+    "hyperthyroidism": {
+        "description": "Hyperthyroidism is a condition where the thyroid gland produces too much thyroid hormone.",
+        "medication": [
+            "Antithyroid medications",
+            "Radioactive iodine",
+            "Thyroid surgery",
+            "Beta-blockers",
+            "Corticosteroids"
+        ],
+        "diet": [
+            "Hyperthyroidism Diet",
+            "Low-Iodine Diet",
+            "Calcium-rich foods",
+            "Selenium-rich foods",
+            "Fruits and vegetables"
+        ],
+        "workout": [
+            "Take prescribed antithyroid medications",
+            "Follow a low-iodine diet",
+            "Include calcium and vitamin D-rich foods",
+            "Manage stress",
+            "Avoid stimulants (caffeine)",
+            "Monitor thyroid levels",
+            "Consult a healthcare professional",
+            "Consider radioactive iodine therapy",
+            "Consider surgery if necessary",
+            "Rest"
+        ],
+        "precautions": [
+            "massage",
+            "eat healthy",
+            "massage",
+            "consult doctor"
+        ]
+    },
+    "hypoglycemia": {
+        "description": "Hypoglycemia is a condition characterized by abnormally low blood sugar levels.",
+        "medication": [
+            "Glucose tablets",
+            "Candy or juice",
+            "Glucagon injection",
+            "IV dextrose",
+            "Diazoxide"
+        ],
+        "diet": [
+            "Hypoglycemia Diet",
+            "Complex carbohydrates",
+            "Protein-rich snacks",
+            "Fiber-rich foods",
+            "Healthy fats"
+        ],
+        "workout": [
+            "Consume fast-acting carbohydrates (candy, juice)",
+            "Follow with complex carbohydrates",
+            "Monitor blood sugar levels",
+            "Eat regular meals and snacks",
+            "Include protein and healthy fats",
+            "Avoid skipping meals",
+            "Carry snacks",
+            "Consult a healthcare professional",
+            "Adjust medication if diabetic",
+            "Wear medical alert identification"
+        ],
+        "precautions": [
+            "lie down on side",
+            "check in pulse",
+            "drink sugary drinks",
+            "consult doctor"
+        ]
+    },
+    "osteoarthristis": {
+        "description": "Osteoarthristis is a degenerative joint disease that affects the cartilage in joints.",
+        "medication": [
+            "Pain relievers",
+            "Exercise",
+            "Hot and cold packs",
+            "Joint protection",
+            "Physical therapy"
+        ],
+        "diet": [
+            "Arthritis Diet",
+            "Anti-Inflammatory Diet",
+            "Omega-3-rich foods",
+            "Fruits and vegetables",
+            "Whole grains"
+        ],
+        "workout": [
+            "Low-impact exercise (swimming, cycling)",
+            "Physical therapy",
+            "Maintain a healthy weight",
+            "Apply heat or cold packs",
+            "Use assistive devices",
+            "Follow an anti-inflammatory diet",
+            "Manage pain with medication",
+            "Consult a healthcare professional",
+            "Joint protection techniques",
+            "Stay active"
+        ],
+        "precautions": [
+            "acetaminophen",
+            "consult nearest hospital",
+            "follow up",
+            "salt baths"
+        ]
+    },
+    "arthritis": {
+        "description": "Arthritis is inflammation of one or more joints, causing pain and stiffness.",
+        "medication": [
+            "NSAIDs",
+            "Disease-modifying antirheumatic drugs (DMARDs)",
+            "Biologics",
+            "Corticosteroids",
+            "Joint replacement surgery"
+        ],
+        "diet": [
+            "Arthritis Diet",
+            "Anti-Inflammatory Diet",
+            "Omega-3-rich foods",
+            "Fruits and vegetables",
+            "Whole grains"
+        ],
+        "workout": [
+            "Follow prescribed medication plan",
+            "Physical therapy",
+            "Low-impact exercise",
+            "Maintain a healthy weight",
+            "Apply heat or cold packs",
+            "Follow an anti-inflammatory diet",
+            "Manage stress",
+            "Consult a healthcare professional",
+            "Joint protection techniques",
+            "Stay active"
+        ],
+        "precautions": [
+            "exercise",
+            "use hot and cold therapy",
+            "try acupuncture",
+            "massage"
+        ]
+    },
+    "(vertigo) paroymsal positional vertigo": {
+        "description": "(Vertigo) Paroxysmal Positional Vertigo is a type of dizziness caused by specific head movements.",
+        "medication": [
+            "Vestibular rehabilitation",
+            "Canalith repositioning",
+            "Medications for nausea",
+            "Surgery",
+            "Home exercises"
+        ],
+        "diet": [
+            "Vertigo Diet",
+            "Low-Salt Diet",
+            "Hydration",
+            "Ginger tea",
+            "Vitamin D-rich foods"
+        ],
+        "workout": [
+            "Canalith repositioning maneuvers (Epley maneuver)",
+            "Vestibular rehabilitation therapy",
+            "Avoid sudden head movements",
+            "Sleep with head elevated",
+            "Stay hydrated",
+            "Manage stress",
+            "Limit caffeine and alcohol",
+            "Consult a healthcare professional",
+            "Follow medical advice",
+            "Safety precautions to prevent falls"
+        ],
+        "precautions": [
+            "lie down",
+            "avoid sudden change in body",
+            "avoid abrupt head movment",
+            "relax"
+        ]
+    },
+    "acne": {
+        "description": "Acne is a skin condition that occurs when hair follicles become clogged with oil and dead skin cells.",
+        "medication": [
+            "Topical treatments",
+            "Antibiotics",
+            "Oral medications",
+            "Hormonal treatments",
+            "Isotretinoin"
+        ],
+        "diet": [
+            "Acne Diet",
+            "Low-Glycemic Diet",
+            "Hydration",
+            "Fruits and vegetables",
+            "Probiotics"
+        ],
+        "workout": [
+            "Cleanse skin gently",
+            "Use non-comedogenic products",
+            "Avoid squeezing pimples",
+            "Follow a low-glycemic diet",
+            "Stay hydrated",
+            "Manage stress",
+            "Limit dairy and sugary foods",
+            "Consult a dermatologist",
+            "Use prescribed medications",
+            "Sun protection"
+        ],
+        "precautions": [
+            "bath twice",
+            "avoid fatty spicy food",
+            "drink plenty of water",
+            "avoid too many products"
+        ]
+    },
+    "urinary tract infection": {
+        "description": "Urinary tract infection is an infection in any part of the urinary system.",
+        "medication": [
+            "Antibiotics",
+            "Pain relievers",
+            "Antihistamines",
+            "Corticosteroids",
+            "Topical treatments"
+        ],
+        "diet": [
+            "UTI Diet",
+            "Hydration",
+            "Cranberry juice",
+            "Probiotics",
+            "Vitamin C-rich foods"
+        ],
+        "workout": [
+            "Stay hydrated",
+            "Consume cranberry products",
+            "Include vitamin C-rich foods",
+            "Limit caffeine and alcohol",
+            "Consume probiotics",
+            "Avoid spicy and acidic foods",
+            "Consult a healthcare professional",
+            "Follow medical recommendations",
+            "Maintain good hygiene",
+            "Limit sugary foods and beverages"
+        ],
+        "precautions": [
+            "drink plenty of water",
+            "increase vitamin c intake",
+            "drink cranberry juice",
+            "take probiotics"
+        ]
+    },
+    "psoriasis": {
+        "description": "Psoriasis is a chronic skin condition characterized by red, itchy, and scaly patches.",
+        "medication": [
+            "Antibiotics",
+            "Urinary analgesics",
+            "Phenazopyridine",
+            "Antispasmodics",
+            "Probiotics"
+        ],
+        "diet": [
+            "Psoriasis Diet",
+            "Anti-Inflammatory Diet",
+            "Omega-3-rich foods",
+            "Fruits and vegetables",
+            "Whole grains"
+        ],
+        "workout": [
+            "Consume anti-inflammatory foods",
+            "Include omega-3 fatty acids",
+            "Include vitamin D analogues",
+            "Limit alcohol consumption",
+            "Stay hydrated",
+            "Consult a healthcare professional",
+            "Limit processed foods",
+            "Follow medical recommendations",
+            "Manage stress",
+            "Consider phototherapy under medical guidance"
+        ],
+        "precautions": [
+            "wash hands with warm soapy water",
+            "stop bleeding using pressure",
+            "consult doctor",
+            "salt baths"
+        ]
+    },
+    "impetigo": {
+        "description": "Impetigo is a highly contagious skin infection causing red sores that can break open.",
+        "medication": [
+            "Topical creams",
+            "Phototherapy",
+            "Systemic medications",
+            "Biologics",
+            "Coal tar preparations"
+        ],
+        "diet": [
+            "Impetigo Diet",
+            "High-Calorie Diet",
+            "Soft foods",
+            "Fruits",
+            "Hydration"
+        ],
+        "workout": [
+            "Maintain good hygiene",
+            "Keep affected areas clean",
+            "Apply topical antibiotics",
+            "Take prescribed oral antibiotics",
+            "Avoid scratching",
+            "Wash linens and clothes",
+            "Isolate the infected individual",
+            "Consult a healthcare professional",
+            "Shorten fingernails",
+            "Hydration"
+        ],
+        "precautions": [
+            "soak affected area in warm water",
+            "use antibiotics",
+            "remove scabs with wet compressed cloth",
+            "consult doctor"
         ]
     }
 }

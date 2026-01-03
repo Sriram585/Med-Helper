@@ -1,9 +1,8 @@
 import os
 import json
 import re
-import csv
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from groq import AsyncGroq
@@ -21,216 +20,231 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-client = AsyncGroq(
-    api_key=os.environ.get("GROQ_API_KEY"),
-)
+client = AsyncGroq(api_key=os.environ.get("GROQ_API_KEY"))
 
 class SymptomRequest(BaseModel):
     symptoms: str
 
-# --- 1. LOAD DATABASE & SYMPTOM LIST ---
-def load_data():
-    # Load Disease DB
+# ==========================================
+# 1. INTERNAL KNOWLEDGE (Replaces CSVs)
+# ==========================================
+# Weights for scoring (Severity 1-7)
+INTERNAL_WEIGHTS = {
+    "itching": 1, "skin rash": 3, "nodal skin eruptions": 4, "continuous sneezing": 4,
+    "shivering": 5, "chills": 3, "joint pain": 3, "stomach pain": 5, "acidity": 3,
+    "ulcers on tongue": 4, "vomiting": 5, "burning micturition": 6, "fatigue": 4,
+    "weight gain": 3, "anxiety": 4, "cold hands and feets": 5, "mood swings": 3,
+    "weight loss": 3, "restlessness": 5, "lethargy": 2, "patches in throat": 6,
+    "irregular sugar level": 5, "cough": 4, "high fever": 7, "sunken eyes": 3,
+    "breathlessness": 4, "sweating": 3, "dehydration": 4, "indigestion": 5,
+    "headache": 3, "yellowish skin": 3, "dark urine": 4, "nausea": 5,
+    "loss of appetite": 4, "pain behind the eyes": 4, "back pain": 3,
+    "constipation": 4, "abdominal pain": 4, "diarrhoea": 6, "mild fever": 5,
+    "yellow urine": 4, "yellowing of eyes": 4, "acute liver failure": 6,
+    "swelling of stomach": 7, "blurred and distorted vision": 5, "phlegm": 5,
+    "throat irritation": 4, "redness of eyes": 5, "sinus pressure": 4,
+    "runny nose": 5, "congestion": 5, "chest pain": 7, "weakness in limbs": 7,
+    "fast heart rate": 5, "pain during bowel movements": 5, "pain in anal region": 6,
+    "bloody stool": 5, "irritation in anus": 6, "neck pain": 5, "dizziness": 4,
+    "cramps": 4, "bruising": 4, "obesity": 4, "swollen legs": 5,
+    "swollen blood vessels": 5, "puffy face and eyes": 5, "enlarged thyroid": 6,
+    "brittle nails": 5, "swollen extremeties": 5, "excessive hunger": 4,
+    "extra marital contacts": 5, "drying and tingling lips": 4, "slurred speech": 4,
+    "knee pain": 3, "hip joint pain": 2, "muscle weakness": 2, "stiff neck": 4,
+    "swelling joints": 5, "movement stiffness": 5, "spinning movements": 6,
+    "loss of balance": 4, "unsteadiness": 4, "weakness of one body side": 4,
+    "loss of smell": 3, "bladder discomfort": 4, "foul smell of urine": 5,
+    "continuous feel of urine": 6, "passage of gases": 5, "internal itching": 4,
+    "depression": 3, "irritability": 2, "muscle pain": 2, "altered sensorium": 2,
+    "red spots over body": 3, "belly pain": 4, "abnormal menstruation": 6,
+    "dischromic patches": 6, "watering from eyes": 4, "increased appetite": 5,
+    "polyuria": 4, "family history": 5, "mucoid sputum": 4, "rusty sputum": 4,
+    "lack of concentration": 3, "visual disturbances": 3, "coma": 7,
+    "stomach bleeding": 6, "distention of abdomen": 4, "fluid overload": 4,
+    "blood in sputum": 5, "prominent veins on calf": 6, "palpitations": 4,
+    "painful walking": 2, "pus filled pimples": 2, "blackheads": 2, "scurring": 2,
+    "skin peeling": 3, "silver like dusting": 3, "small dents in nails": 2,
+    "inflammatory nails": 2, "blister": 4, "red sore around nose": 4,
+    "yellow crust ooze": 4
+}
+
+# ==========================================
+# 2. LOAD MEDICAL DATA (JSON ONLY)
+# ==========================================
+def load_db():
     try:
+        # Assumes medical_data.json exists (containing 'medication' and 'symptoms')
         with open("medical_data.json", "r") as f:
             db = json.load(f)
+            print(f"✅ Loaded {len(db)} diseases from JSON.")
+            return db
     except FileNotFoundError:
-        print("❌ medical_data.json missing.")
-        db = {}
+        print("❌ medical_data.json NOT FOUND. App will run in Pure AI Mode.")
+        return {}
 
-    # Load Severity Weights & Master Symptom List
-    weights = {}
-    master_list = []
-    try:
-        with open("Symptom-severity.csv", "r") as f:
-            reader = csv.reader(f)
-            next(reader) # Skip header
-            for row in reader:
-                if len(row) >= 2:
-                    # Store as "skin rash" (clean format)
-                    s_clean = row[0].replace('_', ' ').strip().lower()
-                    weights[s_clean] = int(row[1])
-                    master_list.append(s_clean)
-    except FileNotFoundError:
-        print("⚠️ Symptom-severity.csv missing.")
-    
-    print(f"✅ Loaded {len(master_list)} unique symptoms for matching.")
-    return db, weights, master_list
+MEDICAL_DB = load_db()
 
-MEDICAL_DB, SYMPTOM_WEIGHTS, MASTER_SYMPTOMS = load_data()
-
-# --- 2. AI SYMPTOM EXTRACTION (The Fix) ---
+# ==========================================
+# 3. AI SYMPTOM EXTRACTION
+# ==========================================
 async def extract_symptoms_ai(user_text):
     """
-    Uses LLM to map messy user text ('i have headche nd fever') 
-    to exact database keys (['headache', 'high fever']).
+    Cleans user input to match database keys.
     """
+    valid_list = list(INTERNAL_WEIGHTS.keys())
+    
     prompt = f"""
-    You are a precise medical entity extractor.
+    Analyze user text: "{user_text}"
+    Map to closest match in this list: {json.dumps(valid_list)}
     
-    **TASK:** Analyze the User Input and map it to the closest matches in the Valid Symptoms List.
-    - Handle typos (e.g., "fevr" -> "high fever").
-    - Handle synonyms (e.g., "tummy ache" -> "stomach pain").
-    - Ignore irrelevant words ("i have", "nd", "maybe").
-    
-    **VALID SYMPTOMS LIST:**
-    {json.dumps(MASTER_SYMPTOMS)}
-
-    **USER INPUT:** "{user_text}"
-
-    **OUTPUT:** Return ONLY a valid JSON List of strings from the Valid List.
-    Example: ["itching", "skin rash"]
-    If no match, return [].
+    Rules:
+    - Return JSON List of strings.
+    - Fix typos ("hedache" -> "headache").
+    - If no clear match, return empty list [].
     """
-
     try:
         chat = await client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
             model="llama-3.3-70b-versatile",
-            temperature=0.0, # Zero temp for strict matching
+            temperature=0.0,
             response_format={"type": "json_object"}
         )
-        
-        result = json.loads(chat.choices[0].message.content)
-        
-        # Handle different return formats keys
-        if isinstance(result, dict):
-            # If AI returns {"symptoms": [...]}, extract the list
-            return list(result.values())[0]
-        elif isinstance(result, list):
-            return result
+        res = json.loads(chat.choices[0].message.content)
+        if isinstance(res, dict): return list(res.values())[0]
+        return res
+    except:
         return []
 
-    except Exception as e:
-        print(f"⚠️ Extraction Error: {e}")
-        return []
-
-# --- 3. SCORING ENGINE (Weighted) ---
-def calculate_disease_scores(confirmed_symptoms):
-    """
-    Calculates disease probability based on the AI-extracted symptoms.
-    """
-    if not confirmed_symptoms:
-        return []
-
-    scored_results = []
+# ==========================================
+# 4. SCORING ENGINE
+# ==========================================
+def score_diseases(user_symptoms):
+    if not MEDICAL_DB: return []
     
-    # Pre-calculate set for speed
-    user_symptom_set = set(confirmed_symptoms)
-
+    scored = []
+    user_set = set(user_symptoms)
+    
     for disease, data in MEDICAL_DB.items():
-        # Get disease symptoms (clean them to match master list format)
-        disease_symptoms = set([s.replace('_', ' ').lower() for s in data.get('symptoms', [])])
+        # Clean DB symptoms
+        db_symptoms = set([s.replace('_', ' ').lower().strip() for s in data.get('symptoms', [])])
         
-        # Find Intersection
-        matches = user_symptom_set.intersection(disease_symptoms)
+        matches = user_set.intersection(db_symptoms)
         
         if matches:
-            # 1. Calculate Weighted Score
-            raw_score = sum(SYMPTOM_WEIGHTS.get(m, 1) for m in matches)
+            # Score = Sum of Weights of Matched Symptoms
+            raw_score = sum(INTERNAL_WEIGHTS.get(m, 1) for m in matches)
             
-            # 2. Calculate Coverage (How much of the disease did we match?)
-            # This prevents "Itching" (Weight 1) from triggering a serious disease 
-            # that requires 10 other symptoms.
-            total_disease_weight = sum(SYMPTOM_WEIGHTS.get(s, 1) for s in disease_symptoms)
-            if total_disease_weight == 0: total_disease_weight = 1
+            # Normalization factor (Total weight of the disease)
+            total_weight = sum(INTERNAL_WEIGHTS.get(s, 1) for s in db_symptoms) or 1
             
-            # Final Score combines Raw Impact + Coverage
-            final_metric = (raw_score / total_disease_weight) * 100
+            # Confidence Percentage
+            confidence = (raw_score / total_weight) * 100
             
-            scored_results.append({
+            # Boost for multiple matches to favor specificity
+            if len(matches) > 1: confidence += 15
+            
+            scored.append({
                 "disease": disease,
-                "score": final_metric,
-                "matched_symptoms": list(matches),
-                "medication": data.get('medication', [])
+                "confidence": min(int(confidence), 99),
+                "medication": data.get('medication', []), # FROM JSON
+                "matches": list(matches)
             })
+            
+    scored.sort(key=lambda x: x['confidence'], reverse=True)
+    return scored[:3]
 
-    # Sort by Score
-    scored_results.sort(key=lambda x: x['score'], reverse=True)
-    
-    # Normalize top result to ~95-98% for UI confidence
-    if scored_results:
-        top_score = scored_results[0]['score']
-        for item in scored_results:
-            # Scale relative to the winner
-            item['confidence'] = int((item['score'] / top_score) * 98)
-
-    return scored_results
-
-# --- 4. API ENDPOINT ---
-@app.post("/analyze")
-async def analyze_symptoms(request: SymptomRequest):
-    print(f"📩 Raw Input: {request.symptoms}")
-    
-    # STEP 1: AI Extraction (Solves "nd", typos, phrasing)
-    extracted_symptoms = await extract_symptoms_ai(request.symptoms)
-    print(f"🔍 Extracted: {extracted_symptoms}")
-    
-    if not extracted_symptoms:
-        return {"results": []}
-
-    # STEP 2: Mathematical Scoring
-    top_matches = calculate_disease_scores(extracted_symptoms)[:3]
-    
-    if not top_matches:
-        return {"results": []}
-
-    # STEP 3: Generate Details (Diet/Workout)
-    diseases_to_process = [
-        {"name": item['disease'], "meds": item['medication']} 
-        for item in top_matches
-    ]
-
-    prompt_details = f"""
-    You are a medical expert.
-    Conditions: {json.dumps([d['name'] for d in diseases_to_process])}
-
-    Generate a JSON List of objects (same order) with:
-    - "description" (short string)
-    - "diet" (list of strings)
-    - "workout" (list of strings)
-    - "precautions" (list of strings)
-    
-    Return JSON List only.
+# ==========================================
+# 5. GENERATIVE AI (Details)
+# ==========================================
+async def generate_details(matches):
     """
-
+    Takes top matches and asks AI for Diet/Workout/Description/Precautions.
+    """
+    diseases = [m['disease'] for m in matches]
+    
+    prompt = f"""
+    You are a medical expert.
+    Diseases: {json.dumps(diseases)}
+    
+    For EACH disease, generate a JSON object with:
+    - "description": Short medical summary.
+    - "diet": List of 4 foods.
+    - "workout": List of 3 activities.
+    - "precautions": List of 3 tips.
+    
+    Return JSON LIST only. Order must match input.
+    """
+    
     try:
         chat = await client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt_details}],
+            messages=[{"role": "user", "content": prompt}],
             model="llama-3.3-70b-versatile",
             temperature=0.3,
             response_format={"type": "json_object"}
         )
+        raw = chat.choices[0].message.content
+        data = json.loads(re.sub(r"```json|```", "", raw).strip())
         
-        # Parse Response
-        raw_text = chat.choices[0].message.content
-        # Remove markdown if present
-        raw_text = re.sub(r"```json\s*|```", "", raw_text).strip()
-        ai_data = json.loads(raw_text)
+        if isinstance(data, dict):
+            for v in data.values():
+                if isinstance(v, list): return v
+        return data
+    except:
+        return []
+
+# ==========================================
+# 6. MAIN API
+# ==========================================
+@app.post("/analyze")
+async def analyze(request: SymptomRequest):
+    print(f"📩 Input: {request.symptoms}")
+    
+    # 1. Extract
+    symptoms = await extract_symptoms_ai(request.symptoms)
+    print(f"🔍 Extracted: {symptoms}")
+    
+    # 2. Score
+    top_matches = score_diseases(symptoms)
+    
+    # 3. If No DB Match -> Pure AI Fallback
+    if not top_matches:
+        print("⚠️ No Database Match. Switching to Pure AI.")
+        # Ask AI to do everything (including meds)
+        # This prevents the "No condition matched" error
+        fallback_prompt = f"Diagnose: {request.symptoms}. Return JSON List of top 3 conditions with fields: disease, confidence(int), description, medication(list), diet(list), workout(list), precautions(list)."
+        try:
+            chat = await client.chat.completions.create(
+                 messages=[{"role": "user", "content": fallback_prompt}],
+                 model="llama-3.3-70b-versatile",
+                 response_format={"type": "json_object"}
+            )
+            res = json.loads(chat.choices[0].message.content)
+            if isinstance(res, dict):
+                for v in res.values():
+                    if isinstance(v, list): return {"results": v}
+            return {"results": []}
+        except Exception as e:
+            return {"error": str(e)}
+
+    # 4. If DB Match -> Hybrid Mode
+    # Fetch details from AI to combine with DB Meds
+    ai_details = await generate_details(top_matches)
+    
+    final_results = []
+    for i, match in enumerate(top_matches):
+        details = ai_details[i] if i < len(ai_details) else {}
         
-        if isinstance(ai_data, dict):
-            ai_data = list(ai_data.values())[0]
-
-        # Merge Results
-        final_results = []
-        for i, match in enumerate(top_matches):
-            if i < len(ai_data):
-                merged = {
-                    "disease": match['disease'],
-                    "confidence": match['confidence'],
-                    "medication": match['medication'],
-                    "description": ai_data[i].get('description', 'Details unavailable'),
-                    "diet": ai_data[i].get('diet', []),
-                    "workout": ai_data[i].get('workout', []),
-                    "precautions": ai_data[i].get('precautions', [])
-                }
-                final_results.append(merged)
-
-        return {"results": final_results}
-
-    except Exception as e:
-        print(f"❌ Error: {e}")
-        return {"error": str(e)}
+        final_results.append({
+            "disease": match['disease'],
+            "confidence": match['confidence'],
+            "medication": match['medication'], # Locked from JSON
+            "description": details.get('description', 'N/A'),
+            "diet": details.get('diet', []),
+            "workout": details.get('workout', []),
+            "precautions": details.get('precautions', [])
+        })
+        
+    return {"results": final_results}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

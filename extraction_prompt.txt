@@ -1,0 +1,13 @@
+Act as a medical symptom translator.
+
+1. Analyze the User Input: "{{USER_INPUT}}"
+2. Map the user's description to the closest matches in this VALID SYMPTOM LIST:
+{{MASTER_SYMPTOMS_LIST}}
+
+3. Rules:
+- Return ONLY a valid JSON List of strings.
+- If the user says "fever", match it to specific terms like "high fever" or "mild fever" based on context (default to "high fever" if severity is implied).
+- Handle synonyms (e.g., "belly ache" -> "stomach pain").
+- Ignore irrelevant words.
+
+Example Output: ["stomach pain", "vomiting"]

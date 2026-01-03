@@ -3,460 +3,88 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MediMind AI | Intelligent Diagnosis</title>
+    <title>MediMind | Professional Health Analysis</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Manrope:wght@400;600;800&display=swap"
       rel="stylesheet"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <style>
-      :root {
-        --primary: #4361ee;
-        --secondary: #3f37c9;
-        --accent: #4cc9f0;
-        --bg-color: #f8f9fa;
-        --card-bg: #ffffff;
-        --text-main: #2b2d42;
-      }
-
-      body {
-        background-color: #f0f4f8;
-        background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-        background-size: 20px 20px;
-        font-family: "Plus Jakarta Sans", sans-serif;
-        color: var(--text-main);
-        min-height: 100vh;
-      }
-
-      /* Hero Section */
-      .hero-section {
-        background: linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--secondary) 100%
-        );
-        color: white;
-        padding: 60px 20px;
-        border-radius: 0 0 30px 30px;
-        box-shadow: 0 10px 30px rgba(67, 97, 238, 0.2);
-        margin-bottom: -40px;
-        position: relative;
-        z-index: 1;
-      }
-
-      .main-container {
-        max-width: 900px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 2;
-      }
-
-      /* Input Card */
-      .input-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-        padding: 30px;
-        transition: transform 0.3s ease;
-      }
-
-      .input-card:hover {
-        transform: translateY(-5px);
-      }
-
-      textarea {
-        background-color: #f8f9fa;
-        border: 2px solid #e9ecef;
-        border-radius: 15px;
-        resize: none;
-        padding: 15px;
-        font-size: 1.1rem;
-        transition: all 0.3s;
-      }
-
-      textarea:focus {
-        background-color: #fff;
-        border-color: var(--accent);
-        box-shadow: 0 0 0 4px rgba(76, 201, 240, 0.1);
-        outline: none;
-      }
-
-      .btn-analyze {
-        background: linear-gradient(45deg, var(--primary), var(--secondary));
-        border: none;
-        border-radius: 12px;
-        padding: 12px 30px;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
-        transition: all 0.3s;
-      }
-
-      .btn-analyze:hover {
-        transform: scale(1.02);
-        box-shadow: 0 15px 25px rgba(67, 97, 238, 0.4);
-      }
-
-      /* Results Styling */
-      .result-card {
-        background: white;
-        border-radius: 16px;
-        border: none;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
-        overflow: hidden;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: slideUp 0.5s forwards;
-      }
-
-      @keyframes slideUp {
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .result-header {
-        padding: 20px 25px;
-        background: #fff;
-        cursor: pointer;
-        border-bottom: 1px solid #f1f1f1;
-        transition: background 0.2s;
-      }
-
-      .result-header:hover {
-        background: #f8faff;
-      }
-
-      /* Circular Confidence Chart */
-      .circular-chart {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: conic-gradient(var(--accent) var(--p), #e9ecef 0deg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-      }
-
-      .circular-chart::after {
-        content: attr(data-percent) "%";
-        position: absolute;
-        background: white;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: var(--primary);
-      }
-
-      /* Detail Grid */
-      .detail-box {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 20px;
-        height: 100%;
-        border: 1px solid #edf2f7;
-        transition: all 0.2s;
-      }
-
-      .detail-box:hover {
-        background: #fff;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        border-color: var(--accent);
-      }
-
-      .icon-box {
-        width: 35px;
-        height: 35px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 10px;
-        font-size: 1.1rem;
-      }
-
-      .med-bg {
-        background: rgba(67, 97, 238, 0.1);
-        color: var(--primary);
-      }
-      .diet-bg {
-        background: rgba(40, 167, 69, 0.1);
-        color: #28a745;
-      }
-      .work-bg {
-        background: rgba(253, 126, 20, 0.1);
-        color: #fd7e14;
-      }
-      .warn-bg {
-        background: rgba(255, 193, 7, 0.1);
-        color: #ffc107;
-      }
-
-      .list-unstyled li {
-        padding: 6px 0;
-        border-bottom: 1px dashed #e9ecef;
-        font-size: 0.95rem;
-      }
-      .list-unstyled li:last-child {
-        border-bottom: none;
-      }
-
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
-      }
-
-      .loading-pulse {
-        display: none;
-        text-align: center;
-        padding: 40px;
-      }
-      .pulse-circle {
-        width: 15px;
-        height: 15px;
-        background-color: var(--primary);
-        border-radius: 50%;
-        display: inline-block;
-        animation: pulse 1.4s infinite ease-in-out both;
-      }
-      .pulse-circle:nth-child(1) {
-        animation-delay: -0.32s;
-      }
-      .pulse-circle:nth-child(2) {
-        animation-delay: -0.16s;
-      }
-
-      @keyframes pulse {
-        0%,
-        80%,
-        100% {
-          transform: scale(0);
-        }
-        40% {
-          transform: scale(1);
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="hero-section text-center">
-      <h1 class="fw-bold mb-2">
-        <i class="fas fa-user-md me-2"></i>MediMind AI
-      </h1>
-      <p class="opacity-75">Advanced Neural Diagnostic Engine</p>
+    <div class="app-wrapper">
+      <nav class="sidebar">
+        <div class="brand">
+          <div class="brand-icon"><i class="fas fa-heartbeat"></i></div>
+          <span>MediMind</span>
+        </div>
+
+        <div class="nav-links">
+          <a href="#" class="active"
+            ><i class="fas fa-stethoscope"></i> Diagnosis</a
+          >
+          <a href="#"><i class="fas fa-history"></i> History</a>
+          <a href="#"><i class="fas fa-cog"></i> Settings</a>
+        </div>
+
+        <div class="user-profile">
+          <div class="avatar"><i class="fas fa-user"></i></div>
+          <div class="user-info">
+            <span class="name">Guest User</span>
+            <span class="status">Basic Plan</span>
+          </div>
+        </div>
+      </nav>
+
+      <main class="main-content">
+        <header class="top-header">
+          <div>
+            <h1>Health Analysis</h1>
+            <p class="subtitle">
+              AI-Powered Symptom Checker & Treatment Planner
+            </p>
+          </div>
+          <button class="btn-secondary"><i class="fas fa-bell"></i></button>
+        </header>
+
+        <section class="search-section">
+          <div class="search-card">
+            <div class="input-group">
+              <i class="fas fa-comment-medical search-icon"></i>
+              <textarea
+                id="symptoms"
+                placeholder="Describe your symptoms in detail (e.g., 'Persistent cough, mild fever, and fatigue for 3 days')..."
+              ></textarea>
+            </div>
+            <div class="action-area">
+              <span class="hint-text"
+                ><i class="fas fa-info-circle"></i> Private & Secure
+                Analysis</span
+              >
+              <button class="btn-primary" onclick="analyzeSymptoms()">
+                Run Analysis <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <div id="loader" class="loader-wrapper">
+          <div class="pulse-ring"></div>
+          <i class="fas fa-heartbeat heart-icon"></i>
+          <p>Analyzing Clinical Patterns...</p>
+        </div>
+
+        <div id="results-area" class="results-feed"></div>
+      </main>
     </div>
 
-    <div class="main-container px-3">
-      <div class="input-card mb-5">
-        <label for="symptoms" class="form-label fw-bold text-secondary mb-3">
-          <i class="fas fa-stethoscope me-2"></i>Describe your symptoms
-        </label>
-        <textarea
-          class="form-control mb-4"
-          id="symptoms"
-          rows="3"
-          placeholder="Ex: I have a splitting headache, sensitivity to light, and nausea..."
-        ></textarea>
-
-        <button
-          onclick="analyzeSymptoms()"
-          class="btn btn-analyze w-100 text-white"
-        >
-          <i class="fas fa-search-plus me-2"></i>Run Analysis
-        </button>
-      </div>
-
-      <div id="loading" class="loading-pulse">
-        <div class="pulse-circle"></div>
-        <div class="pulse-circle"></div>
-        <div class="pulse-circle"></div>
-        <p class="mt-3 text-muted fw-bold">
-          Consulting Medical Knowledge Graph...
-        </p>
-      </div>
-
-      <div id="results"></div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-      async function analyzeSymptoms() {
-        const input = document.getElementById("symptoms").value;
-        const resultsDiv = document.getElementById("results");
-        const loadingDiv = document.getElementById("loading");
-
-        if (!input.trim()) {
-          alert("Please describe your symptoms first.");
-          return;
-        }
-
-        // UI Reset
-        resultsDiv.innerHTML = "";
-        loadingDiv.style.display = "block";
-
-        try {
-          const response = await fetch("http://127.0.0.1:8000/analyze", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ symptoms: input }),
-          });
-
-          const data = await response.json();
-          loadingDiv.style.display = "none";
-
-          if (!data.results || data.results.length === 0) {
-            resultsDiv.innerHTML = `
-                        <div class="alert alert-warning text-center rounded-4 shadow-sm">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            No specific condition matched. Please try more details.
-                        </div>`;
-            return;
-          }
-
-          // Render Results
-          let html =
-            '<h5 class="mb-4 text-secondary fw-bold px-2">Diagnostic Results</h5>';
-
-          data.results.forEach((item, index) => {
-            const collapseId = `collapse${index}`;
-
-            // Delay animation for staggered effect
-            const animDelay = index * 0.1;
-
-            html += `
-                    <div class="result-card" style="animation-delay: ${animDelay}s">
-                        <div class="result-header" data-bs-toggle="collapse" data-bs-target="#${collapseId}">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center">
-                                    <div class="circular-chart me-3" style="--p: ${
-                                      item.confidence
-                                    }deg" data-percent="${
-              item.confidence
-            }"></div>
-                                    <div>
-                                        <h5 class="mb-0 fw-bold text-dark text-capitalize">${
-                                          item.disease
-                                        }</h5>
-                                        <small class="text-muted">Click to view treatment plan</small>
-                                    </div>
-                                </div>
-                                <i class="fas fa-chevron-down text-muted"></i>
-                            </div>
-                        </div>
-
-                        <div id="${collapseId}" class="collapse ${
-              index === 0 ? "show" : ""
-            }">
-                            <div class="p-4">
-                                <p class="text-secondary bg-light p-3 rounded-3 border-start border-4 border-primary mb-4 fst-italic">
-                                    "${item.description}"
-                                </p>
-
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <div class="detail-box">
-                                            <div class="icon-box med-bg"><i class="fas fa-pills"></i></div>
-                                            <h6 class="fw-bold mb-3">Medication (Verified)</h6>
-                                            <ul class="list-unstyled mb-0">
-                                                ${item.medication
-                                                  .map(
-                                                    (m) =>
-                                                      `<li><i class="fas fa-check-circle text-primary me-2 small"></i>${m}</li>`
-                                                  )
-                                                  .join("")}
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="detail-box">
-                                            <div class="icon-box diet-bg"><i class="fas fa-carrot"></i></div>
-                                            <h6 class="fw-bold mb-3">Recommended Diet</h6>
-                                            <ul class="list-unstyled mb-0">
-                                                ${item.diet
-                                                  .map(
-                                                    (d) =>
-                                                      `<li><i class="fas fa-leaf text-success me-2 small"></i>${d}</li>`
-                                                  )
-                                                  .join("")}
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="detail-box">
-                                            <div class="icon-box work-bg"><i class="fas fa-dumbbell"></i></div>
-                                            <h6 class="fw-bold mb-3">Lifestyle & Activity</h6>
-                                            <ul class="list-unstyled mb-0">
-                                                ${item.workout
-                                                  .map(
-                                                    (w) =>
-                                                      `<li><i class="fas fa-running text-warning me-2 small"></i>${w}</li>`
-                                                  )
-                                                  .join("")}
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="detail-box">
-                                            <div class="icon-box warn-bg"><i class="fas fa-shield-alt"></i></div>
-                                            <h6 class="fw-bold mb-3">Safety Precautions</h6>
-                                            <ul class="list-unstyled mb-0">
-                                                ${item.precautions
-                                                  .map(
-                                                    (p) =>
-                                                      `<li><i class="fas fa-exclamation-circle text-warning me-2 small"></i>${p}</li>`
-                                                  )
-                                                  .join("")}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-          });
-
-          resultsDiv.innerHTML = html;
-        } catch (error) {
-          loadingDiv.style.display = "none";
-          resultsDiv.innerHTML = `
-                    <div class="alert alert-danger shadow-sm">
-                        <strong>Connection Error:</strong> Is your backend server running?
-                        <br><small>${error.message}</small>
-                    </div>`;
-        }
-      }
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
