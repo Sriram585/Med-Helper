@@ -38,6 +38,19 @@
           <button class="nav-item" onclick="switchView('medications')">
             <i class="fas fa-pills"></i> <span>Medications</span>
           </button>
+          
+          <div class="menu-label" style="margin-top: 20px;">Wellness</div>
+          <button class="nav-item" onclick="switchView('bmi')">
+            <i class="fas fa-weight"></i> <span>BMI Calculator</span>
+          </button>
+          <button class="nav-item" onclick="switchView('hydration')">
+            <i class="fas fa-tint"></i> <span>Hydration</span>
+          </button>
+          <button class="nav-item" onclick="switchView('mood')">
+            <i class="fas fa-smile"></i> <span>Mood Tracker</span>
+          </button>
+
+          <div class="menu-label" style="margin-top: 20px;">Account</div>
           <button class="nav-item" onclick="switchView('history')">
             <i class="fas fa-history"></i> <span>History</span>
           </button>
@@ -152,6 +165,96 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <!-- BMI CALCULATOR -->
+        <section id="view-bmi" class="view-section" style="display: none">
+            <div class="glass-panel tool-card">
+                <div class="tool-content">
+                    <div class="tool-icon"><i class="fas fa-weight-scale"></i></div>
+                    <h2>BMI Calculator</h2>
+                    <p>Check your Body Mass Index (BMI) to confirm if you are in a healthy weight range.</p>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Height (cm)</label>
+                            <input type="number" id="bmi-height" placeholder="e.g. 175">
+                        </div>
+                        <div class="form-group">
+                            <label>Weight (kg)</label>
+                            <input type="number" id="bmi-weight" placeholder="e.g. 70">
+                        </div>
+                    </div>
+                    <button class="btn-primary full-width" onclick="calculateBMI()">Calculate BMI</button>
+                    
+                    <div id="bmi-result" class="result-box" style="display:none;">
+                        <span id="bmi-value" class="big-number">--</span>
+                        <span id="bmi-category" class="status-badge">--</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HYDRATION TRACKER -->
+        <section id="view-hydration" class="view-section" style="display: none">
+            <div class="glass-panel tool-card">
+                <div class="tool-content">
+                    <div class="tool-icon"><i class="fas fa-tint"></i></div>
+                    <h2>Daily Hydration</h2>
+                    <p>Stay hydrated! Tracking your water intake helps improve energy and focus.</p>
+
+                    <div class="hydration-circle">
+                        <div class="wave"></div>
+                        <div class="hydration-info">
+                            <span id="water-count" class="water-number">0</span>
+                            <span class="water-label">/ 8 Glasses</span>
+                        </div>
+                    </div>
+
+                    <div class="control-row">
+                        <button class="btn-circle btn-minus" onclick="updateWater(-1)"><i class="fas fa-minus"></i></button>
+                        <button class="btn-circle btn-plus" onclick="updateWater(1)"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MOOD TRACKER -->
+        <section id="view-mood" class="view-section" style="display: none">
+             <div class="glass-panel tool-card">
+                <div class="tool-content">
+                    <div class="tool-icon"><i class="fas fa-smile-beam"></i></div>
+                    <h2>How are you feeling?</h2>
+                    <p>Track your mood to see patterns over time.</p>
+
+                    <div class="mood-selector">
+                        <button class="mood-btn" onclick="logMood('great')">
+                            <span class="emoji">🤩</span>
+                            <span>Great</span>
+                        </button>
+                        <button class="mood-btn" onclick="logMood('good')">
+                            <span class="emoji">🙂</span>
+                            <span>Good</span>
+                        </button>
+                         <button class="mood-btn" onclick="logMood('okay')">
+                            <span class="emoji">😐</span>
+                            <span>Okay</span>
+                        </button>
+                        <button class="mood-btn" onclick="logMood('bad')">
+                            <span class="emoji">😔</span>
+                            <span>Bad</span>
+                        </button>
+                         <button class="mood-btn" onclick="logMood('awful')">
+                            <span class="emoji">😫</span>
+                            <span>Awful</span>
+                        </button>
+                    </div>
+
+                    <div id="mood-history" class="mood-history-list">
+                        <!-- History injected here -->
+                    </div>
+                </div>
+             </div>
         </section>
 
         <!-- HISTORY -->

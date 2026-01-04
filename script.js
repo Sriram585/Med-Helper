@@ -33,7 +33,10 @@ function switchView(viewId) {
         'medical-chat': ['Health Assistant', 'Ask general medical questions'],
         'medications': ['Medication Manager', 'Track your active prescriptions'],
         'history': ['Medical History', 'Your past consultations log'],
-        'profile': ['User Profile', 'Manage your personal details']
+        'profile': ['User Profile', 'Manage your personal details'],
+        'bmi': ['BMI Calculator', 'Body Mass Index Assessment'],
+        'hydration': ['Hydration Tracker', 'Daily Water Intake Goal'],
+        'mood': ['Mood Tracker', 'Emotional Well-being Journal']
     };
     if (titles[viewId]) {
         document.getElementById('page-title').innerText = titles[viewId][0];
@@ -43,6 +46,8 @@ function switchView(viewId) {
     // 5. Special Loads
     if (viewId === 'history') loadFullHistory();
     if (viewId === 'medications') loadMedications();
+    if (viewId === 'hydration') loadHydration();
+    if (viewId === 'mood') loadMoodHistory();
 }
 
 // --- 1. SYMPTOM CHECKER ---
@@ -342,3 +347,109 @@ function restoreSearch(text) {
 
 function triggerSOS() { document.getElementById('sos-overlay').style.display = 'flex'; }
 function closeSOS() { document.getElementById('sos-overlay').style.display = 'none'; }
+
+// --- 4. NEW TOOLS LOGIC ---
+
+// BMI CALCULATOR
+function calculateBMI() {
+    const height = parseFloat(document.getElementById('bmi-height').value);
+    const weight = parseFloat(document.getElementById('bmi-weight').value);
+
+    if (!height || !weight) { alert("Please enter valid height and weight."); return; }
+
+    const bmi = (weight / ((height / 100) ** 2)).toFixed(1);
+    const resultBox = document.getElementById('bmi-result');
+    const valueEl = document.getElementById('bmi-value');
+    const catEl = document.getElementById('bmi-category');
+
+    valueEl.innerText = bmi;
+    resultBox.style.display = 'flex';
+
+    let category = '';
+    let color = '';
+
+    if (bmi < 18.5) { category = 'Underweight'; color = '#3b82f6'; }
+    else if (bmi < 25) { category = 'Normal Weight'; color = '#10b981'; } // Green
+    else if (bmi < 30) { category = 'Overweight'; color = '#f59e0b'; } // Orange
+    else { category = 'Obese'; color = '#ef4444'; } // Red
+
+    catEl.innerText = category;
+    catEl.style.color = color;
+    catEl.style.background = color + '20'; // 20 hex = 12% opacity roughly
+}
+
+// HYDRATION TRACKER
+let waterCount = 0;
+function loadHydration() {
+    const date = new Date().toLocaleDateString();
+    const saved = JSON.parse(localStorage.getItem('mediHydration') || '{}');
+
+    // Reset if new day
+    if (saved.date !== date) {
+        waterCount = 0;
+    } else {
+        waterCount = saved.count || 0;
+    }
+    updateWaterUI();
+}
+
+function updateWater(change) {
+    waterCount += change;
+    if (waterCount < 0) waterCount = 0;
+    // Cap at reasonable amount (e.g. 20) to prevent UI break
+    if (waterCount > 20) waterCount = 20;
+
+    localStorage.setItem('mediHydration', JSON.stringify({
+        date: new Date().toLocaleDateString(),
+        count: waterCount
+    }));
+    updateWaterUI();
+}
+
+function updateWaterUI() {
+    document.getElementById('water-count').innerText = waterCount;
+    const percentage = Math.min((waterCount / 8) * 100, 100);
+    const wave = document.querySelector('.wave');
+    if (wave) wave.style.height = `${percentage}%`;
+}
+
+// MOOD TRACKER
+function loadMoodHistory() {
+    const history = JSON.parse(localStorage.getItem('mediMood') || '[]');
+    const container = document.getElementById('mood-history');
+
+    if (!container) return; // Guard clause
+
+    if (history.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding:20px;">No mood logs yet.</div>';
+        return;
+    }
+
+    const emojis = { 'great': '🤩', 'good': '🙂', 'okay': '😐', 'bad': '😔', 'awful': '😫' };
+
+    container.innerHTML = history.slice(0, 7).map(item => `
+        <div class="history-entry">
+            <div class="h-mood"><span style="font-size:1.5rem;">${emojis[item.mood] || '❓'}</span> ${item.mood.charAt(0).toUpperCase() + item.mood.slice(1)}</div>
+            <div class="h-time">${item.date} <br> <span style="font-size:0.8rem">${item.time}</span></div>
+        </div>
+    `).join('');
+}
+
+function logMood(mood) {
+    const history = JSON.parse(localStorage.getItem('mediMood') || '[]');
+    const now = new Date();
+
+    history.unshift({
+        mood: mood,
+        date: now.toLocaleDateString(),
+        time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    });
+
+    if (history.length > 50) history.pop(); // Keep last 50
+    localStorage.setItem('mediMood', JSON.stringify(history));
+
+    // Visual Feedback (Selection state)
+    document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('selected'));
+    // Ideally we'd select the button that was clicked, but simple alert or reload is fine for now
+    loadMoodHistory();
+}
