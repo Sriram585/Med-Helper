@@ -2,7 +2,9 @@ import os
 import json
 import re
 import uvicorn
-from fastapi import FastAPI
+import uuid
+from typing import List, Optional
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from groq import AsyncGroq
@@ -22,8 +24,20 @@ app.add_middleware(
 
 client = AsyncGroq(api_key=os.environ.get("GROQ_API_KEY"))
 
+# --- MODELS ---
 class SymptomRequest(BaseModel):
     symptoms: str
+
+class ChatRequest(BaseModel):
+    message: str
+    history: List[dict] = [] # [{"role": "user", "content": "..."}]
+
+class Medication(BaseModel):
+    id: Optional[str] = None
+    name: str
+    dosage: str
+    frequency: str
+    notes: Optional[str] = ""
 
 # ==========================================
 # 1. INTERNAL KNOWLEDGE (Replaces CSVs)
@@ -71,18 +85,18 @@ INTERNAL_WEIGHTS = {
 # ==========================================
 # 2. LOAD MEDICAL DATA (JSON ONLY)
 # ==========================================
-def load_db():
+def load_json_file(filename, default_value):
     try:
-        # Assumes medical_data.json exists (containing 'medication' and 'symptoms')
-        with open("medical_data.json", "r") as f:
-            db = json.load(f)
-            print(f"✅ Loaded {len(db)} diseases from JSON.")
-            return db
+        with open(filename, "r") as f:
+            return json.load(f)
     except FileNotFoundError:
-        print("❌ medical_data.json NOT FOUND. App will run in Pure AI Mode.")
-        return {}
+        return default_value
 
-MEDICAL_DB = load_db()
+def save_json_file(filename, data):
+    with open(filename, "w") as f:
+        json.dump(data, f, indent=4)
+
+MEDICAL_DB = load_json_file("medical_data.json", {})
 
 # ==========================================
 # 3. AI SYMPTOM EXTRACTION
@@ -193,7 +207,7 @@ async def generate_details(matches):
         return []
 
 # ==========================================
-# 6. MAIN API
+# 6. MAIN API ROUTES
 # ==========================================
 @app.post("/analyze")
 async def analyze(request: SymptomRequest):
@@ -209,8 +223,6 @@ async def analyze(request: SymptomRequest):
     # 3. If No DB Match -> Pure AI Fallback
     if not top_matches:
         print("⚠️ No Database Match. Switching to Pure AI.")
-        # Ask AI to do everything (including meds)
-        # This prevents the "No condition matched" error
         fallback_prompt = f"Diagnose: {request.symptoms}. Return JSON List of top 3 conditions with fields: disease, confidence(int), description, medication(list), diet(list), workout(list), precautions(list)."
         try:
             chat = await client.chat.completions.create(
@@ -227,7 +239,6 @@ async def analyze(request: SymptomRequest):
             return {"error": str(e)}
 
     # 4. If DB Match -> Hybrid Mode
-    # Fetch details from AI to combine with DB Meds
     ai_details = await generate_details(top_matches)
     
     final_results = []
@@ -245,6 +256,45 @@ async def analyze(request: SymptomRequest):
         })
         
     return {"results": final_results}
+
+@app.post("/chat")
+async def chat_endpoint(request: ChatRequest):
+    """
+    General Health AI Chat.
+    """
+    messages = [{"role": "system", "content": "You are MediMind, a helpful and empathetic medical AI assistant. Provide concise, safe, and helpful medical information. Always advise consulting a doctor for serious issues."}]
+    messages.extend(request.history)
+    messages.append({"role": "user", "content": request.message})
+    
+    try:
+        chat = await client.chat.completions.create(
+            messages=messages,
+            model="llama-3.3-70b-versatile",
+            temperature=0.5,
+            max_tokens=300
+        )
+        return {"response": chat.choices[0].message.content}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/medications")
+def get_medications():
+    return load_json_file("medications.json", [])
+
+@app.post("/medications")
+def add_medication(med: Medication):
+    meds = load_json_file("medications.json", [])
+    med.id = str(uuid.uuid4())
+    meds.append(med.dict())
+    save_json_file("medications.json", meds)
+    return med
+
+@app.delete("/medications/{med_id}")
+def delete_medication(med_id: str):
+    meds = load_json_file("medications.json", [])
+    new_meds = [m for m in meds if m['id'] != med_id]
+    save_json_file("medications.json", new_meds)
+    return {"status": "success"}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

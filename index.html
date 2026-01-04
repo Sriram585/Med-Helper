@@ -15,10 +15,15 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="app-background">
+        <div class="glass-orb orb-1"></div>
+        <div class="glass-orb orb-2"></div>
+    </div>
+
     <div class="app-layout">
-      <aside class="sidebar">
+      <aside class="sidebar glass-panel">
         <div class="brand">
-          <div class="brand-logo"><i class="fas fa-dna"></i></div>
+          <div class="brand-logo"><i class="fas fa-heart-pulse"></i></div>
           <span>MediMind</span>
         </div>
 
@@ -27,11 +32,14 @@
           <button class="nav-item active" onclick="switchView('dashboard')">
             <i class="fas fa-th-large"></i> <span>Dashboard</span>
           </button>
-          <button class="nav-item" onclick="switchView('history')">
-            <i class="fas fa-clock"></i> <span>History</span>
+          <button class="nav-item" onclick="switchView('medical-chat')">
+            <i class="fas fa-comments-medical"></i> <span>AI Health Chat</span>
           </button>
-          <button class="nav-item" onclick="switchView('profile')">
-            <i class="fas fa-user-circle"></i> <span>My Profile</span>
+          <button class="nav-item" onclick="switchView('medications')">
+            <i class="fas fa-pills"></i> <span>Medications</span>
+          </button>
+          <button class="nav-item" onclick="switchView('history')">
+            <i class="fas fa-history"></i> <span>History</span>
           </button>
         </nav>
 
@@ -42,20 +50,21 @@
 
         <div class="sidebar-footer">
           <button class="btn-sos" onclick="triggerSOS()">
+            <div class="pulse-ring"></div>
             <i class="fas fa-ambulance"></i> SOS EMERGENCY
           </button>
         </div>
       </aside>
 
       <main class="main-content">
-        <header class="topbar">
+        <header class="topbar glass-panel-sm">
           <div class="greeting">
             <h1 id="page-title">Dashboard</h1>
             <p id="page-subtitle">AI-Powered Symptom Checker</p>
           </div>
           <div class="user-actions">
             <button class="icon-btn"><i class="fas fa-bell"></i></button>
-            <div class="user-profile">
+            <div class="user-profile" onclick="switchView('profile')">
               <img
                 src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff"
                 alt="User"
@@ -64,18 +73,18 @@
           </div>
         </header>
 
+        <!-- DASHBOARD (SYMPTOM CHECKER) -->
         <section id="view-dashboard" class="view-section active">
-          <div class="input-container">
+          <div class="glass-panel input-container">
             <div class="input-header">
               <i class="fas fa-stethoscope"></i>
-              <span>Describe Symptoms</span>
+              <span>Describe Your Symptoms</span>
             </div>
             <div class="textarea-wrapper">
               <textarea
                 id="symptoms"
-                placeholder="e.g. 'Severe migraine with aura, sensitivity to light...'"
+                placeholder="e.g. I have a severe headache, sensitivity to light, and nausea..."
               ></textarea>
-
               <button
                 id="btn-mic"
                 class="btn-mic"
@@ -86,7 +95,7 @@
               </button>
             </div>
             <div class="input-actions">
-              <button class="btn-analyze" onclick="analyzeSymptoms()">
+              <button class="btn-primary" onclick="analyzeSymptoms()">
                 Run Analysis <i class="fas fa-arrow-right"></i>
               </button>
             </div>
@@ -94,14 +103,60 @@
 
           <div id="loader" class="loader">
             <div class="spinner"></div>
-            <span>Consulting Medical Knowledge Graph...</span>
+            <span>Consulting Knowledge Graph...</span>
           </div>
 
           <div id="results-container" class="results-grid"></div>
         </section>
 
+        <!-- AI HEALTH CHAT -->
+        <section id="view-medical-chat" class="view-section" style="display: none">
+            <div class="glass-panel chat-container">
+                <div class="chat-window" id="chat-window">
+                    <div class="message ai-message">
+                        <div class="msg-avatar"><i class="fas fa-robot"></i></div>
+                        <div class="msg-content">Hello! I'm MediMind AI. Ask me any general health questions. Note: I am an AI, not a doctor.</div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Ask a health question..." onkeypress="handleChatEnter(event)">
+                    <button class="btn-send" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MEDICATIONS MANAGER -->
+        <section id="view-medications" class="view-section" style="display: none">
+            <div class="meds-layout">
+                <div class="glass-panel add-med-form">
+                    <h3><i class="fas fa-plus-circle"></i> Add Medication</h3>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="med-name" placeholder="e.g. Paracetamol">
+                    </div>
+                    <div class="form-group">
+                        <label>Dosage</label>
+                        <input type="text" id="med-dosage" placeholder="e.g. 500mg">
+                    </div>
+                    <div class="form-group">
+                        <label>Frequency</label>
+                        <input type="text" id="med-freq" placeholder="e.g. Twice daily">
+                    </div>
+                    <button class="btn-primary full-width" onclick="addMedication()">Save Medication</button>
+                </div>
+                
+                <div class="meds-list-container">
+                    <h3>Active Prescriptions</h3>
+                    <div id="medications-list" class="meds-grid">
+                        <!-- Meds Loaded Here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTORY -->
         <section id="view-history" class="view-section" style="display: none">
-          <div class="history-panel">
+          <div class="glass-panel history-panel">
             <div class="panel-header">
               <h2>Recent Consultations</h2>
               <button class="btn-clear" onclick="clearHistory()">
@@ -112,54 +167,34 @@
           </div>
         </section>
 
-        <section id="view-profile" class="view-section" style="display: none">
-          <div class="profile-card">
-            <div class="profile-header">
-              <img
-                src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff&size=128"
-                class="profile-img"
-              />
-              <div class="profile-info">
-                <h3>Admin User</h3>
-                <span style="color: #64748b; font-size: 0.9rem"
-                  >Member since 2024</span
-                >
-              </div>
-            </div>
-            <form class="profile-form" onsubmit="return false;">
-              <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" value="Admin User" />
-              </div>
-              <div class="form-group">
-                <label>Email</label>
-                <input type="email" value="admin@medimind.ai" />
-              </div>
-              <div class="form-group">
-                <label>Age</label>
-                <input type="number" value="25" />
-              </div>
-              <div class="form-group">
-                <label>Blood Group</label>
-                <select>
-                  <option>O+</option>
-                  <option>A+</option>
-                  <option>B+</option>
-                </select>
-              </div>
-              <button class="btn-save">Save Changes</button>
-            </form>
-          </div>
-        </section>
+        <!-- PROFILE (Simplified for now) -->
+         <section id="view-profile" class="view-section" style="display: none">
+             <div class="glass-panel profile-card">
+                 <div class="profile-header">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff&size=128" class="profile-img" />
+                    <div>
+                        <h3>Admin User</h3>
+                        <p>admin@medimind.ai</p>
+                    </div>
+                 </div>
+                 <div class="form-group">
+                     <label>Blood Group</label>
+                     <select disabled><option>O+</option></select>
+                 </div>
+                 <p style="color:#64748b; font-size: 0.9rem;">Profile editing coming soon.</p>
+             </div>
+         </section>
+
       </main>
     </div>
 
+    <!-- SOS OVERLAY -->
     <div id="sos-overlay" class="sos-overlay">
-      <div class="sos-modal">
-        <i class="fas fa-exclamation-triangle fa-3x text-danger"></i>
-        <h2>Emergency Mode</h2>
-        <p>Calling Emergency Services...</p>
-        <button class="btn-cancel" onclick="closeSOS()">Cancel</button>
+      <div class="sos-modal glass-panel">
+        <div class="sos-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <h2>EMERGENCY MODE</h2>
+        <p>Broadcasting location to emergency services...</p>
+        <button class="btn-cancel" onclick="closeSOS()">CANCEL ALERT</button>
       </div>
     </div>
 
