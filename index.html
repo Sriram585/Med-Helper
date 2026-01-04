@@ -3,86 +3,164 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MediMind | Professional Health Analysis</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <title>MediMind | Health Dashboard</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Manrope:wght@400;600;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="app-wrapper">
-      <nav class="sidebar">
+    <div class="app-layout">
+      <aside class="sidebar">
         <div class="brand">
-          <div class="brand-icon"><i class="fas fa-heartbeat"></i></div>
+          <div class="brand-logo"><i class="fas fa-dna"></i></div>
           <span>MediMind</span>
         </div>
 
-        <div class="nav-links">
-          <a href="#" class="active"
-            ><i class="fas fa-stethoscope"></i> Diagnosis</a
-          >
-          <a href="#"><i class="fas fa-history"></i> History</a>
-          <a href="#"><i class="fas fa-cog"></i> Settings</a>
+        <div class="menu-label">Main Menu</div>
+        <nav class="nav-menu">
+          <button class="nav-item active" onclick="switchView('dashboard')">
+            <i class="fas fa-th-large"></i> <span>Dashboard</span>
+          </button>
+          <button class="nav-item" onclick="switchView('history')">
+            <i class="fas fa-clock"></i> <span>History</span>
+          </button>
+          <button class="nav-item" onclick="switchView('profile')">
+            <i class="fas fa-user-circle"></i> <span>My Profile</span>
+          </button>
+        </nav>
+
+        <div class="menu-label">Quick Access</div>
+        <div id="sidebar-history" class="history-list">
+          <div class="empty-history">No recent scans</div>
         </div>
 
-        <div class="user-profile">
-          <div class="avatar"><i class="fas fa-user"></i></div>
-          <div class="user-info">
-            <span class="name">Guest User</span>
-            <span class="status">Basic Plan</span>
-          </div>
+        <div class="sidebar-footer">
+          <button class="btn-sos" onclick="triggerSOS()">
+            <i class="fas fa-ambulance"></i> SOS EMERGENCY
+          </button>
         </div>
-      </nav>
+      </aside>
 
       <main class="main-content">
-        <header class="top-header">
-          <div>
-            <h1>Health Analysis</h1>
-            <p class="subtitle">
-              AI-Powered Symptom Checker & Treatment Planner
-            </p>
+        <header class="topbar">
+          <div class="greeting">
+            <h1 id="page-title">Dashboard</h1>
+            <p id="page-subtitle">AI-Powered Symptom Checker</p>
           </div>
-          <button class="btn-secondary"><i class="fas fa-bell"></i></button>
+          <div class="user-actions">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+            <div class="user-profile">
+              <img
+                src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff"
+                alt="User"
+              />
+            </div>
+          </div>
         </header>
 
-        <section class="search-section">
-          <div class="search-card">
-            <div class="input-group">
-              <i class="fas fa-comment-medical search-icon"></i>
+        <section id="view-dashboard" class="view-section active">
+          <div class="input-container">
+            <div class="input-header">
+              <i class="fas fa-stethoscope"></i>
+              <span>Describe Symptoms</span>
+            </div>
+            <div class="textarea-wrapper">
               <textarea
                 id="symptoms"
-                placeholder="Describe your symptoms in detail (e.g., 'Persistent cough, mild fever, and fatigue for 3 days')..."
+                placeholder="e.g. 'Severe migraine with aura, sensitivity to light...'"
               ></textarea>
-            </div>
-            <div class="action-area">
-              <span class="hint-text"
-                ><i class="fas fa-info-circle"></i> Private & Secure
-                Analysis</span
+
+              <button
+                id="btn-mic"
+                class="btn-mic"
+                title="Start Voice Input"
+                onclick="toggleVoiceInput()"
               >
-              <button class="btn-primary" onclick="analyzeSymptoms()">
+                <i class="fas fa-microphone"></i>
+              </button>
+            </div>
+            <div class="input-actions">
+              <button class="btn-analyze" onclick="analyzeSymptoms()">
                 Run Analysis <i class="fas fa-arrow-right"></i>
               </button>
             </div>
           </div>
+
+          <div id="loader" class="loader">
+            <div class="spinner"></div>
+            <span>Consulting Medical Knowledge Graph...</span>
+          </div>
+
+          <div id="results-container" class="results-grid"></div>
         </section>
 
-        <div id="loader" class="loader-wrapper">
-          <div class="pulse-ring"></div>
-          <i class="fas fa-heartbeat heart-icon"></i>
-          <p>Analyzing Clinical Patterns...</p>
-        </div>
+        <section id="view-history" class="view-section" style="display: none">
+          <div class="history-panel">
+            <div class="panel-header">
+              <h2>Recent Consultations</h2>
+              <button class="btn-clear" onclick="clearHistory()">
+                Clear All
+              </button>
+            </div>
+            <div id="full-history-list" class="full-history-grid"></div>
+          </div>
+        </section>
 
-        <div id="results-area" class="results-feed"></div>
+        <section id="view-profile" class="view-section" style="display: none">
+          <div class="profile-card">
+            <div class="profile-header">
+              <img
+                src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff&size=128"
+                class="profile-img"
+              />
+              <div class="profile-info">
+                <h3>Admin User</h3>
+                <span style="color: #64748b; font-size: 0.9rem"
+                  >Member since 2024</span
+                >
+              </div>
+            </div>
+            <form class="profile-form" onsubmit="return false;">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" value="Admin User" />
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" value="admin@medimind.ai" />
+              </div>
+              <div class="form-group">
+                <label>Age</label>
+                <input type="number" value="25" />
+              </div>
+              <div class="form-group">
+                <label>Blood Group</label>
+                <select>
+                  <option>O+</option>
+                  <option>A+</option>
+                  <option>B+</option>
+                </select>
+              </div>
+              <button class="btn-save">Save Changes</button>
+            </form>
+          </div>
+        </section>
       </main>
+    </div>
+
+    <div id="sos-overlay" class="sos-overlay">
+      <div class="sos-modal">
+        <i class="fas fa-exclamation-triangle fa-3x text-danger"></i>
+        <h2>Emergency Mode</h2>
+        <p>Calling Emergency Services...</p>
+        <button class="btn-cancel" onclick="closeSOS()">Cancel</button>
+      </div>
     </div>
 
     <script src="script.js"></script>
