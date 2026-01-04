@@ -36,7 +36,8 @@ function switchView(viewId) {
         'profile': ['User Profile', 'Manage your personal details'],
         'bmi': ['BMI Calculator', 'Body Mass Index Assessment'],
         'hydration': ['Hydration Tracker', 'Daily Water Intake Goal'],
-        'mood': ['Mood Tracker', 'Emotional Well-being Journal']
+        'mood': ['Mood Tracker', 'Emotional Well-being Journal'],
+        'appointments': ['Find Doctors', 'Book Medical Consultations']
     };
     if (titles[viewId]) {
         document.getElementById('page-title').innerText = titles[viewId][0];
@@ -404,6 +405,7 @@ function updateWater(change) {
         count: waterCount
     }));
     updateWaterUI();
+    updateDashboardWidgets();
 }
 
 function updateWaterUI() {
@@ -417,6 +419,9 @@ function updateWaterUI() {
 function loadMoodHistory() {
     const history = JSON.parse(localStorage.getItem('mediMood') || '[]');
     const container = document.getElementById('mood-history');
+
+    // Always render chart
+    renderMoodChart(history);
 
     if (!container) return; // Guard clause
 
@@ -452,4 +457,317 @@ function logMood(mood) {
     document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('selected'));
     // Ideally we'd select the button that was clicked, but simple alert or reload is fine for now
     loadMoodHistory();
+    updateDashboardWidgets(); // Update dashboard if mood changes
 }
+
+function renderMoodChart(history) {
+    const counts = { 'great': 0, 'good': 0, 'okay': 0, 'bad': 0, 'awful': 0 };
+    history.forEach(h => {
+        if (counts[h.mood] !== undefined) counts[h.mood]++;
+    });
+
+    const max = Math.max(...Object.values(counts)) || 1; // Avoid divide by zero
+    const colors = { 'great': 'bar-great', 'good': 'bar-good', 'okay': 'bar-okay', 'bad': 'bar-bad', 'awful': 'bar-awful' };
+    const labels = { 'great': 'Great', 'good': 'Good', 'okay': 'Okay', 'bad': 'Bad', 'awful': 'Awful' };
+
+    const chart = document.getElementById('mood-chart');
+    if (chart) {
+        chart.innerHTML = Object.keys(counts).map(key => {
+            const height = (counts[key] / max) * 100; // Percentage of max
+            return `
+                <div class="chart-bar-group">
+                    <div class="chart-bar ${colors[key]}" style="height:${height}%" data-count="${counts[key]}"></div>
+                    <span class="chart-label">${labels[key]}</span>
+                </div>
+            `;
+        }).join('');
+    }
+}
+
+function renderMoodChart(history) {
+    const counts = { 'great': 0, 'good': 0, 'okay': 0, 'bad': 0, 'awful': 0 };
+    history.forEach(h => {
+        if (counts[h.mood] !== undefined) counts[h.mood]++;
+    });
+
+    const max = Math.max(...Object.values(counts)) || 1; // Avoid divide by zero
+    const colors = { 'great': 'bar-great', 'good': 'bar-good', 'okay': 'bar-okay', 'bad': 'bar-bad', 'awful': 'bar-awful' };
+    const labels = { 'great': 'Great', 'good': 'Good', 'okay': 'Okay', 'bad': 'Bad', 'awful': 'Awful' };
+
+    const chart = document.getElementById('mood-chart');
+    if (chart) {
+        chart.innerHTML = Object.keys(counts).map(key => {
+            const height = (counts[key] / max) * 100; // Percentage of max
+            return `
+                <div class="chart-bar-group">
+                    <div class="chart-bar ${colors[key]}" style="height:${height}%" data-count="${counts[key]}"></div>
+                    <span class="chart-label">${labels[key]}</span>
+                </div>
+            `;
+        }).join('');
+    }
+}
+
+// --- 5. DASHBOARD 2.0 AGGREGATION ---
+function updateDashboardWidgets() {
+    // 1. Water
+    const waterData = JSON.parse(localStorage.getItem('mediHydration') || '{}');
+    const today = new Date().toLocaleDateString();
+    const count = (waterData.date === today) ? (waterData.count || 0) : 0;
+    const waterEl = document.getElementById('dash-water');
+    if (waterEl) waterEl.innerText = `${count} / 8`;
+
+    // 2. Meds
+    // We need to fetch meds count. Since loadMedications is async and updates DOM, 
+    // we should ideally fetch data directly. 
+    // For simplicity, we'll trigger a background fetch or just use a stored count if we had one.
+    // Better: Fetch meds just for count.
+    fetch(`${API_BASE}/medications`)
+        .then(res => res.json())
+        .then(data => {
+            const medEl = document.getElementById('dash-meds');
+            if (medEl) medEl.innerText = data.length || 0;
+        })
+        .catch(() => { });
+
+    // 3. Mood
+    const moodData = JSON.parse(localStorage.getItem('mediMood') || '[]');
+    const moodEl = document.getElementById('dash-mood');
+    if (moodEl) {
+        if (moodData.length > 0) {
+            const latest = moodData[0].mood;
+            moodEl.innerText = latest.charAt(0).toUpperCase() + latest.slice(1);
+        } else {
+            moodEl.innerText = "-";
+        }
+    }
+}
+
+// --- 6. PROFILE SYSTEM ---
+function loadProfile() {
+    const profile = JSON.parse(localStorage.getItem('mediProfile') || '{}');
+
+    // Update Display
+    const name = profile.name || 'Guest User';
+    document.getElementById('profile-name-display').innerText = name;
+
+    // Update Form
+    if (document.getElementById('p-name')) document.getElementById('p-name').value = profile.name || '';
+    if (document.getElementById('p-age')) document.getElementById('p-age').value = profile.age || '';
+    if (document.getElementById('p-blood')) document.getElementById('p-blood').value = profile.blood || '';
+    if (document.getElementById('p-email')) document.getElementById('p-email').value = profile.email || '';
+    if (document.getElementById('p-notes')) document.getElementById('p-notes').value = profile.notes || '';
+
+    // Update Greeting on Dashboard
+    // Use try-catch or check existence
+    const subtitle = document.getElementById('page-subtitle');
+    if (subtitle) subtitle.innerText = `Welcome back, ${name.split(' ')[0]}`;
+}
+
+function saveProfile() {
+    const profile = {
+        name: document.getElementById('p-name').value,
+        age: document.getElementById('p-age').value,
+        blood: document.getElementById('p-blood').value,
+        email: document.getElementById('p-email').value,
+        notes: document.getElementById('p-notes').value
+    };
+
+    localStorage.setItem('mediProfile', JSON.stringify(profile));
+    localStorage.setItem('mediProfile', JSON.stringify(profile));
+    showToast("Profile changes saved successfully!");
+    loadProfile(); // Refresh UI
+    loadProfile(); // Refresh UI
+}
+
+// --- 7. APPOINTMENTS SYSTEM ---
+const mockDoctors = [
+    { id: 1, name: "Dr. Sarah Smith", specialty: "Cardiologist", image: "https://ui-avatars.com/api/?name=Sarah+Smith&background=random" },
+    { id: 2, name: "Dr. James Wilson", specialty: "Dermatologist", image: "https://ui-avatars.com/api/?name=James+Wilson&background=random" },
+    { id: 3, name: "Dr. Emily Chen", specialty: "Pediatrician", image: "https://ui-avatars.com/api/?name=Emily+Chen&background=random" },
+    { id: 4, name: "Dr. Michael Ross", specialty: "General Physician", image: "https://ui-avatars.com/api/?name=Michael+Ross&background=random" },
+    { id: 5, name: "Dr. Linda Brown", specialty: "Neurologist", image: "https://ui-avatars.com/api/?name=Linda+Brown&background=random" }
+];
+
+function loadDoctors() {
+    const list = document.getElementById('doctor-list');
+    if (!list) return;
+    list.innerHTML = mockDoctors.map(doc => `
+        <div class="doctor-card">
+            <div class="doc-cover"></div>
+            <div class="doc-info">
+                <img src="${doc.image}" class="doc-img">
+                <div class="doc-name">${doc.name}</div>
+                <div class="doc-spec">${doc.specialty}</div>
+                <button class="btn-book" onclick="bookAppointment('${doc.name}')">Book Visit</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function filterDoctors() {
+    const query = document.getElementById('doc-search').value.toLowerCase();
+    const cards = document.querySelectorAll('.doctor-card');
+    cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query) ? 'block' : 'none';
+    });
+}
+
+// --- REFACTORED APPOINTMENT LOGIC ---
+let selectedDoctor = null;
+
+function bookAppointment(docName) {
+    selectedDoctor = docName;
+    document.getElementById('modal-doc-name').innerText = docName;
+    document.getElementById('appt-date-input').value = "Tomorrow at 10 AM"; // Default
+    document.getElementById('date-modal').style.display = 'flex';
+}
+
+function closeDateModal() {
+    document.getElementById('date-modal').style.display = 'none';
+    selectedDoctor = null;
+}
+
+function confirmAppointment() {
+    const date = document.getElementById('appt-date-input').value;
+    if (!date || !selectedDoctor) return;
+
+    closeDateModal();
+
+    const appointments = JSON.parse(localStorage.getItem('mediAppointments') || '[]');
+    appointments.unshift({ doctor: selectedDoctor, date: date, id: Date.now() });
+    localStorage.setItem('mediAppointments', JSON.stringify(appointments));
+
+    // Show App Popup (Success Modal)
+    showSuccessModal('Request Sent', `Your request to see <strong>${selectedDoctor}</strong> on <strong>${date}</strong> has been sent!`);
+    loadAppointments();
+}
+
+function showSuccessModal(title, message) {
+    const modal = document.getElementById('success-modal');
+    if (modal) {
+        document.getElementById('success-title').innerText = title;
+        document.getElementById('success-message').innerHTML = message;
+        modal.style.display = 'flex';
+    }
+}
+
+function closeSuccessModal() {
+    document.getElementById('success-modal').style.display = 'none';
+}
+
+function showToast(message) {
+    // Keep this for profile saves, but appointments now use Success Modal
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<i class="fas fa-check-circle" style="color:#4ade80"></i> <span>${message}</span>`;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        toast.style.transition = '0.3s';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+
+
+function loadAppointments() {
+    const list = document.getElementById('appointment-list');
+    if (!list) return;
+    const appointments = JSON.parse(localStorage.getItem('mediAppointments') || '[]');
+
+    if (appointments.length === 0) {
+        list.innerHTML = '<div style="color:var(--text-secondary); text-align:center;">No upcoming appointments.</div>';
+        return;
+    }
+
+    list.innerHTML = appointments.map(appt => `
+        <div class="appt-card">
+            <div>
+                <div style="font-weight:700;">${appt.doctor}</div>
+                <div style="font-size:0.9rem; color:var(--text-secondary);"><i class="far fa-calendar-alt"></i> ${appt.date}</div>
+            </div>
+            <span class="badge-pro" style="background:#dcfce7; color:#166534;">Confirmed</span>
+        </div>
+    `).join('');
+}
+
+// --- 8. REPORT EXPORT ---
+function exportHealthReport() {
+    const profile = JSON.parse(localStorage.getItem('mediProfile') || '{}');
+    const meds = loadMedications_Data(); // Need to extract this logic or just fetch again
+    const history = JSON.parse(localStorage.getItem('mediHistory') || '[]');
+
+    // We'll just fetch meds from API for now in the background or assume we have them locally? 
+    // Let's just use what we can get synchronously or await.
+    // Making this async to be clean.
+    generateReportContent(profile, history);
+}
+
+async function generateReportContent(profile, history) {
+    let meds = [];
+    try {
+        const res = await fetch(`${API_BASE}/medications`);
+        meds = await res.json();
+    } catch (e) { }
+
+    const report = `
+MEDICAL HEALTH REPORT - MediMind
+Generated: ${new Date().toLocaleString()}
+------------------------------------------------
+PATIENT PROFILE
+Name: ${profile.name || 'N/A'}
+Age: ${profile.age || 'N/A'}
+Blood Group: ${profile.blood || 'N/A'}
+Emails: ${profile.email || 'N/A'}
+Notes: ${profile.notes || 'None'}
+
+------------------------------------------------
+ACTIVE MEDICATIONS
+${meds.length ? meds.map(m => `- ${m.name} (${m.dosage}, ${m.frequency})`).join('\n') : "No active medications."}
+
+------------------------------------------------
+RECENT CONSULTATION HISTORY
+${history.slice(0, 10).map(h => `- [${h.date}] ${h.text}`).join('\n')}
+
+------------------------------------------------
+DISCLAIMER: This report is generated by an AI tool and should be verified by a doctor.
+    `;
+
+    // Download Logic
+    const blob = new Blob([report], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `MediMind_Report_${Date.now()}.txt`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+// --- 9. DISCLAIMER ---
+function checkDisclaimer() {
+    if (!localStorage.getItem('mediDisclaimerAccepted')) {
+        document.getElementById('disclaimer-overlay').style.display = 'flex';
+    }
+}
+
+function acceptDisclaimer() {
+    localStorage.setItem('mediDisclaimerAccepted', 'true');
+    document.getElementById('disclaimer-overlay').style.display = 'none';
+}
+
+// Update Init
+document.addEventListener('DOMContentLoaded', () => {
+    updateDashboardWidgets();
+    loadProfile();
+    loadDoctors();
+    loadAppointments();
+    checkDisclaimer();
+});
