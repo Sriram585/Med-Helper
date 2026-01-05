@@ -1253,7 +1253,64 @@ select {
     background: #ef4444;
 }
 
-.chart-label {
-    font-size: 0.8rem;
+/* --- NEW DOCTOR LIST UI --- */
+.doctor-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.doctor-row {
+    background: white;
+    border-radius: 16px;
+    padding: 15px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: 0.2s;
+}
+
+.doctor-row:hover {
+    transform: translateX(5px);
+    border-color: var(--primary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.doc-img-sm {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #e0e7ff;
+}
+
+.doc-info-list {
+    flex: 1;
+}
+
+.doc-name-list {
+    font-weight: 700;
+    color: var(--text-main);
+    font-size: 1.05rem;
+}
+
+.doc-spec-list {
+    font-size: 0.85rem;
     color: var(--text-secondary);
+}
+
+.btn-book-sm {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-book-sm:hover {
+    background: var(--secondary);
 }

@@ -581,6 +581,7 @@ function saveProfile() {
 }
 
 // --- 7. APPOINTMENTS SYSTEM ---
+// --- 7. APPOINTMENTS SYSTEM ---
 const mockDoctors = [
     { id: 1, name: "Dr. Sarah Smith", specialty: "Cardiologist", image: "https://ui-avatars.com/api/?name=Sarah+Smith&background=random" },
     { id: 2, name: "Dr. James Wilson", specialty: "Dermatologist", image: "https://ui-avatars.com/api/?name=James+Wilson&background=random" },
@@ -593,14 +594,13 @@ function loadDoctors() {
     const list = document.getElementById('doctor-list');
     if (!list) return;
     list.innerHTML = mockDoctors.map(doc => `
-        <div class="doctor-card">
-            <div class="doc-cover"></div>
-            <div class="doc-info">
-                <img src="${doc.image}" class="doc-img">
-                <div class="doc-name">${doc.name}</div>
-                <div class="doc-spec">${doc.specialty}</div>
-                <button class="btn-book" onclick="bookAppointment('${doc.name}')">Book Visit</button>
+        <div class="doctor-row">
+            <img src="${doc.image}" class="doc-img-sm">
+            <div class="doc-info-list">
+                <div class="doc-name-list">${doc.name}</div>
+                <div class="doc-spec-list">${doc.specialty}</div>
             </div>
+            <button class="btn-book-sm" onclick="bookAppointment('${doc.name}')">Book</button>
         </div>
     `).join('');
 }
@@ -618,20 +618,36 @@ function filterDoctors() {
 let selectedDoctor = null;
 
 function bookAppointment(docName) {
-    selectedDoctor = docName;
-    document.getElementById('modal-doc-name').innerText = docName;
-    document.getElementById('appt-date-input').value = "Tomorrow at 10 AM"; // Default
-    document.getElementById('date-modal').style.display = 'flex';
+    try {
+        console.log("Booking for:", docName);
+        selectedDoctor = docName;
+        const nameEl = document.getElementById('modal-doc-name');
+        const inputEl = document.getElementById('appt-date-input');
+        const modalEl = document.getElementById('date-modal');
+
+        if (nameEl) nameEl.innerText = docName;
+        if (inputEl) inputEl.value = "Tomorrow at 10 AM";
+        if (modalEl) modalEl.style.display = 'flex';
+    } catch (e) {
+        console.error(e);
+        alert("Error opening booking modal. See console.");
+    }
 }
 
 function closeDateModal() {
-    document.getElementById('date-modal').style.display = 'none';
+    const modal = document.getElementById('date-modal');
+    if (modal) modal.style.display = 'none';
     selectedDoctor = null;
 }
 
 function confirmAppointment() {
-    const date = document.getElementById('appt-date-input').value;
-    if (!date || !selectedDoctor) return;
+    const dateInput = document.getElementById('appt-date-input');
+    const date = dateInput ? dateInput.value : null;
+
+    if (!date || !selectedDoctor) {
+        alert("Please confirm the doctor and date.");
+        return;
+    }
 
     closeDateModal();
 
@@ -654,7 +670,8 @@ function showSuccessModal(title, message) {
 }
 
 function closeSuccessModal() {
-    document.getElementById('success-modal').style.display = 'none';
+    const modal = document.getElementById('success-modal');
+    if (modal) modal.style.display = 'none';
 }
 
 function showToast(message) {
