@@ -154,6 +154,7 @@
         <section id="view-medical-chat" class="view-section" style="display: none">
             <div class="glass-panel chat-container">
                 <div class="chat-window" id="chat-window">
+                    <button class="btn-back" onclick="switchView('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
                     <div class="message ai-message">
                         <div class="msg-avatar"><i class="fas fa-robot"></i></div>
                         <div class="msg-content">Hello! I'm MediMind AI. Ask me any general health questions. Note: I am an AI, not a doctor.</div>
@@ -170,6 +171,7 @@
         <section id="view-medications" class="view-section" style="display: none">
             <div class="meds-layout">
                 <div class="glass-panel add-med-form">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i class="fas fa-arrow-left"></i> Back</button>
                     <h3><i class="fas fa-plus-circle"></i> Add Medication</h3>
                     <div class="form-group">
                         <label>Name</label>
@@ -182,6 +184,10 @@
                     <div class="form-group">
                         <label>Frequency</label>
                         <input type="text" id="med-freq" placeholder="e.g. Twice daily">
+                    </div>
+                    <div class="form-group">
+                        <label>Reminder Time</label>
+                        <input type="time" id="med-time">
                     </div>
                     <button class="btn-primary full-width" onclick="addMedication()">Save Medication</button>
                 </div>
@@ -199,6 +205,7 @@
         <section id="view-bmi" class="view-section" style="display: none">
             <div class="glass-panel tool-card">
                 <div class="tool-content">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
                     <div class="tool-icon"><i class="fas fa-weight-scale"></i></div>
                     <h2>BMI Calculator</h2>
                     <p>Check your Body Mass Index (BMI) to confirm if you are in a healthy weight range.</p>
@@ -227,6 +234,7 @@
         <section id="view-hydration" class="view-section" style="display: none">
             <div class="glass-panel tool-card">
                 <div class="tool-content">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
                     <div class="tool-icon"><i class="fas fa-tint"></i></div>
                     <h2>Daily Hydration</h2>
                     <p>Stay hydrated! Tracking your water intake helps improve energy and focus.</p>
@@ -251,6 +259,7 @@
         <section id="view-mood" class="view-section" style="display: none">
              <div class="glass-panel tool-card">
                 <div class="tool-content">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
                     <div class="tool-icon"><i class="fas fa-smile-beam"></i></div>
                     <h2>How are you feeling?</h2>
                     <p>Track your mood to see patterns over time.</p>
@@ -296,6 +305,7 @@
         <!-- HISTORY -->
         <section id="view-history" class="view-section" style="display: none">
           <div class="glass-panel history-panel">
+            <button class="btn-back" onclick="switchView('dashboard')" style="margin: 20px 0 0 20px;"><i class="fas fa-arrow-left"></i> Back</button>
             <div class="panel-header">
               <h2>Recent Consultations</h2>
               <button class="btn-clear" onclick="clearHistory()">
@@ -309,6 +319,7 @@
         <!-- PROFILE (Fully Functional) -->
          <section id="view-profile" class="view-section" style="display: none">
              <div class="glass-panel profile-card">
+                 <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom: 20px;"><i class="fas fa-arrow-left"></i> Back</button>
                  <div class="profile-header-edit">
                     <div class="profile-avatar-container">
                         <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff&size=128" id="profile-img-lg" class="profile-img" />
@@ -366,6 +377,7 @@
         <!-- DOCTOR APPOINTMENTS -->
         <section id="view-appointments" class="view-section" style="display: none">
             <div class="glass-panel" style="padding: 20px;">
+                <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i class="fas fa-arrow-left"></i> Back</button>
                 <div class="search-bar">
                     <input type="text" placeholder="Search by specialty (e.g. Cardiologist)..." id="doc-search" onkeyup="filterDoctors()">
                     <i class="fas fa-search search-icon"></i>

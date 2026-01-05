@@ -222,8 +222,9 @@ async function loadMedications() {
                     <span class="med-name">${m.name}</span>
                     <button class="btn-delete" onclick="deleteMedication('${m.id}')"><i class="fas fa-trash"></i></button>
                 </div>
+                </div>
                 <div class="med-info"><i class="fas fa-prescription-bottle"></i> ${m.dosage}</div>
-                <div class="med-info"><i class="fas fa-clock"></i> ${m.frequency}</div>
+                <div class="med-info"><i class="fas fa-clock"></i> ${m.frequency} ${m.time ? '<span class="badge-pro" style="margin-left:5px; font-size:0.8rem;">' + m.time + '</span>' : ''}</div>
             </div>
         `).join('');
     } catch (e) {
@@ -235,19 +236,21 @@ async function addMedication() {
     const name = document.getElementById('med-name').value;
     const dosage = document.getElementById('med-dosage').value;
     const freq = document.getElementById('med-freq').value;
+    const time = document.getElementById('med-time').value;
 
     if (!name || !dosage) { alert("Name and Dosage are required."); return; }
 
     await fetch(`${API_BASE}/medications`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, dosage, frequency: freq })
+        body: JSON.stringify({ name, dosage, frequency: freq, time })
     });
 
     // Clear form
     document.getElementById('med-name').value = '';
     document.getElementById('med-dosage').value = '';
     document.getElementById('med-freq').value = '';
+    document.getElementById('med-time').value = '';
 
     loadMedications();
 }
@@ -786,5 +789,27 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProfile();
     loadDoctors();
     loadAppointments();
+    loadAppointments();
     checkDisclaimer();
+
+    // Start Reminder Loop
+    setInterval(checkMedicationReminders, 60000);
 });
+
+// --- REMINDER SYSTEM ---
+function checkMedicationReminders() {
+    const now = new Date();
+    // Format HH:MM
+    const current = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+
+    fetch(`${API_BASE}/medications`)
+        .then(res => res.json())
+        .then(meds => {
+            meds.forEach(m => {
+                if (m.time === current) {
+                    showSuccessModal("Medication Reminder", `It's time to take your <strong>${m.name}</strong> (${m.dosage})!`);
+                }
+            });
+        })
+        .catch(e => console.error("Reminder check failed", e));
+}

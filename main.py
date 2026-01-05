@@ -37,6 +37,7 @@ class Medication(BaseModel):
     name: str
     dosage: str
     frequency: str
+    time: Optional[str] = None # HH:MM format
     notes: Optional[str] = ""
 
 # ==========================================
