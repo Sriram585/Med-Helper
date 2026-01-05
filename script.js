@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadFullHistory();
     setupVoiceInput();
     loadMedications(); // Initial load
+    loadHabits(); // Habits Load
 });
 
 const API_BASE = 'http://127.0.0.1:8000';
@@ -40,7 +41,11 @@ function switchView(viewId) {
         'appointments': ['Find Doctors', 'Book Medical Consultations'],
         'diet': ['AI Nutritionist', 'Personalized Meal Plans'],
         'workout': ['Workout Coach', 'Fitness Routines'],
-        'wearables': ['Wearables', 'Device Synchronization']
+        'workout': ['Workout Coach', 'Fitness Routines'],
+        'wearables': ['Wearables', 'Device Synchronization'],
+        'habits': ['Daily Habits', 'Build healthy routines'],
+        'sleep': ['Sleep Calculator', 'Optimize your rest'],
+        'lab': ['Lab Analyzer', 'AI Report Interpretation']
     };
     if (titles[viewId]) {
         document.getElementById('page-title').innerText = titles[viewId][0];
@@ -798,6 +803,205 @@ document.addEventListener('DOMContentLoaded', () => {
     checkDisclaimer();
 
     // Start Reminder Loop
+
+    // --- 10. NEW FEATURES LOGIC ---
+
+    // === HABITS ===
+    function loadHabits() {
+        const list = document.getElementById('habits-list');
+        if (!list) return;
+
+        // Structure: [{id, text, streak, lastDoneDate}]
+        let habits = JSON.parse(localStorage.getItem('mediHabits') || '[]');
+        const today = new Date().toLocaleDateString();
+
+        // Calculate Total Streak (Sum of all streaks for fun)
+        const totalStreak = habits.reduce((acc, h) => acc + (h.streak || 0), 0);
+        document.getElementById('total-streak').innerText = totalStreak + " Days";
+
+        list.innerHTML = habits.map(h => {
+            const isDoneToday = h.lastDoneDate === today;
+            return `
+        <div class="glass-panel habit-card ${isDoneToday ? 'done' : ''}" style="display:flex; justify-content:space-between; align-items:center; padding:15px; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <div onclick="toggleHabit(${h.id})" style="cursor:pointer; width:30px; height:30px; border-radius:50%; border:2px solid ${isDoneToday ? '#22c55e' : '#cbd5e1'}; background:${isDoneToday ? '#22c55e' : 'transparent'}; display:flex; align-items:center; justify-content:center;">
+                    ${isDoneToday ? '<i class="fas fa-check" style="color:white;"></i>' : ''}
+                </div>
+                <div>
+                    <div style="font-weight:600; text-decoration:${isDoneToday ? 'line-through' : 'none'}; color:${isDoneToday ? 'var(--text-secondary)' : 'var(--text-primary)'}">${h.text}</div>
+                    <div style="font-size:0.8rem; color:var(--text-secondary);"><i class="fas fa-fire" style="color:${h.streak > 0 ? '#ef4444' : '#ccc'}"></i> ${h.streak} day streak</div>
+                </div>
+            </div>
+            <button class="icon-btn" onclick="deleteHabit(${h.id})" style="color:#cbd5e1;"><i class="fas fa-trash"></i></button>
+        </div>
+        `;
+        }).join('');
+    }
+
+    function addHabit() {
+        const input = document.getElementById('new-habit-input');
+        const text = input.value.trim();
+        if (!text) return;
+
+        let habits = JSON.parse(localStorage.getItem('mediHabits') || '[]');
+        habits.push({
+            id: Date.now(),
+            text: text,
+            streak: 0,
+            lastDoneDate: null
+        });
+        localStorage.setItem('mediHabits', JSON.stringify(habits));
+        input.value = '';
+        loadHabits();
+    }
+
+    function toggleHabit(id) {
+        let habits = JSON.parse(localStorage.getItem('mediHabits') || '[]');
+        const habit = habits.find(h => h.id === id);
+        if (!habit) return;
+
+        const today = new Date().toLocaleDateString();
+        const yesterday = new Date(Date.now() - 86400000).toLocaleDateString();
+
+        if (habit.lastDoneDate === today) {
+            // Undo
+            habit.lastDoneDate = null;
+            // Logic to revert streak is complex without history, simple decrement if > 0
+            if (habit.streak > 0) habit.streak--;
+        } else {
+            // Do
+            if (habit.lastDoneDate === yesterday) {
+                habit.streak++;
+            } else {
+                habit.streak = 1; // Reset or Start
+            }
+            habit.lastDoneDate = today;
+            showToast("Habit Completed! 🔥");
+        }
+
+        localStorage.setItem('mediHabits', JSON.stringify(habits));
+        loadHabits();
+    }
+
+    function deleteHabit(id) {
+        if (!confirm("Delete this habit?")) return;
+        let habits = JSON.parse(localStorage.getItem('mediHabits') || '[]');
+        habits = habits.filter(h => h.id !== id);
+        localStorage.setItem('mediHabits', JSON.stringify(habits));
+        loadHabits();
+    }
+
+    // === SLEEP CALCULATOR ===
+    let sleepMode = 'wake-at';
+
+    function toggleSleepMode(mode) {
+        sleepMode = mode;
+        document.getElementById('btn-wake-at').classList.toggle('active', mode === 'wake-at');
+        document.getElementById('btn-sleep-now').classList.toggle('active', mode === 'sleep-now');
+
+        const inputContainer = document.getElementById('sleep-input-container');
+        if (mode === 'sleep-now') {
+            inputContainer.style.display = 'none';
+            calculateSleep(); // Auto calc for now
+        } else {
+            inputContainer.style.display = 'block';
+            document.getElementById('sleep-results').innerHTML = '';
+        }
+    }
+
+    function calculateSleep() {
+        const resultsDiv = document.getElementById('sleep-results');
+        resultsDiv.innerHTML = '';
+
+        let baseTime = new Date();
+        let isWakeTime = false; // Are we calculating backwards from a wake time?
+
+        if (sleepMode === 'wake-at') {
+            const timeInput = document.getElementById('wake-time').value; // HH:MM 24h
+            if (!timeInput) return;
+
+            const [hours, mins] = timeInput.split(':');
+            baseTime.setHours(parseInt(hours), parseInt(mins), 0);
+
+            // If time is in past for today, assume full circle? No, usually Date object handles it but let's just use raw manipulation.
+            // Actually simpler: Treat 'baseTime' as the TARGET.
+            // We want to subtract 90 min cycles.
+            isWakeTime = true;
+
+        } else {
+            // Sleep Now
+            // Start from Now + 15 mins (avg time to fall asleep)
+            baseTime.setMinutes(baseTime.getMinutes() + 15);
+            isWakeTime = false;
+        }
+
+        // Cycles: 4 (6h), 5 (7.5h), 6 (9h)
+        const cycles = [6, 5, 4]; // Recommended order
+
+        let html = '';
+        if (sleepMode === 'sleep-now') {
+            html += `<h3>If you sleep now (in 15m), wake up at:</h3>`;
+        } else {
+            html += `<h3>To wake up at ${document.getElementById('wake-time').value}, sleep at:</h3>`;
+        }
+
+        cycles.forEach(c => {
+            const cycleTime = new Date(baseTime); // Clone
+            if (isWakeTime) {
+                // Subtract 90 * c minutes
+                cycleTime.setMinutes(cycleTime.getMinutes() - (c * 90));
+            } else {
+                // Add 90 * c minutes
+                cycleTime.setMinutes(cycleTime.getMinutes() + (c * 90));
+            }
+
+            const timeStr = cycleTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            html += `
+        <div class="glass-panel" style="padding:15px; margin-bottom:10px; border-left: 5px solid ${c === 5 || c === 6 ? '#10b981' : '#f59e0b'};">
+            <div style="font-size:1.2rem; font-weight:bold;">${timeStr}</div>
+            <div style="color:var(--text-secondary); font-size:0.9rem;">${c} Cycles (${c * 1.5} Hours)</div>
+        </div>
+        `;
+        });
+
+        resultsDiv.innerHTML = html;
+    }
+
+    // === LAB REPORT ANALYZER ===
+    async function analyzeLabReport() {
+        const text = document.getElementById('lab-report-text').value;
+        if (!text.trim()) { alert("Please paste the report text."); return; }
+
+        document.getElementById('lab-loader').style.display = 'flex';
+        document.getElementById('lab-result').style.display = 'none';
+
+        try {
+            const res = await fetch(`${API_BASE}/analyze_report`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ report_text: text })
+            });
+            const data = await res.json();
+
+            document.getElementById('lab-loader').style.display = 'none';
+            const resultDiv = document.getElementById('lab-result');
+            const contentDiv = document.getElementById('lab-result-content');
+
+            // Simple Markdown cleaning
+            let formatted = data.analysis
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '<br><br>')
+                .replace(/\n-/g, '<br>•');
+
+            contentDiv.innerHTML = formatted;
+            resultDiv.style.display = 'block';
+
+        } catch (e) {
+            document.getElementById('lab-loader').style.display = 'none';
+            alert("Error analyzing report. Ensure server is running.");
+        }
+    }
     setInterval(checkMedicationReminders, 60000);
 });
 

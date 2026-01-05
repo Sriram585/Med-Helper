@@ -50,6 +50,9 @@ class WorkoutRequest(BaseModel):
     level: str
     equipment: str
 
+class LabReportRequest(BaseModel):
+    report_text: str
+
 # ==========================================
 # 1. INTERNAL KNOWLEDGE (Replaces CSVs)
 # ==========================================
@@ -338,6 +341,34 @@ async def generate_workout(req: WorkoutRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/analyze_report")
+async def analyze_report(req: LabReportRequest):
+    prompt = f"""
+    You are a friendly medical explanation assistant. 
+    Analyze this raw lab report data: "{req.report_text}"
+    
+    1. Identify the key metrics provided (e.g. Hemoglobin, Glucose).
+    2. Check if they are within standard normal ranges (general adult).
+    3. Explain what each result means in simple terms.
+    4. Flag anything that seems High or Low.
+    5. Provide a short, reassuring summary.
+    
+    IMPORTANT: 
+    - Use clear Markdown formatting.
+    - Do NOT diagnose specific diseases. Use phrases like "may indicate" or "commonly seen in".
+    - End with a disclaimer: "This is an AI explanation, not a doctor's diagnosis."
+    """
+    try:
+        chat = await client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama-3.3-70b-versatile",
+            max_tokens=800
+        )
+        return {"analysis": chat.choices[0].message.content}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/medications")
 def get_medications():
     return load_json_file("medications.json", [])
 

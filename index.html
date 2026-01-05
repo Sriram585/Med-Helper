@@ -62,17 +62,23 @@
           <button class="nav-item" onclick="switchView('mood')">
             <i class="fas fa-smile"></i> <span>Mood Tracker</span>
           </button>
+          <button class="nav-item" onclick="switchView('sleep')">
+            <i class="fas fa-bed"></i> <span>Sleep Calculator</span>
+          </button>
+          <button class="nav-item" onclick="switchView('lab')">
+            <i class="fas fa-flask"></i> <span>Lab Analyzer</span>
+          </button>
 
           <div class="menu-label" style="margin-top: 20px;">Account</div>
           <button class="nav-item" onclick="switchView('history')">
             <i class="fas fa-history"></i> <span>History</span>
           </button>
+          <button class="nav-item" onclick="switchView('habits')">
+            <i class="fas fa-fire"></i> <span>Daily Habits</span>
+          </button>
         </nav>
 
-        <div class="menu-label">Quick Access</div>
-        <div id="sidebar-history" class="history-list">
-          <div class="empty-history">No recent scans</div>
-        </div>
+
 
         <div class="sidebar-footer">
           <button class="btn-sos" onclick="triggerSOS()">
@@ -505,6 +511,87 @@
                 <div id="appointment-list">
                     <!-- Booked appointments -->
                 </div>
+            </div>
+        </section>
+
+        <!-- HABITS TRACKER -->
+        <section id="view-habits" class="view-section" style="display: none">
+            <div class="glass-panel tool-card">
+                <div class="tool-content">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
+                    <div class="tool-icon"><i class="fas fa-fire-alt" style="color:#ef4444;"></i></div>
+                    <h2>Daily Healthy Habits</h2>
+                    <p>Build consistency. Keep the fire burning!</p>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background: rgba(255,255,255,0.5); padding:15px; border-radius:15px;">
+                        <div>
+                            <span style="font-size:0.9rem; color:var(--text-secondary);">Current Streak</span>
+                            <div style="font-size:1.5rem; font-weight:800; color:#ef4444;" id="total-streak">0 Days</div>
+                        </div>
+                        <i class="fas fa-fire" style="font-size:2.5rem; color:#ef4444; opacity:0.8;"></i>
+                    </div>
+
+                    <div class="input-actions" style="margin-bottom:20px;">
+                        <input type="text" id="new-habit-input" placeholder="New habit (e.g. Read 10 pages)" style="padding:10px; border-radius:10px; border:1px solid #ddd; flex:1;">
+                        <button class="btn-primary" onclick="addHabit()" style="width:auto;"><i class="fas fa-plus"></i></button>
+                    </div>
+
+                    <div id="habits-list" class="habits-grid">
+                        <!-- Habits Injected Here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLEEP CALCULATOR -->
+        <section id="view-sleep" class="view-section" style="display: none">
+            <div class="glass-panel tool-card">
+                <div class="tool-content">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
+                    <div class="tool-icon"><i class="fas fa-moon" style="color:#6366f1;"></i></div>
+                    <h2>Sleep Cycle Calculator</h2>
+                    <p>Wake up feeling refreshed by sleeping in 90-minute cycles.</p>
+
+                    <div class="card-toggle-row" style="display:flex; gap:10px; margin-bottom:20px; width:100%;">
+                        <button class="btn-outline active" id="btn-wake-at" onclick="toggleSleepMode('wake-at')" style="flex:1;">I want to wake at...</button>
+                        <button class="btn-outline" id="btn-sleep-now" onclick="toggleSleepMode('sleep-now')" style="flex:1;">I'm sleeping now</button>
+                    </div>
+
+                    <div id="sleep-input-container">
+                        <label>Wake Up Time</label>
+                        <input type="time" id="wake-time" style="width:100%; padding:15px; border-radius:10px; border:1px solid #ccc; font-size:1.2rem; margin-bottom:15px;">
+                        <button class="btn-primary full-width" onclick="calculateSleep()">Calculate Best Bedtimes</button>
+                    </div>
+
+                    <div id="sleep-results" class="results-grid" style="margin-top:20px;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LAB REPORT ANALYZER -->
+        <section id="view-lab" class="view-section" style="display: none">
+            <div class="glass-panel input-container">
+                 <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i class="fas fa-arrow-left"></i> Back</button>
+                <div class="input-header">
+                    <i class="fas fa-microscope"></i>
+                    <span>Lab Report Analyzer</span>
+                </div>
+                <div class="textarea-wrapper">
+                    <textarea id="lab-report-text" placeholder="Paste your Blood Test, Lipid Profile, or other lab results here..."></textarea>
+                </div>
+                <div class="input-actions">
+                    <button class="btn-primary" onclick="analyzeLabReport()">Analyze Report <i class="fas fa-magic"></i></button>
+                </div>
+            </div>
+            
+            <div id="lab-loader" class="loader" style="display:none;">
+                <div class="spinner"></div>
+                <span>AI is reading your report...</span>
+            </div>
+
+            <div id="lab-result" class="glass-panel" style="display:none; margin-top:20px; padding:25px;">
+                <h3><i class="fas fa-file-medical-alt"></i> Analysis Result</h3>
+                <div id="lab-result-content" style="line-height:1.6; color:var(--text-primary);"></div>
             </div>
         </section>
 
