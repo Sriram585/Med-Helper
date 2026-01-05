@@ -34,7 +34,7 @@
             <i class="fas fa-th-large"></i> <span>Dashboard</span>
           </button>
           <button class="nav-item" onclick="switchView('medical-chat')">
-            <i class="fas fa-comments-medical"></i> <span>AI Health Chat</span>
+            <i class="fas fa-robot"></i> <span>AI Health Chat</span>
           </button>
           <button class="nav-item" onclick="switchView('medications')">
             <i class="fas fa-pills"></i> <span>Medications</span>
@@ -51,7 +51,7 @@
           
           <div class="menu-label" style="margin-top: 20px;">Wellness</div>
           <button class="nav-item" onclick="switchView('wearables')">
-            <i class="fas fa-watch"></i> <span>Wearables</span>
+            <i class="fas fa-heart-pulse"></i> <span>Wearables</span>
           </button>
           <button class="nav-item" onclick="switchView('bmi')">
             <i class="fas fa-weight"></i> <span>BMI Calculator</span>
@@ -386,58 +386,68 @@
 
         <!-- DIET PLAN -->
         <section id="view-diet" class="view-section" style="display: none">
-            <div class="glass-panel">
-                <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i class="fas fa-arrow-left"></i> Back</button>
-                <h3><i class="fas fa-carrot"></i> AI Nutritionist</h3>
-                <div class="form-row" style="margin-top:20px;">
-                    <div class="form-group">
-                        <label>Goal</label>
-                        <select id="diet-goal">
-                            <option value="Lose Weight">Lose Weight</option>
-                            <option value="Muscle Gain">Muscle Gain</option>
-                            <option value="Healthy Living">Healthy Living</option>
-                        </select>
+            <div class="glass-panel tool-card">
+                <div class="tool-content">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
+                    <div class="tool-icon"><i class="fas fa-carrot"></i></div>
+                    <h2>AI Nutritionist</h2>
+                    <p>Get a personalized 7-day meal plan based on your health goals.</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Goal</label>
+                            <select id="diet-goal">
+                                <option value="Lose Weight">Lose Weight</option>
+                                <option value="Muscle Gain">Muscle Gain</option>
+                                <option value="Healthy Living">Healthy Living</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Preferences</label>
+                            <input type="text" id="diet-pref" placeholder="e.g. Veg, Keto...">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Preferences</label>
-                        <input type="text" id="diet-pref" placeholder="e.g. Vegetarian, Keto...">
+                    <button class="btn-primary full-width" onclick="generateDiet()">Generate Plan</button>
+                    
+                    <div id="diet-result" class="results-grid" style="margin-top:30px; width:100%;">
+                        <!-- Plans go here -->
                     </div>
-                </div>
-                <button class="btn-primary full-width" onclick="generateDiet()">Generate Plan</button>
-                
-                <div id="diet-result" class="results-grid" style="margin-top:30px;">
-                    <!-- Plans go here -->
                 </div>
             </div>
         </section>
 
         <!-- WORKOUT PLAN -->
         <section id="view-workout" class="view-section" style="display: none">
-            <div class="glass-panel">
-                <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i class="fas fa-arrow-left"></i> Back</button>
-                <h3><i class="fas fa-dumbbell"></i> Personal Coach</h3>
-                <div class="form-row" style="margin-top:20px;">
-                    <div class="form-group">
-                        <label>Fitness Level</label>
-                        <select id="work-level">
-                            <option value="Beginner">Beginner</option>
-                            <option value="Intermediate">Intermediate</option>
-                            <option value="Advanced">Advanced</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Equipment</label>
-                        <select id="work-equip">
-                            <option value="None (Bodyweight)">No Equipment</option>
-                            <option value="Dumbbells">Dumbbells</option>
-                            <option value="Full Gym">Full Gym</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="btn-primary full-width" onclick="generateWorkout()">Create Routine</button>
+             <div class="glass-panel tool-card">
+                <div class="tool-content">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
+                    <div class="tool-icon"><i class="fas fa-dumbbell"></i></div>
+                    <h2>Personal Coach</h2>
+                    <p>Create a custom workout routine tailored to your equipment.</p>
 
-                <div id="workout-result" class="results-grid" style="margin-top:30px;">
-                    <!-- Plans go here -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fitness Level</label>
+                            <select id="work-level">
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Equipment</label>
+                            <select id="work-equip">
+                                <option value="None (Bodyweight)">No Equipment</option>
+                                <option value="Dumbbells">Dumbbells</option>
+                                <option value="Full Gym">Full Gym</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-primary full-width" onclick="generateWorkout()">Create Routine</button>
+
+                    <div id="workout-result" class="results-grid" style="margin-top:30px; width:100%;">
+                        <!-- Plans go here -->
+                    </div>
                 </div>
             </div>
         </section>

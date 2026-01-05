@@ -838,11 +838,20 @@ async function generateDiet() {
         const plan = await res.json();
 
         container.innerHTML = plan.map(day => `
-            <div class="glass-panel result-card" style="padding:20px;">
-                <h3 style="color:var(--primary); margin-bottom:10px;">${day.day || "Day"}</h3>
-                <ul style="padding-left:20px; font-size:0.95rem; line-height:1.6;">
-                    ${(day.meals || []).map(m => `<li>${m}</li>`).join('')}
-                </ul>
+            <div class="glass-panel plan-card">
+                <h3 style="color:var(--primary); margin-bottom:15px; border-bottom:1px solid #f1f5f9; padding-bottom:10px;">${day.day || "Day"}</h3>
+                <div>
+                    ${(day.meals || []).map(m => {
+            let tag = "Meal";
+            if (m.includes("Breakfast")) tag = "Breakfast";
+            if (m.includes("Lunch")) tag = "Lunch";
+            if (m.includes("Dinner")) tag = "Dinner";
+            if (m.includes("Snack")) tag = "Snack";
+
+            const cleanText = m.replace(tag, '').replace(':', '').trim();
+            return `<div class="plan-item"><span class="plan-tag">${tag}</span> ${cleanText || m}</div>`;
+        }).join('')}
+                </div>
             </div>
         `).join('');
     } catch (e) {
@@ -868,12 +877,14 @@ async function generateWorkout() {
         const plan = await res.json();
 
         container.innerHTML = plan.map(day => `
-            <div class="glass-panel result-card" style="padding:20px;">
-                <h3 style="color:var(--secondary); margin-bottom:5px;">${day.day || "Day"}</h3>
-                <div class="badge-pro" style="display:inline-block; margin-bottom:10px;">${day.focus || "Mix"}</div>
-                <ul style="padding-left:20px; font-size:0.95rem; line-height:1.6;">
-                    ${(day.exercises || []).map(e => `<li>${e}</li>`).join('')}
-                </ul>
+            <div class="glass-panel plan-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #f1f5f9; padding-bottom:10px;">
+                    <h3 style="color:var(--secondary); margin:0;">${day.day || "Day"}</h3>
+                    <div class="badge-pro">${day.focus || "Training"}</div>
+                </div>
+                <div>
+                    ${(day.exercises || []).map(e => `<div class="plan-item"><i class="fas fa-check-circle" style="color:#d1fae5; margin-right:8px;"></i> ${e}</div>`).join('')}
+                </div>
             </div>
         `).join('');
     } catch (e) {
