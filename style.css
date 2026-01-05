@@ -1440,3 +1440,60 @@ select {
     color: var(--primary);
     transform: translateX(-3px);
 }
+
+/* --- WEARABLE ANIMATIONS --- */
+#wear-hr {
+    transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hr-graph-mock {
+    height: 50px;
+    background: #fef2f2;
+    border-radius: 12px;
+    margin-top: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hr-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+    animation: heartbeatLine 2s infinite linear;
+}
+
+@keyframes heartbeatLine {
+    0% {
+        transform: scaleY(1);
+        opacity: 0.5;
+    }
+
+    10% {
+        transform: scaleY(4);
+        opacity: 1;
+    }
+
+    20% {
+        transform: scaleY(1);
+        opacity: 0.5;
+    }
+
+    30% {
+        transform: scaleY(3);
+        opacity: 1;
+    }
+
+    40% {
+        transform: scaleY(1);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scaleY(1);
+        opacity: 0.5;
+    }
+}

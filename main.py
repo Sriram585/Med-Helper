@@ -40,6 +40,16 @@ class Medication(BaseModel):
     time: Optional[str] = None # HH:MM format
     notes: Optional[str] = ""
 
+class DietRequest(BaseModel):
+    goal: str
+    preferences: str
+    calories: Optional[int] = 2000
+
+class WorkoutRequest(BaseModel):
+    goal: str
+    level: str
+    equipment: str
+
 # ==========================================
 # 1. INTERNAL KNOWLEDGE (Replaces CSVs)
 # ==========================================
@@ -278,7 +288,56 @@ async def chat_endpoint(request: ChatRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/medications")
+@app.post("/generate/diet")
+async def generate_diet(req: DietRequest):
+    prompt = f"""
+    Create a 7-day diet plan.
+    Goal: {req.goal}
+    Preferences: {req.preferences}
+    Calories: {req.calories}
+    
+    Return JSON format: [{{ "day": "Monday", "meals": ["Breakfast...", "Lunch...", "Dinner...", "Snack..."] }}, ...]
+    """
+    try:
+        chat = await client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama-3.3-70b-versatile",
+            response_format={"type": "json_object"}
+        )
+        res = json.loads(chat.choices[0].message.content)
+        # Handle various return formats
+        if "days" in res: return res["days"]
+        if "plan" in res: return res["plan"] 
+        if isinstance(res, dict): return list(res.values())[0]
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/generate/workout")
+async def generate_workout(req: WorkoutRequest):
+    prompt = f"""
+    Create a weekly workout routine.
+    Goal: {req.goal}
+    Level: {req.level}
+    Equipment: {req.equipment}
+    
+    Return JSON format: [{{ "day": "Monday", "focus": "Cardio", "exercises": ["30 mins run", "10 burpees"] }}, ...]
+    """
+    try:
+        chat = await client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama-3.3-70b-versatile",
+            response_format={"type": "json_object"}
+        )
+        res = json.loads(chat.choices[0].message.content)
+        if isinstance(res, dict): 
+            # Try to find the list
+            for v in res.values():
+                if isinstance(v, list): return v
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 def get_medications():
     return load_json_file("medications.json", [])
 

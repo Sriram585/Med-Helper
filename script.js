@@ -37,7 +37,10 @@ function switchView(viewId) {
         'bmi': ['BMI Calculator', 'Body Mass Index Assessment'],
         'hydration': ['Hydration Tracker', 'Daily Water Intake Goal'],
         'mood': ['Mood Tracker', 'Emotional Well-being Journal'],
-        'appointments': ['Find Doctors', 'Book Medical Consultations']
+        'appointments': ['Find Doctors', 'Book Medical Consultations'],
+        'diet': ['AI Nutritionist', 'Personalized Meal Plans'],
+        'workout': ['Workout Coach', 'Fitness Routines'],
+        'wearables': ['Wearables', 'Device Synchronization']
     };
     if (titles[viewId]) {
         document.getElementById('page-title').innerText = titles[viewId][0];
@@ -49,6 +52,8 @@ function switchView(viewId) {
     if (viewId === 'medications') loadMedications();
     if (viewId === 'hydration') loadHydration();
     if (viewId === 'mood') loadMoodHistory();
+    if (viewId === 'wearables') startWearableSimulation();
+    else stopWearableSimulation();
 }
 
 // --- 1. SYMPTOM CHECKER ---
@@ -812,4 +817,152 @@ function checkMedicationReminders() {
             });
         })
         .catch(e => console.error("Reminder check failed", e));
+}
+
+// --- NEW FEATURES LOGIC ---
+
+// 1. DIET PLAN
+async function generateDiet() {
+    const goal = document.getElementById('diet-goal').value;
+    const pref = document.getElementById('diet-pref').value || "No specific preferences";
+    const container = document.getElementById('diet-result');
+
+    container.innerHTML = '<div class="loader" style="display:flex; grid-column:1/-1;">Generating nutritional plan...</div>';
+
+    try {
+        const res = await fetch(`${API_BASE}/generate/diet`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ goal, preferences: pref })
+        });
+        const plan = await res.json();
+
+        container.innerHTML = plan.map(day => `
+            <div class="glass-panel result-card" style="padding:20px;">
+                <h3 style="color:var(--primary); margin-bottom:10px;">${day.day || "Day"}</h3>
+                <ul style="padding-left:20px; font-size:0.95rem; line-height:1.6;">
+                    ${(day.meals || []).map(m => `<li>${m}</li>`).join('')}
+                </ul>
+            </div>
+        `).join('');
+    } catch (e) {
+        container.innerHTML = "Error generating plan. Try again.";
+    }
+}
+
+// 2. WORKOUT PLAN
+async function generateWorkout() {
+    const level = document.getElementById('work-level').value;
+    const equip = document.getElementById('work-equip').value;
+    const goal = "General Fitness"; // Simplified for UI
+    const container = document.getElementById('workout-result');
+
+    container.innerHTML = '<div class="loader" style="display:flex; grid-column:1/-1;">Building workout routine...</div>';
+
+    try {
+        const res = await fetch(`${API_BASE}/generate/workout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ level, equipment: equip, goal })
+        });
+        const plan = await res.json();
+
+        container.innerHTML = plan.map(day => `
+            <div class="glass-panel result-card" style="padding:20px;">
+                <h3 style="color:var(--secondary); margin-bottom:5px;">${day.day || "Day"}</h3>
+                <div class="badge-pro" style="display:inline-block; margin-bottom:10px;">${day.focus || "Mix"}</div>
+                <ul style="padding-left:20px; font-size:0.95rem; line-height:1.6;">
+                    ${(day.exercises || []).map(e => `<li>${e}</li>`).join('')}
+                </ul>
+            </div>
+        `).join('');
+    } catch (e) {
+        container.innerHTML = "Error generating workout. Try again.";
+    }
+}
+
+// 3. WEARABLE SIMULATION
+let wearInterval;
+let hrChart = null;
+
+function initHRChart() {
+    const ctx = document.getElementById('hrChart').getContext('2d');
+    hrChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Heart Rate (BPM)',
+                data: [],
+                borderColor: '#ef4444',
+                backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: false,
+                pointRadius: 4,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#ef4444',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 800, easing: 'linear' }, // Smooth slide
+            scales: {
+                x: {
+                    title: { display: true, text: 'Time' },
+                    grid: { display: false }
+                },
+                y: {
+                    title: { display: true, text: 'BPM' },
+                    min: 50,
+                    max: 130
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+}
+
+function startWearableSimulation() {
+    if (!hrChart) initHRChart();
+
+    // Clear old interval if exists
+    if (wearInterval) clearInterval(wearInterval);
+
+    wearInterval = setInterval(() => {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+        // Random BPM between 70 and 100
+        const hr = 70 + Math.floor(Math.random() * 30);
+
+        // Update Chart Data
+        hrChart.data.labels.push(timeStr);
+        hrChart.data.datasets[0].data.push(hr);
+
+        // Keep last 15 points
+        if (hrChart.data.labels.length > 15) {
+            hrChart.data.labels.shift();
+            hrChart.data.datasets[0].data.shift();
+        }
+
+        hrChart.update();
+
+        // Update Big Number
+        const hrEl = document.getElementById('wear-hr');
+        if (hrEl) {
+            hrEl.innerText = hr;
+            hrEl.style.transform = "scale(1.1)";
+            setTimeout(() => hrEl.style.transform = "scale(1)", 200);
+        }
+
+    }, 2000);
+}
+
+function stopWearableSimulation() {
+    if (wearInterval) clearInterval(wearInterval);
 }

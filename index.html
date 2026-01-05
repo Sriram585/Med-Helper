@@ -13,6 +13,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div class="app-background">
@@ -41,8 +42,17 @@
           <button class="nav-item" onclick="switchView('appointments')">
             <i class="fas fa-user-md"></i> <span>Find Doctors</span>
           </button>
+          <button class="nav-item" onclick="switchView('diet')">
+            <i class="fas fa-carrot"></i> <span>Diet Plan</span>
+          </button>
+          <button class="nav-item" onclick="switchView('workout')">
+            <i class="fas fa-dumbbell"></i> <span>Workouts</span>
+          </button>
           
           <div class="menu-label" style="margin-top: 20px;">Wellness</div>
+          <button class="nav-item" onclick="switchView('wearables')">
+            <i class="fas fa-watch"></i> <span>Wearables</span>
+          </button>
           <button class="nav-item" onclick="switchView('bmi')">
             <i class="fas fa-weight"></i> <span>BMI Calculator</span>
           </button>
@@ -373,6 +383,99 @@
                  </div>
              </div>
          </section>
+
+        <!-- DIET PLAN -->
+        <section id="view-diet" class="view-section" style="display: none">
+            <div class="glass-panel">
+                <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i class="fas fa-arrow-left"></i> Back</button>
+                <h3><i class="fas fa-carrot"></i> AI Nutritionist</h3>
+                <div class="form-row" style="margin-top:20px;">
+                    <div class="form-group">
+                        <label>Goal</label>
+                        <select id="diet-goal">
+                            <option value="Lose Weight">Lose Weight</option>
+                            <option value="Muscle Gain">Muscle Gain</option>
+                            <option value="Healthy Living">Healthy Living</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferences</label>
+                        <input type="text" id="diet-pref" placeholder="e.g. Vegetarian, Keto...">
+                    </div>
+                </div>
+                <button class="btn-primary full-width" onclick="generateDiet()">Generate Plan</button>
+                
+                <div id="diet-result" class="results-grid" style="margin-top:30px;">
+                    <!-- Plans go here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- WORKOUT PLAN -->
+        <section id="view-workout" class="view-section" style="display: none">
+            <div class="glass-panel">
+                <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i class="fas fa-arrow-left"></i> Back</button>
+                <h3><i class="fas fa-dumbbell"></i> Personal Coach</h3>
+                <div class="form-row" style="margin-top:20px;">
+                    <div class="form-group">
+                        <label>Fitness Level</label>
+                        <select id="work-level">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Equipment</label>
+                        <select id="work-equip">
+                            <option value="None (Bodyweight)">No Equipment</option>
+                            <option value="Dumbbells">Dumbbells</option>
+                            <option value="Full Gym">Full Gym</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-primary full-width" onclick="generateWorkout()">Create Routine</button>
+
+                <div id="workout-result" class="results-grid" style="margin-top:30px;">
+                    <!-- Plans go here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- WEARABLES DASHBOARD -->
+        <section id="view-wearables" class="view-section" style="display: none">
+             <div class="glass-panel">
+                <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i class="fas fa-arrow-left"></i> Back</button>
+                <h3><i class="fas fa-watch"></i> Device Sync</h3>
+                <p style="color:var(--text-secondary); margin-bottom:20px;">Connected to: <strong>Mock Fitbit Versa 4</strong></p>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-blue"><i class="fas fa-shoe-prints"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="wear-steps">8,432</span>
+                            <span class="stat-label">Steps Today</span>
+                        </div>
+                    </div>
+                     <div class="stat-card">
+                        <div class="stat-icon icon-purple"><i class="fas fa-moon"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="wear-sleep">7h 12m</span>
+                            <span class="stat-label">Sleep</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel-sm" style="padding:20px; text-align:center; margin-top:20px;">
+                    <div style="font-size:3rem; font-weight:900; color:#ef4444;" id="wear-hr">72</div>
+                    <div style="color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Heart Rate (BPM)</div>
+                    <div style="height: 300px; width: 100%; margin-top: 20px;">
+                        <canvas id="hrChart"></canvas>
+                    </div>
+                </div>
+
+             </div>
+        </section>
 
         <!-- DOCTOR APPOINTMENTS -->
         <section id="view-appointments" class="view-section" style="display: none">
