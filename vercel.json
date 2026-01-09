@@ -1,0 +1,38 @@
+{
+    "builds": [
+        {
+            "src": "main.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/analyze",
+            "dest": "/main.py"
+        },
+        {
+            "src": "/chat",
+            "dest": "/main.py"
+        },
+        {
+            "src": "/generate/(.*)",
+            "dest": "/main.py"
+        },
+        {
+            "src": "/analyze_report(.*)",
+            "dest": "/main.py"
+        },
+        {
+            "src": "/docs",
+            "dest": "/main.py"
+        },
+        {
+            "src": "/openapi.json",
+            "dest": "/main.py"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/$1"
+        }
+    ]
+}
