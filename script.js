@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSidebarHistory();
     loadFullHistory();
     setupVoiceInput();
-    loadMedications(); // Initial load
     loadHabits(); // Habits Load
 });
 
@@ -18,7 +17,7 @@ function switchView(viewId) {
     const buttons = document.querySelectorAll('.nav-item');
     if (viewId === 'dashboard') buttons[0].classList.add('active');
     if (viewId === 'medical-chat') buttons[1].classList.add('active');
-    if (viewId === 'medications') buttons[2].classList.add('active');
+    // if (viewId === 'medications') buttons[2].classList.add('active');
     if (viewId === 'history') buttons[3].classList.add('active');
 
     // 2. Hide all sections
@@ -32,7 +31,7 @@ function switchView(viewId) {
     const titles = {
         'dashboard': ['Dashboard', 'AI-Powered Symptom Checker'],
         'medical-chat': ['Health Assistant', 'Ask general medical questions'],
-        'medications': ['Medication Manager', 'Track your active prescriptions'],
+        // 'medications': ['Medication Manager', 'Track your active prescriptions'],
         'history': ['Medical History', 'Your past consultations log'],
         'profile': ['User Profile', 'Manage your personal details'],
         'bmi': ['BMI Calculator', 'Body Mass Index Assessment'],
@@ -54,7 +53,7 @@ function switchView(viewId) {
 
     // 5. Special Loads
     if (viewId === 'history') loadFullHistory();
-    if (viewId === 'medications') loadMedications();
+    // if (viewId === 'medications') loadMedications();
     if (viewId === 'hydration') loadHydration();
     if (viewId === 'mood') loadMoodHistory();
     if (viewId === 'wearables') startWearableSimulation();
@@ -212,64 +211,7 @@ function handleChatEnter(e) {
     if (e.key === 'Enter') sendChatMessage();
 }
 
-// --- 3. MEDICATION MANAGER ---
-async function loadMedications() {
-    const list = document.getElementById('medications-list');
-    list.innerHTML = '<div style="color:var(--text-secondary); padding:20px;">Loading...</div>';
 
-    try {
-        const res = await fetch(`${API_BASE}/medications`);
-        const meds = await res.json();
-
-        if (meds.length === 0) {
-            list.innerHTML = '<div style="grid-column:1/-1; padding:20px; text-align:center; color:var(--text-secondary);">No active medications.</div>';
-            return;
-        }
-
-        list.innerHTML = meds.map(m => `
-            <div class="glass-panel med-card">
-                <div class="med-header">
-                    <span class="med-name">${m.name}</span>
-                    <button class="btn-delete" onclick="deleteMedication('${m.id}')"><i class="fas fa-trash"></i></button>
-                </div>
-                </div>
-                <div class="med-info"><i class="fas fa-prescription-bottle"></i> ${m.dosage}</div>
-                <div class="med-info"><i class="fas fa-clock"></i> ${m.frequency} ${m.time ? '<span class="badge-pro" style="margin-left:5px; font-size:0.8rem;">' + m.time + '</span>' : ''}</div>
-            </div>
-        `).join('');
-    } catch (e) {
-        list.innerHTML = 'Error loading medications.';
-    }
-}
-
-async function addMedication() {
-    const name = document.getElementById('med-name').value;
-    const dosage = document.getElementById('med-dosage').value;
-    const freq = document.getElementById('med-freq').value;
-    const time = document.getElementById('med-time').value;
-
-    if (!name || !dosage) { alert("Name and Dosage are required."); return; }
-
-    await fetch(`${API_BASE}/medications`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, dosage, frequency: freq, time })
-    });
-
-    // Clear form
-    document.getElementById('med-name').value = '';
-    document.getElementById('med-dosage').value = '';
-    document.getElementById('med-freq').value = '';
-    document.getElementById('med-time').value = '';
-
-    loadMedications();
-}
-
-async function deleteMedication(id) {
-    if (!confirm("Remove this medication?")) return;
-    await fetch(`${API_BASE}/medications/${id}`, { method: 'DELETE' });
-    loadMedications();
-}
 
 
 // --- UTILS: VOICE & HISTORY ---
@@ -530,18 +472,9 @@ function updateDashboardWidgets() {
     const waterEl = document.getElementById('dash-water');
     if (waterEl) waterEl.innerText = `${count} / 8`;
 
-    // 2. Meds
-    // We need to fetch meds count. Since loadMedications is async and updates DOM, 
-    // we should ideally fetch data directly. 
-    // For simplicity, we'll trigger a background fetch or just use a stored count if we had one.
-    // Better: Fetch meds just for count.
-    fetch(`${API_BASE}/medications`)
-        .then(res => res.json())
-        .then(data => {
-            const medEl = document.getElementById('dash-meds');
-            if (medEl) medEl.innerText = data.length || 0;
-        })
-        .catch(() => { });
+    // 2. Meds - REMOVED
+    const medEl = document.getElementById('dash-meds');
+    if (medEl) medEl.innerText = "-";
 
     // 3. Mood
     const moodData = JSON.parse(localStorage.getItem('mediMood') || '[]');
@@ -732,7 +665,7 @@ function loadAppointments() {
 // --- 8. REPORT EXPORT ---
 function exportHealthReport() {
     const profile = JSON.parse(localStorage.getItem('mediProfile') || '{}');
-    const meds = loadMedications_Data(); // Need to extract this logic or just fetch again
+    // const meds = loadMedications_Data(); // Removed
     const history = JSON.parse(localStorage.getItem('mediHistory') || '[]');
 
     // We'll just fetch meds from API for now in the background or assume we have them locally? 
@@ -742,11 +675,11 @@ function exportHealthReport() {
 }
 
 async function generateReportContent(profile, history) {
-    let meds = [];
-    try {
-        const res = await fetch(`${API_BASE}/medications`);
-        meds = await res.json();
-    } catch (e) { }
+    // let meds = [];
+    // try {
+    //     const res = await fetch(`${API_BASE}/medications`);
+    //     meds = await res.json();
+    // } catch (e) { }
 
     const report = `
 MEDICAL HEALTH REPORT - MediMind
@@ -761,7 +694,7 @@ Notes: ${profile.notes || 'None'}
 
 ------------------------------------------------
 ACTIVE MEDICATIONS
-${meds.length ? meds.map(m => `- ${m.name} (${m.dosage}, ${m.frequency})`).join('\n') : "No active medications."}
+(Feature Removed)
 
 ------------------------------------------------
 RECENT CONSULTATION HISTORY

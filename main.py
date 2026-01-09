@@ -32,13 +32,6 @@ class ChatRequest(BaseModel):
     message: str
     history: List[dict] = [] # [{"role": "user", "content": "..."}]
 
-class Medication(BaseModel):
-    id: Optional[str] = None
-    name: str
-    dosage: str
-    frequency: str
-    time: Optional[str] = None # HH:MM format
-    notes: Optional[str] = ""
 
 class DietRequest(BaseModel):
     goal: str
@@ -174,7 +167,7 @@ def score_diseases(user_symptoms):
             scored.append({
                 "disease": disease,
                 "confidence": min(int(confidence), 99),
-                "medication": data.get('medication', []), # FROM JSON
+                # "medication": data.get('medication', []), # REMOVED
                 "matches": list(matches)
             })
             
@@ -368,24 +361,7 @@ async def analyze_report(req: LabReportRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/medications")
-def get_medications():
-    return load_json_file("medications.json", [])
 
-@app.post("/medications")
-def add_medication(med: Medication):
-    meds = load_json_file("medications.json", [])
-    med.id = str(uuid.uuid4())
-    meds.append(med.dict())
-    save_json_file("medications.json", meds)
-    return med
-
-@app.delete("/medications/{med_id}")
-def delete_medication(med_id: str):
-    meds = load_json_file("medications.json", [])
-    new_meds = [m for m in meds if m['id'] != med_id]
-    save_json_file("medications.json", new_meds)
-    return {"status": "success"}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

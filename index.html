@@ -36,9 +36,6 @@
           <button class="nav-item" onclick="switchView('medical-chat')">
             <i class="fas fa-robot"></i> <span>AI Health Chat</span>
           </button>
-          <button class="nav-item" onclick="switchView('medications')">
-            <i class="fas fa-pills"></i> <span>Medications</span>
-          </button>
           <button class="nav-item" onclick="switchView('appointments')">
             <i class="fas fa-user-md"></i> <span>Find Doctors</span>
           </button>
@@ -116,13 +113,6 @@
                       <span class="stat-label">Hydration</span>
                   </div>
               </div>
-              <div class="stat-card" onclick="switchView('medications')">
-                  <div class="stat-icon icon-purple"><i class="fas fa-pills"></i></div>
-                  <div class="stat-info">
-                      <span class="stat-value" id="dash-meds">0</span>
-                      <span class="stat-label">Active Meds</span>
-                  </div>
-              </div>
               <div class="stat-card" onclick="switchView('mood')">
                   <div class="stat-icon icon-yellow"><i class="fas fa-smile"></i></div>
                   <div class="stat-info">
@@ -183,39 +173,6 @@
             </div>
         </section>
 
-        <!-- MEDICATIONS MANAGER -->
-        <section id="view-medications" class="view-section" style="display: none">
-            <div class="meds-layout">
-                <div class="glass-panel add-med-form">
-                    <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i class="fas fa-arrow-left"></i> Back</button>
-                    <h3><i class="fas fa-plus-circle"></i> Add Medication</h3>
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" id="med-name" placeholder="e.g. Paracetamol">
-                    </div>
-                    <div class="form-group">
-                        <label>Dosage</label>
-                        <input type="text" id="med-dosage" placeholder="e.g. 500mg">
-                    </div>
-                    <div class="form-group">
-                        <label>Frequency</label>
-                        <input type="text" id="med-freq" placeholder="e.g. Twice daily">
-                    </div>
-                    <div class="form-group">
-                        <label>Reminder Time</label>
-                        <input type="time" id="med-time">
-                    </div>
-                    <button class="btn-primary full-width" onclick="addMedication()">Save Medication</button>
-                </div>
-                
-                <div class="meds-list-container">
-                    <h3>Active Prescriptions</h3>
-                    <div id="medications-list" class="meds-grid">
-                        <!-- Meds Loaded Here -->
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <!-- BMI CALCULATOR -->
         <section id="view-bmi" class="view-section" style="display: none">
