@@ -5,34 +5,30 @@
             "use": "@vercel/python"
         }
     ],
-    "routes": [
+    "rewrites": [
         {
-            "src": "/analyze",
-            "dest": "/main.py"
+            "source": "/analyze",
+            "destination": "/main.py"
         },
         {
-            "src": "/chat",
-            "dest": "/main.py"
+            "source": "/chat",
+            "destination": "/main.py"
         },
         {
-            "src": "/generate/(.*)",
-            "dest": "/main.py"
+            "source": "/generate/(.*)",
+            "destination": "/main.py"
         },
         {
-            "src": "/analyze_report(.*)",
-            "dest": "/main.py"
+            "source": "/analyze_report",
+            "destination": "/main.py"
         },
         {
-            "src": "/docs",
-            "dest": "/main.py"
+            "source": "/docs",
+            "destination": "/main.py"
         },
         {
-            "src": "/openapi.json",
-            "dest": "/main.py"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/$1"
+            "source": "/openapi.json",
+            "destination": "/main.py"
         }
     ]
 }
