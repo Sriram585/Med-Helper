@@ -4,6 +4,8 @@ import re
 import uvicorn
 import uuid
 from typing import List, Optional
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -367,6 +369,32 @@ async def analyze_report(req: LabReportRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# ==========================================
+# 7. SERVE FRONTEND (STATIC FILES)
+# ==========================================
 
+# 1. Serve the homepage
+@app.get("/")
+async def read_index():
+    return FileResponse("index.html")
+
+# 2. Serve CSS and JS specifically
+@app.get("/style.css")
+async def read_css():
+    return FileResponse("style.css")
+
+@app.get("/script.js")
+async def read_js():
+    return FileResponse("script.js")
+
+# 3. Serve Images or other assets (Optional catch-all)
+@app.get("/{filename}")
+async def read_assets(filename: str):
+    # Security: only serve safe files if they exist
+    if os.path.exists(filename) and filename.endswith((".png", ".jpg", ".ico", ".json")):
+        return FileResponse(filename)
+    raise HTTPException(status_code=404, detail="File not found")
+
+    
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

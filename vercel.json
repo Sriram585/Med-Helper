@@ -5,30 +5,10 @@
             "use": "@vercel/python"
         }
     ],
-    "rewrites": [
+    "routes": [
         {
-            "source": "/analyze",
-            "destination": "/main.py"
-        },
-        {
-            "source": "/chat",
-            "destination": "/main.py"
-        },
-        {
-            "source": "/generate/(.*)",
-            "destination": "/main.py"
-        },
-        {
-            "source": "/analyze_report",
-            "destination": "/main.py"
-        },
-        {
-            "source": "/docs",
-            "destination": "/main.py"
-        },
-        {
-            "source": "/openapi.json",
-            "destination": "/main.py"
+            "src": "/(.*)",
+            "dest": "main.py"
         }
     ]
 }
