@@ -123,7 +123,8 @@ async def extract_symptoms_ai(user_text):
     Rules:
     - Return JSON List of strings.
     - Fix typos ("hedache" -> "headache").
-    - If no clear match, return empty list [].
+    - Map general terms to specific ones (e.g. "fever" -> "high fever", "cold" -> "continuous sneezing").
+    - If unsure, include the closest match. Only return empty list if completely unrelated.
     """
     try:
         chat = await client.chat.completions.create(
@@ -133,9 +134,11 @@ async def extract_symptoms_ai(user_text):
             response_format={"type": "json_object"}
         )
         res = json.loads(chat.choices[0].message.content)
+        print(f"DEBUG LLM RESPONSE: {res}")
         if isinstance(res, dict): return list(res.values())[0]
         return res
-    except:
+    except Exception as e:
+        print(f"DEBUG ERROR: {e}")
         return []
 
 # ==========================================

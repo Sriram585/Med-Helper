@@ -1002,20 +1002,20 @@ async function proceedAnalysis() {
 
 // --- REMINDER SYSTEM ---
 function checkMedicationReminders() {
-    const now = new Date();
-    // Format HH:MM
-    const current = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+    // Feature removed temporarily.
+    // const now = new Date();
+    // const current = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
 
-    fetch(`${API_BASE}/medications`)
-        .then(res => res.json())
-        .then(meds => {
-            meds.forEach(m => {
-                if (m.time === current) {
-                    showSuccessModal("Medication Reminder", `It's time to take your <strong>${m.name}</strong> (${m.dosage})!`);
-                }
-            });
-        })
-        .catch(e => console.error("Reminder check failed", e));
+    // fetch(`${API_BASE}/medications`)
+    //     .then(res => res.json())
+    //     .then(meds => {
+    //         meds.forEach(m => {
+    //             if (m.time === current) {
+    //                 showSuccessModal("Medication Reminder", `It's time to take your <strong>${m.name}</strong> (${m.dosage})!`);
+    //             }
+    //         });
+    //     })
+    //     .catch(e => console.error("Reminder check failed", e));
 }
 
 // --- NEW FEATURES LOGIC ---
