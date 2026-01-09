@@ -4,11 +4,13 @@ import re
 import uvicorn
 import uuid
 from typing import List, Optional
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from groq import AsyncGroq
 from dotenv import load_dotenv
+import pypdf
+import io
 
 load_dotenv()
 

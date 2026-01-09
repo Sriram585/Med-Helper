@@ -231,30 +231,7 @@ body {
     font-size: 0.8rem;
 }
 
-.btn-sos {
-    width: 100%;
-    padding: 16px;
-    border-radius: var(--radius-md);
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: white;
-    border: none;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-    transition: 0.3s;
-}
-
-.btn-sos:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 25px rgba(239, 68, 68, 0.4);
-}
+/* SOS Button Removed */
 
 /* --- MAIN CONTENT --- */
 .main-content {
@@ -746,61 +723,7 @@ textarea:focus {
 }
 
 /* --- SOS OVERLAY --- */
-.sos-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(220, 38, 38, 0.85);
-    backdrop-filter: blur(8px);
-    z-index: 1000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-}
-
-.sos-modal {
-    background: white;
-    padding: 40px;
-    text-align: center;
-    max-width: 90%;
-    width: 400px;
-    animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.sos-icon {
-    font-size: 4rem;
-    color: #ef4444;
-    margin-bottom: 20px;
-    animation: pulse 1s infinite;
-}
-
-.btn-cancel {
-    margin-top: 25px;
-    padding: 12px 30px;
-    background: #f3f4f6;
-    border: none;
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.btn-cancel:hover {
-    background: #e5e7eb;
-}
-
-@keyframes bounceIn {
-    from {
-        transform: scale(0.5);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
+/* SOS Overlay Removed */
 
 @media (max-width: 900px) {
     .app-layout {
@@ -1582,4 +1505,37 @@ select {
 
 .card-toggle-row button:last-child {
     margin-right: 0;
+}
+
+/* --- FILE UPLOAD --- */
+.upload-container {
+    border: 2px dashed #cbd5e1;
+    border-radius: var(--radius-md);
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.upload-container:hover {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.upload-icon {
+    font-size: 2.5rem;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    transition: 0.3s;
+}
+
+.upload-container:hover .upload-icon {
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.upload-text {
+    font-weight: 600;
+    color: var(--text-secondary);
 }
