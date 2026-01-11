@@ -1593,10 +1593,61 @@ function renderCalendar() {
         let indicator = hasTask ? `<div style="width:6px; height:6px; background:#ef4444; border-radius:50%; margin-top:2px;"></div>` : '';
 
         daysContainer.innerHTML += `
-            <div class="${classes}" style="height:50px; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:${isToday ? '#e0e7ff' : '#f8fafc'}; color:${isToday ? 'var(--primary)' : 'var(--text-main)'}; font-weight:${isToday ? '700' : '400'}; border:1px solid ${isToday ? '#c7d2fe' : 'transparent'};">
+            <div class="${classes}" onclick="selectDate(${i})" style="height:50px; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:${isToday ? '#e0e7ff' : '#f8fafc'}; color:${isToday ? 'var(--primary)' : 'var(--text-main)'}; font-weight:${isToday ? '700' : '400'}; border:1px solid ${isToday ? '#c7d2fe' : 'transparent'}; cursor:pointer;">
                 ${i}
                 ${indicator}
             </div>
+        `;
+    }
+}
+
+function selectDate(day) {
+    // 1. Highlight selected
+    const allDays = document.querySelectorAll('.cal-day');
+    allDays.forEach(d => d.style.border = "1px solid transparent");
+    // event.target.style.border = "1px solid var(--primary)"; // Simplified visual feedback
+
+    // 2. Find Appointments
+    const details = document.getElementById('calendar-day-details');
+    if (!details) return;
+
+    // Helper logic same as renderCalendar to find matches
+    const today = new Date();
+    const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+
+    let matches = [];
+
+    if (isCurrentMonth) {
+        MOCK_APPOINTMENTS.forEach(t => {
+            let dayOffset = null;
+            const dStr = t.date.toLowerCase();
+
+            if (dStr.includes('today')) dayOffset = 0;
+            if (dStr.includes('tomorrow')) dayOffset = 1;
+            if (dStr.includes('yesterday')) dayOffset = -1;
+
+            if (dayOffset !== null) {
+                const targetDate = new Date();
+                targetDate.setDate(today.getDate() + dayOffset);
+                if (targetDate.getMonth() === currentMonth && targetDate.getDate() === day) {
+                    matches.push(t);
+                }
+            }
+        });
+    }
+
+    // 3. Render Details
+    if (matches.length === 0) {
+        details.innerHTML = `<div style="color:var(--text-secondary); font-size:0.9rem; text-align:center; padding-top:10px;">No appointments on this date.</div>`;
+    } else {
+        details.innerHTML = `
+            <div style="font-weight:700; margin-bottom:10px; color:var(--primary);">Appointments for ${currentMonth + 1}/${day}:</div>
+            ${matches.map(m => `
+                <div style="background:#f8fafc; padding:8px; border-radius:6px; margin-bottom:5px; font-size:0.9rem; border-left:3px solid var(--primary);">
+                    <div style="font-weight:600;">${m.patient}</div>
+                    <div style="color:var(--text-secondary); font-size:0.8rem;">${m.reason} <span style="float:right;">${m.date}</span></div>
+                </div>
+            `).join('')}
         `;
     }
 }
