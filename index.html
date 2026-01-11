@@ -21,7 +21,32 @@
         <div class="glass-orb orb-2"></div>
     </div>
 
-    <div class="app-layout">
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="login-container">
+        <div class="glass-panel login-box">
+            <div class="brand" style="justify-content: center; margin-bottom: 20px;">
+                <div class="brand-logo"><i class="fas fa-heart-pulse"></i></div>
+                <span>MediMind</span>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 30px; color: var(--text-main);">Welcome Back</h2>
+            
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="login-user" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-pass" placeholder="Enter password">
+            </div>
+            
+            <button class="btn-primary full-width" onclick="handleLogin()">Login</button>
+            <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-secondary);">
+                Demo Users: <br> <b>patient / patient123</b> <br> <b>doctor / doctor123</b>
+            </p>
+        </div>
+    </div>
+
+    <div class="app-layout" id="app-layout" style="display: none;">
       <aside class="sidebar glass-panel">
         <div class="brand">
           <div class="brand-logo"><i class="fas fa-heart-pulse"></i></div>
@@ -552,6 +577,35 @@
             </div>
         </section>
 
+        <!-- DOCTOR DASHBOARD -->
+        <section id="view-doctor-dashboard" class="view-section" style="display: none">
+            <div class="glass-panel" style="padding: 30px;">
+                <h2 style="margin-bottom: 20px;">Doctor Dashboard</h2>
+                <p>Welcome, <span id="doc-dash-name">Doctor</span>. Here are your upcoming appointments.</p>
+                
+                <div class="dashboard-stats" style="margin-top: 30px;">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-blue"><i class="fas fa-calendar-check"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="doc-appt-count">0</span>
+                            <span class="stat-label">Appointments</span>
+                        </div>
+                    </div>
+                     <div class="stat-card">
+                        <div class="stat-icon icon-purple"><i class="fas fa-user-injured"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value">5</span>
+                            <span class="stat-label">Pending Reviews</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 40px; margin-bottom: 20px;">Upcoming Appointments</h3>
+                <div id="doc-appointments-list" class="results-grid">
+                    <!-- Injected -->
+                </div>
+            </div>
+        </section>
       </main>
     </div>
 

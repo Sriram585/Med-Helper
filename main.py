@@ -29,6 +29,12 @@ app.add_middleware(
 client = AsyncGroq(api_key=os.environ.get("GROQ_API_KEY"))
 
 # --- MODELS ---
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+# ... existing models ...
 class SymptomRequest(BaseModel):
     symptoms: str
 
@@ -49,6 +55,26 @@ class WorkoutRequest(BaseModel):
 
 class LabReportRequest(BaseModel):
     report_text: str
+
+# ==========================================
+# 0. AUTHENTICATION (Simple Mock)
+# ==========================================
+def load_users():
+    try:
+        with open("users.json", "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+USERS_DB = load_users()
+
+@app.post("/login")
+async def login(credentials: LoginRequest):
+    user = USERS_DB.get(credentials.username)
+    if not user or user["password"] != credentials.password:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    return {"name": user["name"], "role": user["role"]}
+
 
 # ==========================================
 # 1. INTERNAL KNOWLEDGE (Replaces CSVs)
@@ -294,7 +320,7 @@ async def chat_endpoint(request: ChatRequest):
 @app.post("/generate/diet")
 async def generate_diet(req: DietRequest):
     prompt = f"""
-    Create a 7-day diet plan.
+    Create a 7-day diet plan also mention the weight (in grams) for each food item you mention.
     Goal: {req.goal}
     Preferences: {req.preferences}
     Calories: {req.calories}

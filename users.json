@@ -1,0 +1,12 @@
+{
+    "patient": {
+        "password": "patient123",
+        "name": "John Doe",
+        "role": "patient"
+    },
+    "doctor": {
+        "password": "doctor123",
+        "name": "Dr. Sarah Smith",
+        "role": "doctor"
+    }
+}

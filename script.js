@@ -1,12 +1,13 @@
+// Global State
+let currentUser = null;
+
 document.addEventListener('DOMContentLoaded', () => {
-    loadSidebarHistory();
-    loadFullHistory();
-    setupVoiceInput();
-    loadHabits(); // Habits Load
+    // Initial Load - Keep layout hidden until login
+    // Some inits that don't depend on user can run, but let's keep it clean
 });
 
 // const API_BASE = 'http://127.0.0.1:8000';
-const API_BASE = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+const API_BASE = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' || window.location.hostname === '')
     ? 'http://127.0.0.1:8000'
     : '';
 
@@ -1178,4 +1179,101 @@ function startWearableSimulation() {
 
 function stopWearableSimulation() {
     if (wearInterval) clearInterval(wearInterval);
+}
+
+// --- 11. AUTHENTICATION & DOCTOR DASHBOARD ---
+
+async function handleLogin() {
+    console.log("Login button clicked");
+    const user = document.getElementById('login-user').value;
+    const pass = document.getElementById('login-pass').value;
+
+    if (!user || !pass) {
+        alert("Please enter username and password.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: user, password: pass })
+        });
+
+        if (!response.ok) {
+            alert("Invalid credentials. Try patient/patient123");
+            return;
+        }
+
+        const data = await response.json();
+        currentUser = data; // {name, role}
+
+        // UI Switch
+        document.getElementById('login-screen').style.display = 'none';
+
+        // Show App Layout
+        const appLayout = document.getElementById('app-layout');
+        if (appLayout) appLayout.style.display = 'flex';
+
+        if (currentUser.role === 'doctor') {
+            loadDoctorDashboard();
+        } else {
+            // Patient Init
+            // loadSidebarHistory(); // already called on load but safe to recall
+            loadSidebarHistory();
+            loadFullHistory();
+            setupVoiceInput();
+            loadHabits();
+            updateDashboardWidgets();
+
+            // Show Sidebar
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) sidebar.style.display = 'flex';
+            switchView('dashboard');
+        }
+
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+function loadDoctorDashboard() {
+    // 1. Hide Sidebar
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) sidebar.style.display = 'none';
+
+    // 2. Show View
+    document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
+    document.getElementById('view-doctor-dashboard').style.display = 'block';
+
+    // 3. Set Header Info
+    const nameEl = document.getElementById('doc-dash-name');
+    if (nameEl) nameEl.innerText = currentUser.name;
+
+    // 4. Load Mock Appointments
+    const localAppts = JSON.parse(localStorage.getItem('mediAppointments') || '[]');
+    const allAppts = [
+        ...localAppts.map(a => ({ ...a, patient: "Current User" })),
+        { doctor: currentUser.name, date: "Tomorrow at 2 PM", patient: "Alice Cooper" },
+        { doctor: currentUser.name, date: "Friday at 10 AM", patient: "Bob Brown" }
+    ];
+
+    // Filter
+    const myAppts = allAppts.filter(a => a.doctor === currentUser.name || a.doctor === "Dr. Sarah Smith" || a.doctor === "Dr. Sarah Smith");
+
+    const countEl = document.getElementById('doc-appt-count');
+    if (countEl) countEl.innerText = myAppts.length;
+
+    const list = document.getElementById('doc-appointments-list');
+    if (list) {
+        list.innerHTML = myAppts.map(a => `
+            <div class="doc-appt-card">
+                <div>
+                    <div style="font-weight:700; font-size:1.1rem;">${a.patient || 'Patient'}</div>
+                    <div style="color:var(--text-secondary);"><i class="far fa-clock"></i> ${a.date}</div>
+                </div>
+                <button class="btn-primary" style="padding: 8px 16px; font-size: 0.9rem;" onclick="alert('Viewing patient details is a future feature!')">View Details</button>
+            </div>
+        `).join('');
+    }
 }
