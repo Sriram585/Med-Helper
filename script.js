@@ -2252,16 +2252,16 @@ function loadDoctorAppointments() {
         if (appt.type === 'urgent') badge = '<span class="badge-urgent">Urgent</span>';
         if (appt.type === 'review') badge = '<span class="badge-review">Review</span>';
 
-        return \
+        return `
         <div class="appointment-card">
             <div class="border-accent-red"></div>
             <div class="appt-info" style="margin-left: 15px;">
-                <h4>\ \</h4>
-                <div class="time-slot"><i class="far fa-clock"></i> \</div>
-                <div class="reason">\</div>
+                <h4>${appt.name} ${badge}</h4>
+                <div class="time-slot"><i class="far fa-clock"></i> ${appt.time}</div>
+                <div class="reason">${appt.reason}</div>
             </div>
-            <button class="btn-view-appt" onclick="viewAppointmentDetails(\)">View</button>
+            <button class="btn-view-appt" onclick="viewAppointmentDetails(${appt.id})">View</button>
         </div>
-        \;
+        `;
     }).join('');
 }

@@ -110,15 +110,12 @@
             </div>
         </div>
 
-        <button class="btn-primary full-width" onclick="handleLogin()">Login (Instant Access)</button>
-        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-secondary);">
-            Select a role and click Login.
-        </p>
+
     </div>
     </div>
 
     <div class="app-layout" id="app-layout" style="display: none;">
-        <<<<<<< HEAD <aside class="sidebar glass-panel">
+        <aside class="sidebar glass-panel">
             <div class="brand">
                 <div class="brand-logo"><i class="fas fa-heart-pulse"></i></div>
                 <span>MediMind</span>
@@ -208,760 +205,567 @@
             <div class="sidebar-footer">
                 <!-- SOS Removed -->
             </div>
-            </aside>
+        </aside>
 
-            <main class="main-content">
-                <header class="topbar glass-panel-sm">
-                    <div class="greeting">
-                        <h1 id="page-title">Dashboard</h1>
-                        <p id="page-subtitle">Your Health Overview</p>
+        <main class="main-content">
+            <header class="topbar glass-panel-sm">
+                <div class="greeting">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-subtitle">Your Health Overview</p>
+                </div>
+                <div class="user-actions">
+                    <button class="icon-btn"><i class="fas fa-bell"></i></button>
+                    <div class="user-profile" onclick="switchView('profile')">
+                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff" alt="User" />
                     </div>
-                    <div class="user-actions">
-                        <button class="icon-btn"><i class="fas fa-bell"></i></button>
-                        <div class="user-profile" onclick="switchView('profile')">
-                            <img src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff"
-                                alt="User" />
-                        </div>
-                    </div>
-                </header>
+                </div>
+            </header>
 
-                <!-- DASHBOARD (SYMPTOM CHECKER) -->
-                <section id="view-dashboard" class="view-section active">
-                    <!-- NEW: DASHBOARD SUMMARY WIDGETS -->
-                    <div class="dashboard-stats">
-                        <div class="stat-card" onclick="switchView('hydration')">
-                            <div class="stat-icon icon-blue"><i class="fas fa-tint"></i></div>
-                            <div class="stat-info">
-                                <span class="stat-value" id="dash-water">0/8</span>
-                                <span class="stat-label">Hydration</span>
-                            </div>
-                        </div>
-                        <div class="stat-card" onclick="switchView('mood')">
-                            <div class="stat-icon icon-yellow"><i class="fas fa-smile"></i></div>
-                            <div class="stat-info">
-                                <span class="stat-value" id="dash-mood">-</span>
-                                <span class="stat-label">Last Mood</span>
-                            </div>
+            <!-- DASHBOARD (SYMPTOM CHECKER) -->
+            <section id="view-dashboard" class="view-section active">
+                <!-- NEW: DASHBOARD SUMMARY WIDGETS -->
+                <div class="dashboard-stats">
+                    <div class="stat-card" onclick="switchView('hydration')">
+                        <div class="stat-icon icon-blue"><i class="fas fa-tint"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="dash-water">0/8</span>
+                            <span class="stat-label">Hydration</span>
                         </div>
                     </div>
-
-                    <div class="glass-panel input-container">
-                        <div class="input-header">
-                            <i class="fas fa-stethoscope"></i>
-                            <span>Describe Your Symptoms</span>
-                        </div>
-                        <div class="textarea-wrapper">
-                            <textarea id="symptoms"
-                                placeholder="e.g. I have a severe headache, sensitivity to light, and nausea..."></textarea>
-                            <button id="btn-mic" class="btn-mic" title="Start Voice Input" onclick="toggleVoiceInput()">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                        </div>
-                        <div class="input-actions">
-                            <button class="btn-primary" onclick="analyzeSymptoms()">
-                                Run Analysis <i class="fas fa-arrow-right"></i>
-                            </button>
+                    <div class="stat-card" onclick="switchView('mood')">
+                        <div class="stat-icon icon-yellow"><i class="fas fa-smile"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="dash-mood">-</span>
+                            <span class="stat-label">Last Mood</span>
                         </div>
                     </div>
+                </div>
 
-                    <div id="loader" class="loader">
-                        <div class="spinner"></div>
-                        <span>Consulting Knowledge Graph...</span>
+                <div class="glass-panel input-container">
+                    <div class="input-header">
+                        <i class="fas fa-stethoscope"></i>
+                        <span>Describe Your Symptoms</span>
                     </div>
-
-                    <div id="results-container" class="results-grid"></div>
-                </section>
-
-                <!-- AI HEALTH CHAT -->
-                <section id="view-medical-chat" class="view-section" style="display: none">
-                    <div class="glass-panel chat-container">
-                        <div class="chat-window" id="chat-window">
-                            <button class="btn-back" onclick="switchView('dashboard')"><i class="fas fa-arrow-left"></i>
-                                Back</button>
-                            <div class="message ai-message">
-                                <div class="msg-avatar"><i class="fas fa-robot"></i></div>
-                                <div class="msg-content">Hello! I'm MediMind AI. Ask me any general health questions.
-                                    Note:
-                                    I am an AI, not a doctor.</div>
-                            </div>
-                        </div>
-                        <div class="chat-input-area">
-                            <input type="text" id="chat-input" placeholder="Ask a health question..."
-                                onkeypress="handleChatEnter(event)">
-                            <button class="btn-send" onclick="sendChatMessage()"><i
-                                    class="fas fa-paper-plane"></i></button>
-                        </div>
+                    <div class="textarea-wrapper">
+                        <textarea id="symptoms"
+                            placeholder="e.g. I have a severe headache, sensitivity to light, and nausea..."></textarea>
+                        <button id="btn-mic" class="btn-mic" title="Start Voice Input" onclick="toggleVoiceInput()">
+                            <i class="fas fa-microphone"></i>
+                        </button>
                     </div>
-                </section>
+                    <div class="input-actions">
+                        <button class="btn-primary" onclick="analyzeSymptoms()">
+                            Run Analysis <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
 
+                <div id="loader" class="loader">
+                    <div class="spinner"></div>
+                    <span>Consulting Knowledge Graph...</span>
+                </div>
 
-                <!-- BMI CALCULATOR -->
-                <section id="view-bmi" class="view-section" style="display: none">
-                    <div class="glass-panel tool-card">
-                        <div class="tool-content">
-                            <button class="btn-back" onclick="switchView('dashboard')"
-                                style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
-                            <div class="tool-icon"><i class="fas fa-weight-scale"></i></div>
-                            <h2>BMI Calculator</h2>
-                            <p>Check your Body Mass Index (BMI) to confirm if you are in a healthy weight range.</p>
+                <div id="results-container" class="results-grid"></div>
+            </section>
 
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Height (cm)</label>
-                                    <input type="number" id="bmi-height" placeholder="e.g. 175">
-                                </div>
-                                <div class="form-group">
-                                    <label>Weight (kg)</label>
-                                    <input type="number" id="bmi-weight" placeholder="e.g. 70">
-                                </div>
-                            </div>
-                            <button class="btn-primary full-width" onclick="calculateBMI()">Calculate BMI</button>
-
-                            <div id="bmi-result" class="result-box" style="display:none;">
-                                <span id="bmi-value" class="big-number">--</span>
-                                <span id="bmi-category" class="status-badge">--</span>
-                            </div>
+            <!-- AI HEALTH CHAT -->
+            <section id="view-medical-chat" class="view-section" style="display: none">
+                <div class="glass-panel chat-container">
+                    <div class="chat-window" id="chat-window">
+                        <button class="btn-back" onclick="switchView('dashboard')"><i class="fas fa-arrow-left"></i>
+                            Back</button>
+                        <div class="message ai-message">
+                            <div class="msg-avatar"><i class="fas fa-robot"></i></div>
+                            <div class="msg-content">Hello! I'm MediMind AI. Ask me any general health questions.
+                                Note:
+                                I am an AI, not a doctor.</div>
                         </div>
                     </div>
-                </section>
-
-                <!-- HYDRATION TRACKER -->
-                <section id="view-hydration" class="view-section" style="display: none">
-                    <div class="glass-panel tool-card">
-                        <div class="tool-content">
-                            <button class="btn-back" onclick="switchView('dashboard')"
-                                style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
-                            <div class="tool-icon"><i class="fas fa-tint"></i></div>
-                            <h2>Daily Hydration</h2>
-                            <p>Stay hydrated! Tracking your water intake helps improve energy and focus.</p>
-
-                            <div class="hydration-circle">
-                                <div class="wave"></div>
-                                <div class="hydration-info">
-                                    <span id="water-count" class="water-number">0</span>
-                                    <span class="water-label">/ 8 Glasses</span>
-                                </div>
-                            </div>
-
-                            <div class="control-row">
-                                <button class="btn-circle btn-minus" onclick="updateWater(-1)"><i
-                                        class="fas fa-minus"></i></button>
-                                <button class="btn-circle btn-plus" onclick="updateWater(1)"><i
-                                        class="fas fa-plus"></i></button>
-                            </div>
-                        </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Ask a health question..."
+                            onkeypress="handleChatEnter(event)">
+                        <button class="btn-send" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- MOOD TRACKER -->
-                <section id="view-mood" class="view-section" style="display: none">
-                    <div class="glass-panel tool-card">
-                        <div class="tool-content">
-                            <button class="btn-back" onclick="switchView('dashboard')"
-                                style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
-                            <div class="tool-icon"><i class="fas fa-smile-beam"></i></div>
-                            <h2>How are you feeling?</h2>
-                            <p>Track your mood to see patterns over time.</p>
 
-                            <div class="mood-selector">
-                                <button class="mood-btn" onclick="logMood('great')">
-                                    <span class="emoji">🤩</span>
-                                    <span>Great</span>
-                                </button>
-                                <button class="mood-btn" onclick="logMood('good')">
-                                    <span class="emoji">🙂</span>
-                                    <span>Good</span>
-                                </button>
-                                <button class="mood-btn" onclick="logMood('okay')">
-                                    <span class="emoji">😐</span>
-                                    <span>Okay</span>
-                                </button>
-                                <button class="mood-btn" onclick="logMood('bad')">
-                                    <span class="emoji">😔</span>
-                                    <span>Bad</span>
-                                </button>
-                                <button class="mood-btn" onclick="logMood('awful')">
-                                    <span class="emoji">😫</span>
-                                    <span>Awful</span>
-                                </button>
-                            </div>
-
-                            <div id="mood-history" class="mood-history-list">
-                                <!-- History injected here -->
-                            </div>
-
-                            <!-- NEW: MOOD STATS -->
-                            <div class="mood-stats-container"
-                                style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                                <h3>Mood Trends (Last 50 Entries)</h3>
-                                <div id="mood-chart" class="simple-bar-chart">
-                                    <!-- Bars injected via JS -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- HISTORY -->
-                <section id="view-history" class="view-section" style="display: none">
-                    <div class="glass-panel history-panel">
-                        <button class="btn-back" onclick="switchView('dashboard')" style="margin: 20px 0 0 20px;"><i
+            <!-- BMI CALCULATOR -->
+            <section id="view-bmi" class="view-section" style="display: none">
+                <div class="glass-panel tool-card">
+                    <div class="tool-content">
+                        <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i
                                 class="fas fa-arrow-left"></i> Back</button>
-                        <div class="panel-header">
-                            <h2>Recent Consultations</h2>
-                            <button class="btn-clear" onclick="clearHistory()">
-                                Clear All
-                            </button>
-                        </div>
-                        <div id="full-history-list" class="full-history-grid"></div>
-                    </div>
-                </section>
+                        <div class="tool-icon"><i class="fas fa-weight-scale"></i></div>
+                        <h2>BMI Calculator</h2>
+                        <p>Check your Body Mass Index (BMI) to confirm if you are in a healthy weight range.</p>
 
-                <!-- PROFILE (Fully Functional) -->
-                <section id="view-profile" class="view-section" style="display: none">
-                    <div class="glass-panel profile-card">
-                        <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom: 20px;"><i
-                                class="fas fa-arrow-left"></i> Back</button>
-                        <div class="profile-header-edit">
-                            <div class="profile-avatar-container">
-                                <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff&size=128"
-                                    id="profile-img-lg" class="profile-img" />
-                            </div>
-                            <div class="profile-title-block">
-                                <h2 id="profile-name-display">Guest User</h2>
-                                <span class="badge-pro">Free Plan</span>
-                            </div>
-                        </div>
-
-                        <div class="profile-form">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Full Name</label>
-                                    <input type="text" id="p-name" placeholder="Enter your name">
-                                </div>
-                                <div class="form-group">
-                                    <label>Age</label>
-                                    <input type="number" id="p-age" placeholder="Years">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Blood Group</label>
-                                    <select id="p-blood">
-                                        <option value="">Select...</option>
-                                        <option value="A+">A+</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B+">B+</option>
-                                        <option value="B-">B-</option>
-                                        <option value="O+">O+</option>
-                                        <option value="O-">O-</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="AB-">AB-</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="email" id="p-email" placeholder="email@example.com">
-                                </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Height (cm)</label>
+                                <input type="number" id="bmi-height" placeholder="e.g. 175">
                             </div>
                             <div class="form-group">
-                                <label>Medical Allergies / Notes</label>
-                                <textarea id="p-notes" style="height: 80px;"
-                                    placeholder="Penicillin, Peanuts, etc..."></textarea>
+                                <label>Weight (kg)</label>
+                                <input type="number" id="bmi-weight" placeholder="e.g. 70">
                             </div>
+                        </div>
+                        <button class="btn-primary full-width" onclick="calculateBMI()">Calculate BMI</button>
 
-                            <button class="btn-primary full-width" onclick="saveProfile()">Save Profile Changes</button>
-                            <button class="btn-outline full-width" style="margin-top:15px;"
-                                onclick="exportHealthReport()">
-                                <i class="fas fa-file-download"></i> Download Health Report
+                        <div id="bmi-result" class="result-box" style="display:none;">
+                            <span id="bmi-value" class="big-number">--</span>
+                            <span id="bmi-category" class="status-badge">--</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HYDRATION TRACKER -->
+            <section id="view-hydration" class="view-section" style="display: none">
+                <div class="glass-panel tool-card">
+                    <div class="tool-content">
+                        <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i
+                                class="fas fa-arrow-left"></i> Back</button>
+                        <div class="tool-icon"><i class="fas fa-tint"></i></div>
+                        <h2>Daily Hydration</h2>
+                        <p>Stay hydrated! Tracking your water intake helps improve energy and focus.</p>
+
+                        <div class="hydration-circle">
+                            <div class="wave"></div>
+                            <div class="hydration-info">
+                                <span id="water-count" class="water-number">0</span>
+                                <span class="water-label">/ 8 Glasses</span>
+                            </div>
+                        </div>
+
+                        <div class="control-row">
+                            <button class="btn-circle btn-minus" onclick="updateWater(-1)"><i
+                                    class="fas fa-minus"></i></button>
+                            <button class="btn-circle btn-plus" onclick="updateWater(1)"><i
+                                    class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MOOD TRACKER -->
+            <section id="view-mood" class="view-section" style="display: none">
+                <div class="glass-panel tool-card">
+                    <div class="tool-content">
+                        <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i
+                                class="fas fa-arrow-left"></i> Back</button>
+                        <div class="tool-icon"><i class="fas fa-smile-beam"></i></div>
+                        <h2>How are you feeling?</h2>
+                        <p>Track your mood to see patterns over time.</p>
+
+                        <div class="mood-selector">
+                            <button class="mood-btn" onclick="logMood('great')">
+                                <span class="emoji">🤩</span>
+                                <span>Great</span>
+                            </button>
+                            <button class="mood-btn" onclick="logMood('good')">
+                                <span class="emoji">🙂</span>
+                                <span>Good</span>
+                            </button>
+                            <button class="mood-btn" onclick="logMood('okay')">
+                                <span class="emoji">😐</span>
+                                <span>Okay</span>
+                            </button>
+                            <button class="mood-btn" onclick="logMood('bad')">
+                                <span class="emoji">😔</span>
+                                <span>Bad</span>
+                            </button>
+                            <button class="mood-btn" onclick="logMood('awful')">
+                                <span class="emoji">😫</span>
+                                <span>Awful</span>
                             </button>
                         </div>
-                    </div>
-                </section>
 
-                <!-- DIET PLAN -->
-                <section id="view-diet" class="view-section" style="display: none">
-                    <div class="glass-panel tool-card">
-                        <div class="tool-content">
-                            <button class="btn-back" onclick="switchView('dashboard')"
-                                style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
-                            <div class="tool-icon"><i class="fas fa-carrot"></i></div>
-                            <h2>AI Nutritionist</h2>
-                            <p>Get a personalized 7-day meal plan based on your health goals.</p>
+                        <div id="mood-history" class="mood-history-list">
+                            <!-- History injected here -->
+                        </div>
 
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Goal</label>
-                                    <select id="diet-goal">
-                                        <option value="Lose Weight">Lose Weight</option>
-                                        <option value="Muscle Gain">Muscle Gain</option>
-                                        <option value="Healthy Living">Healthy Living</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Preferences</label>
-                                    <input type="text" id="diet-pref" placeholder="e.g. Veg, Keto...">
-                                </div>
-                            </div>
-                            <button class="btn-primary full-width" onclick="generateDiet()">Generate Plan</button>
-
-                            <div id="diet-result" class="results-grid" style="margin-top:30px; width:100%;">
-                                <!-- Plans go here -->
+                        <!-- NEW: MOOD STATS -->
+                        <div class="mood-stats-container"
+                            style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                            <h3>Mood Trends (Last 50 Entries)</h3>
+                            <div id="mood-chart" class="simple-bar-chart">
+                                <!-- Bars injected via JS -->
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- WORKOUT PLAN -->
-                <section id="view-workout" class="view-section" style="display: none">
-                    <div class="glass-panel tool-card">
-                        <div class="tool-content">
-                            <button class="btn-back" onclick="switchView('dashboard')"
-                                style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
-                            <div class="tool-icon"><i class="fas fa-dumbbell"></i></div>
-                            <h2>Personal Coach</h2>
-                            <p>Create a custom workout routine tailored to your equipment.</p>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Fitness Level</label>
-                                    <select id="work-level">
-                                        <option value="Beginner">Beginner</option>
-                                        <option value="Intermediate">Intermediate</option>
-                                        <option value="Advanced">Advanced</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Equipment</label>
-                                    <select id="work-equip">
-                                        <option value="None (Bodyweight)">No Equipment</option>
-                                        <option value="Dumbbells">Dumbbells</option>
-                                        <option value="Full Gym">Full Gym</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button class="btn-primary full-width" onclick="generateWorkout()">Create Routine</button>
-
-                            <div id="workout-result" class="results-grid" style="margin-top:30px; width:100%;">
-                                <!-- Plans go here -->
-                            </div>
-                        </div>
+            <!-- HISTORY -->
+            <section id="view-history" class="view-section" style="display: none">
+                <div class="glass-panel history-panel">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="margin: 20px 0 0 20px;"><i
+                            class="fas fa-arrow-left"></i> Back</button>
+                    <div class="panel-header">
+                        <h2>Recent Consultations</h2>
+                        <button class="btn-clear" onclick="clearHistory()">
+                            Clear All
+                        </button>
                     </div>
-                </section>
+                    <div id="full-history-list" class="full-history-grid"></div>
+                </div>
+            </section>
 
-                <!-- WEARABLES DASHBOARD -->
-                <section id="view-wearables" class="view-section" style="display: none">
-                    <div class="glass-panel">
-                        <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i
-                                class="fas fa-arrow-left"></i> Back</button>
-                        <h3><i class="fas fa-watch"></i> Device Sync</h3>
-                        <p style="color:var(--text-secondary); margin-bottom:20px;">Connected to: <strong>Mock Fitbit
-                                Versa
-                                4</strong></p>
-
-                        <div class="dashboard-stats">
-                            <div class="stat-card">
-                                <div class="stat-icon icon-blue"><i class="fas fa-shoe-prints"></i></div>
-                                <div class="stat-info">
-                                    <span class="stat-value" id="wear-steps">8,432</span>
-                                    <span class="stat-label">Steps Today</span>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon icon-purple"><i class="fas fa-moon"></i></div>
-                                <div class="stat-info">
-                                    <span class="stat-value" id="wear-sleep">7h 12m</span>
-                                    <span class="stat-label">Sleep</span>
-                                </div>
-                            </div>
+            <!-- PROFILE (Fully Functional) -->
+            <section id="view-profile" class="view-section" style="display: none">
+                <div class="glass-panel profile-card">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom: 20px;"><i
+                            class="fas fa-arrow-left"></i> Back</button>
+                    <div class="profile-header-edit">
+                        <div class="profile-avatar-container">
+                            <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff&size=128"
+                                id="profile-img-lg" class="profile-img" />
                         </div>
-
-                        <div class="glass-panel-sm" style="padding:20px; text-align:center; margin-top:20px;">
-                            <div style="font-size:3rem; font-weight:900; color:#ef4444;" id="wear-hr">72</div>
-                            <div style="color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Heart
-                                Rate
-                                (BPM)</div>
-                            <div style="height: 300px; width: 100%; margin-top: 20px;">
-                                <canvas id="hrChart"></canvas>
-                            </div>
-                        </div>
-
-                    </div>
-                </section>
-
-                <!-- DOCTOR APPOINTMENTS -->
-                <section id="view-appointments" class="view-section" style="display: none">
-                    <div class="glass-panel" style="padding: 20px;">
-                        <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i
-                                class="fas fa-arrow-left"></i> Back</button>
-                        <div class="search-bar">
-                            <input type="text" placeholder="Search by specialty (e.g. Cardiologist)..." id="doc-search"
-                                onkeyup="filterDoctors()">
-                            <i class="fas fa-search search-icon"></i>
-                        </div>
-                        <div id="doctor-list" class="doctor-grid">
-                            <!-- Doctors injected via JS -->
+                        <div class="profile-title-block">
+                            <h2 id="profile-name-display">Guest User</h2>
+                            <span class="badge-pro">Free Plan</span>
                         </div>
                     </div>
 
-                    <div class="glass-panel" style="margin-top: 30px; padding: 20px;">
-                        <h3>Your Appointments</h3>
-                        <div id="appointment-list">
-                            <!-- Booked appointments -->
-                        </div>
-                    </div>
-                </section>
-
-                <!-- HABITS TRACKER -->
-                <section id="view-habits" class="view-section" style="display: none">
-                    <div class="glass-panel tool-card">
-                        <div class="tool-content">
-                            <button class="btn-back" onclick="switchView('dashboard')"
-                                style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
-                            <div class="tool-icon"><i class="fas fa-fire-alt" style="color:#ef4444;"></i></div>
-                            <h2>Daily Healthy Habits</h2>
-                            <p>Build consistency. Keep the fire burning!</p>
-
-                            <div
-                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background: rgba(255,255,255,0.5); padding:15px; border-radius:15px;">
-                                <div>
-                                    <span style="font-size:0.9rem; color:var(--text-secondary);">Current Streak</span>
-                                    <div style="font-size:1.5rem; font-weight:800; color:#ef4444;" id="total-streak">0
-                                        Days
-                                    </div>
-                                </div>
-                                <i class="fas fa-fire" style="font-size:2.5rem; color:#ef4444; opacity:0.8;"></i>
+                    <div class="profile-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="p-name" placeholder="Enter your name">
                             </div>
-
-                            <div class="input-actions" style="margin-bottom:20px;">
-                                <input type="text" id="new-habit-input" placeholder="New habit (e.g. Read 10 pages)"
-                                    style="padding:10px; border-radius:10px; border:1px solid #ddd; flex:1;">
-                                <button class="btn-primary" onclick="addHabit()" style="width:auto;"><i
-                                        class="fas fa-plus"></i></button>
-                            </div>
-
-                            <div id="habits-list" class="habits-grid">
-                                <!-- Habits Injected Here -->
+                            <div class="form-group">
+                                <label>Age</label>
+                                <input type="number" id="p-age" placeholder="Years">
                             </div>
                         </div>
-                    </div>
-                </section>
-
-                <!-- SLEEP CALCULATOR -->
-                <section id="view-sleep" class="view-section" style="display: none">
-                    <div class="glass-panel tool-card">
-                        <div class="tool-content">
-                            <button class="btn-back" onclick="switchView('dashboard')"
-                                style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
-                            <div class="tool-icon"><i class="fas fa-moon" style="color:#6366f1;"></i></div>
-                            <h2>Sleep Cycle Calculator</h2>
-                            <p>Wake up feeling refreshed by sleeping in 90-minute cycles.</p>
-
-                            <div class="card-toggle-row"
-                                style="display:flex; gap:10px; margin-bottom:20px; width:100%;">
-                                <button class="btn-outline active" id="btn-wake-at" onclick="toggleSleepMode('wake-at')"
-                                    style="flex:1;">I want to wake at...</button>
-                                <button class="btn-outline" id="btn-sleep-now" onclick="toggleSleepMode('sleep-now')"
-                                    style="flex:1;">I'm sleeping now</button>
-                            </div>
-
-                            <div id="sleep-input-container">
-                                <label>Wake Up Time</label>
-                                <input type="time" id="wake-time"
-                                    style="width:100%; padding:15px; border-radius:10px; border:1px solid #ccc; font-size:1.2rem; margin-bottom:15px;">
-                                <button class="btn-primary full-width" onclick="calculateSleep()">Calculate Best
-                                    Bedtimes</button>
-                            </div>
-
-                            <div id="sleep-results" class="results-grid" style="margin-top:20px;"></div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- LAB REPORT ANALYZER -->
-                <section id="view-lab" class="view-section" style="display: none">
-                    <div class="glass-panel input-container">
-                        <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i
-                                class="fas fa-arrow-left"></i> Back</button>
-                        <div class="input-header">
-                            <i class="fas fa-microscope"></i>
-                            <span>Lab Report Analyzer</span>
-                        </div>
-                        <div class="upload-container" id="upload-box"
-                            onclick="document.getElementById('lab-file').click()">
-                            <input type="file" id="lab-file" accept=".txt,.pdf" hidden
-                                onchange="handleFileSelect(this)">
-                            <div class="upload-icon"><i class="fas fa-paperclip"></i></div>
-                            <div class="upload-text" id="upload-label">Click to upload Lab Report (PDF/TXT)</div>
-                        </div>
-
-                        <div class="input-actions" style="margin-top:20px; text-align:center;">
-                            <button class="btn-primary full-width" onclick="triggerLabAnalysis()">Analyze Report <i
-                                    class="fas fa-magic"></i></button>
-                        </div>
-                    </div>
-
-                    <div id="lab-loader" class="loader" style="display:none;">
-                        <div class="spinner"></div>
-                        <span>AI is reading your report...</span>
-                    </div>
-
-                    <div id="lab-result" class="glass-panel" style="display:none; margin-top:20px; padding:25px;">
-                        <h3><i class="fas fa-file-medical-alt"></i> Analysis Result</h3>
-                        <div id="lab-result-content" style="line-height:1.6; color:var(--text-primary);"></div>
-                    </div>
-                </section>
-
-                <section id="view-appointments" class="view-section" style="display: none">
-                    <div class="glass-panel tool-card">
-                        <div class="tool-content">
-                            <button class="btn-back" onclick="switchView('dashboard')"
-                                style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
-                            <div class="tool-icon icon-blue"><i class="fas fa-calendar-plus"></i></div>
-                            <h2>Book Appointment</h2>
-                            <p>Schedule a consultation with our available specialists.</p>
-
-                            <div class="form-group" style="margin-top: 20px;">
-                                <label>Select Doctor</label>
-                                <select id="book-doctor">
-                                    <option value="Dr. Sarah Smith">Dr. Sarah Smith (General Physician)</option>
-                                    <option value="Dr. James Wilson">Dr. James Wilson (Cardiologist)</option>
-                                    <option value="Dr. Linda Ray">Dr. Linda Ray (Dermatologist)</option>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Blood Group</label>
+                                <select id="p-blood">
+                                    <option value="">Select...</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Date & Time</label>
-                                <input type="datetime-local" id="book-date">
+                                <label>Email</label>
+                                <input type="email" id="p-email" placeholder="email@example.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Medical Allergies / Notes</label>
+                            <textarea id="p-notes" style="height: 80px;"
+                                placeholder="Penicillin, Peanuts, etc..."></textarea>
+                        </div>
+
+                        <button class="btn-primary full-width" onclick="saveProfile()">Save Profile Changes</button>
+                        <button class="btn-outline full-width" style="margin-top:15px;" onclick="exportHealthReport()">
+                            <i class="fas fa-file-download"></i> Download Health Report
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DIET PLAN -->
+            <section id="view-diet" class="view-section" style="display: none">
+                <div class="glass-panel tool-card">
+                    <div class="tool-content">
+                        <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i
+                                class="fas fa-arrow-left"></i> Back</button>
+                        <div class="tool-icon"><i class="fas fa-carrot"></i></div>
+                        <h2>AI Nutritionist</h2>
+                        <p>Get a personalized 7-day meal plan based on your health goals.</p>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Goal</label>
+                                <select id="diet-goal">
+                                    <option value="Lose Weight">Lose Weight</option>
+                                    <option value="Muscle Gain">Muscle Gain</option>
+                                    <option value="Healthy Living">Healthy Living</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label>Reason for Visit</label>
-                                <textarea id="book-reason" placeholder="Describe your symptoms..."
-                                    style="height: 80px;"></textarea>
-                            </div>
-
-                            <button class="btn-primary full-width" onclick="bookAppointment()">Confirm Booking</button>
-                        </div>
-                    </div>
-                    <div class="glass-panel" style="padding: 25px; margin-top: 30px;">
-                        <div class="panel-header" style="margin-bottom: 20px;">
-                            <h3><i class="fas fa-users-medical"></i> Patient Directory</h3>
-                            <div style="position: relative;">
-                                <input type="text" placeholder="Search patients..."
-                                    style="padding: 8px 30px 8px 15px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 0.9rem;">
-                                <i class="fas fa-search"
-                                    style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.8rem;"></i>
+                                <label>Preferences</label>
+                                <input type="text" id="diet-pref" placeholder="e.g. Veg, Keto...">
                             </div>
                         </div>
+                        <button class="btn-primary full-width" onclick="generateDiet()">Generate Plan</button>
 
-                        <div id="doctor-patient-list" class="patient-list">
-                            <!-- Populated by JS -->
-                            <div style="text-align:center; color:var(--text-secondary); padding: 20px;">Loading
-                                patients...
-                            </div>
+                        <div id="diet-result" class="results-grid" style="margin-top:30px; width:100%;">
+                            <!-- Plans go here -->
                         </div>
-                    </div>
-
-                    <<<<<<< HEAD </section>
-                        <section id="view-doctor-dashboard" class="view-section" style="display: none">
-                            <div
-                                style="margin-bottom: 30px; display:flex; justify-content:space-between; align-items:end;">
-                                <div>
-                                    <h2 style="margin-bottom: 5px;">Doctor Dashboard</h2>
-                                    <p style="color: var(--text-secondary);">Welcome back, <span id="doc-dash-name"
-                                            style="font-weight:700; color:var(--primary);">Doctor</span>.</p>
-                                </div>
-                                <div id="doc-status-badge" onclick="toggleDocStatus()"
-                                    style="cursor:pointer; font-size:0.9rem; color:var(--text-secondary); background:white; padding:8px 15px; border-radius:30px; border:1px solid #e2e8f0; user-select:none;">
-                                    <i class="fas fa-circle"
-                                        style="color:#22c55e; font-size:0.6rem; vertical-align:middle;"></i> Online
-                                </div>
-                            </div>
-
-                            <!-- Clean Stats Row -->
-                            <div class="dashboard-stats" style="margin-bottom: 40px; gap: 20px;">
-                                <div class="stat-card-minimal">
-                                    <div class="stat-icon icon-blue" style="width:45px; height:45px; font-size:1.1rem;">
-                                        <i class="fas fa-calendar-check"></i></div>
-                                    <div class="stat-info">
-                                        <span class="stat-value" id="doc-appt-count" style="font-size:1.5rem;">0</span>
-                                        <span class="stat-label" style="font-size:0.85rem;">Appointments</span>
-                                    </div>
-                                </div>
-                                <div class="stat-card-minimal">
-                                    <div class="stat-icon icon-purple"
-                                        style="width:45px; height:45px; font-size:1.1rem;"><i
-                                            class="fas fa-user-injured"></i></div>
-                                    <div class="stat-info">
-                                        <span class="stat-value" style="font-size:1.5rem;">5</span>
-                                        <span class="stat-label" style="font-size:0.85rem;">Pending Reviews</span>
-                                    </div>
-                                </div>
-                                <div class="stat-card-minimal">
-                                    <div class="stat-icon icon-red" style="width:45px; height:45px; font-size:1.1rem;">
-                                        <i class="fas fa-notes-medical"></i></div>
-                                    <div class="stat-info">
-                                        <span class="stat-value" style="font-size:1.5rem;">3</span>
-                                        <span class="stat-label" style="font-size:0.85rem;">Urgent Cases</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Two Column Grid -->
-                            <div class="doc-dash-grid">
-
-                                <!-- Appointments Column -->
-                                <div>
-                                    <div class="doc-section-header">
-                                        <h3>Upcoming Appointments</h3>
-                                        <button class="btn-outline"
-                                            style="padding: 5px 12px; font-size: 0.8rem; border-radius:8px;"
-                                            onclick="switchView('calendar')">View Calendar</button>
-                                    </div>
-                                    <div id="doc-appointments-list">
-                                        <!-- Injected -->
-                                        <div
-                                            style="text-align:center; color:var(--text-secondary); padding: 40px; background:white; border-radius:12px; border:1px dashed #e2e8f0;">
-                                            No appointments yet.
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Patients Column -->
-                                <div>
-                                    <div class="doc-section-header">
-                                        <h3>Patient Directory</h3>
-                                        <div style="position: relative;">
-                                            <input type="text" id="patient-search-mini" placeholder="Search..."
-                                                onkeyup="filterPatients('mini')"
-                                                style="background:white; padding: 6px 30px 6px 15px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 0.85rem; width:180px;">
-                                            <i class="fas fa-search"
-                                                style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.7rem;"></i>
-                                        </div>
-                                    </div>
-                                    <div id="doctor-patient-list">
-                                        <!-- Populated by JS -->
-                                    </div>
-                                    <button class="btn-outline full-width"
-                                        style="margin-top:15px; border-radius:10px; font-size:0.9rem;"
-                                        onclick="switchView('my-patients')">View All Patients</button>
-                                </div>
-
-                            </div>
-                        </section>
-
-                        <!-- DOCTOR CALENDAR VIEW -->
-                        <section id="view-calendar" class="view-section" style="display: none">
-                            <div class="glass-panel" style="padding: 25px;">
-                                <button class="btn-back" onclick="switchView('doctor-dashboard')"
-                                    style="margin-bottom:20px;"><i class="fas fa-arrow-left"></i> Back to
-                                    Dashboard</button>
-                                <div class="doc-section-header">
-                                    <h2><i class="far fa-calendar-alt"></i> Schedule</h2>
-                                    <button class="btn-primary" onclick="openEventModal()"><i class="fas fa-plus"></i>
-                                        New Event</button>
-                                </div>
-                                <!-- Clean Calendar Grid -->
-                                <div id="calendar-grid"
-                                    style="display:grid; grid-template-columns: repeat(7, 1fr); gap:10px; text-align:center;">
-                                    <!-- Headers -->
-                                    <div style="font-weight:bold; color:var(--text-secondary);">Sun</div>
-                                    <div style="font-weight:bold; color:var(--text-secondary);">Mon</div>
-                                    <div style="font-weight:bold; color:var(--text-secondary);">Tue</div>
-                                    <div style="font-weight:bold; color:var(--text-secondary);">Wed</div>
-                                    <div style="font-weight:bold; color:var(--text-secondary);">Thu</div>
-                                    <div style="font-weight:bold; color:var(--text-secondary);">Fri</div>
-                                    <div style="font-weight:bold; color:var(--text-secondary);">Sat</div>
-                                    <!-- Days injected via JS -->
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- DOCTOR MY PATIENTS VIEW -->
-                        <section id="view-my-patients" class="view-section" style="display: none">
-                            <div class="glass-panel" style="padding: 25px;">
-                                <button class="btn-back" onclick="switchView('doctor-dashboard')"
-                                    style="margin-bottom:20px;"><i class="fas fa-arrow-left"></i> Back</button>
-                                <div class="doc-section-header">
-                                    <h2><i class="fas fa-users"></i> My Patients</h2>
-                                    <div style="position: relative;">
-                                        <input type="text" id="patient-search-full" placeholder="Search by name..."
-                                            onkeyup="filterPatients('full')"
-                                            style="background:white; padding: 10px 40px 10px 20px; border-radius: 30px; border: 1px solid #e2e8f0; font-size: 1rem; width:300px;">
-                                        <i class="fas fa-search"
-                                            style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
-                                    </div>
-                                </div>
-
-                                <div id="full-patient-list" class="results-grid">
-                                    <!-- Injected JS -->
-                                </div>
-                            </div>
-                        </section>
-                </section>
-            </main>
-            =======
-            <!-- Patient Detail Modal -->
-            <div id="patient-modal" class="modal">
-                <div class="modal-content glass-panel" style="max-width: 600px;">
-                    <div class="modal-header">
-                        <h2 id="modal-patient-name">Patient Name</h2>
-                        <span class="close-modal" onclick="closePatientModal()">&times;</span>
-                    </div>
-                    <div class="modal-body" id="modal-patient-body">
-                        <!-- Details -->
-                    </div>
-                    <div class="modal-footer" style="margin-top:20px; text-align:right;">
-                        <button class="btn-primary" onclick="closePatientModal()">Close</button>
                     </div>
                 </div>
-            </div>
             </section>
-            <section id="view-doctor-dashboard" class="view-section" style="display: none">
-                <div style="margin-bottom: 25px;">
-                    <h2 style="margin-bottom: 5px;">Doctor Dashboard</h2>
-                    <p style="color: var(--text-secondary);">Welcome back, <span id="doc-dash-name"
-                            style="font-weight:700; color:var(--primary);">Doctor</span>.</p>
+
+            <!-- WORKOUT PLAN -->
+            <section id="view-workout" class="view-section" style="display: none">
+                <div class="glass-panel tool-card">
+                    <div class="tool-content">
+                        <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i
+                                class="fas fa-arrow-left"></i> Back</button>
+                        <div class="tool-icon"><i class="fas fa-dumbbell"></i></div>
+                        <h2>Personal Coach</h2>
+                        <p>Create a custom workout routine tailored to your equipment.</p>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Fitness Level</label>
+                                <select id="work-level">
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advanced">Advanced</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Equipment</label>
+                                <select id="work-equip">
+                                    <option value="None (Bodyweight)">No Equipment</option>
+                                    <option value="Dumbbells">Dumbbells</option>
+                                    <option value="Full Gym">Full Gym</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn-primary full-width" onclick="generateWorkout()">Create Routine</button>
+
+                        <div id="workout-result" class="results-grid" style="margin-top:30px; width:100%;">
+                            <!-- Plans go here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WEARABLES DASHBOARD -->
+            <section id="view-wearables" class="view-section" style="display: none">
+                <div class="glass-panel">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i
+                            class="fas fa-arrow-left"></i> Back</button>
+                    <h3><i class="fas fa-watch"></i> Device Sync</h3>
+                    <p style="color:var(--text-secondary); margin-bottom:20px;">Connected to: <strong>Mock Fitbit
+                            Versa
+                            4</strong></p>
+
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon icon-blue"><i class="fas fa-shoe-prints"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="wear-steps">8,432</span>
+                                <span class="stat-label">Steps Today</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-purple"><i class="fas fa-moon"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="wear-sleep">7h 12m</span>
+                                <span class="stat-label">Sleep</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel-sm" style="padding:20px; text-align:center; margin-top:20px;">
+                        <div style="font-size:3rem; font-weight:900; color:#ef4444;" id="wear-hr">72</div>
+                        <div style="color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Heart
+                            Rate
+                            (BPM)</div>
+                        <div style="height: 300px; width: 100%; margin-top: 20px;">
+                            <canvas id="hrChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- DOCTOR APPOINTMENTS -->
+            <section id="view-appointments" class="view-section" style="display: none">
+                <div class="glass-panel" style="padding: 20px;">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i
+                            class="fas fa-arrow-left"></i> Back</button>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search by specialty (e.g. Cardiologist)..." id="doc-search"
+                            onkeyup="filterDoctors()">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    <div id="doctor-list" class="doctor-grid">
+                        <!-- Doctors injected via JS -->
+                    </div>
                 </div>
 
-                <div class="dashboard-stats" style="margin-bottom: 30px;">
-                    <div class="stat-card" style="cursor: pointer;" onclick="filterDoctorDashboard('appointments')">
-                        <div class="stat-icon icon-blue"><i class="fas fa-calendar-check"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="doc-appt-count">0</span>
-                            <span class="stat-label">Appointments</span>
-                        </div>
+                <div class="glass-panel" style="margin-top: 30px; padding: 20px;">
+                    <h3>Your Appointments</h3>
+                    <div id="appointment-list">
+                        <!-- Booked appointments -->
                     </div>
-                    <div class="stat-card" style="cursor: pointer;" onclick="filterDoctorDashboard('reviews')">
-                        <div class="stat-icon icon-purple"><i class="fas fa-user-injured"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-value">5</span>
-                            <span class="stat-label">Pending Reviews</span>
+                </div>
+            </section>
+
+            <!-- HABITS TRACKER -->
+            <section id="view-habits" class="view-section" style="display: none">
+                <div class="glass-panel tool-card">
+                    <div class="tool-content">
+                        <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i
+                                class="fas fa-arrow-left"></i> Back</button>
+                        <div class="tool-icon"><i class="fas fa-fire-alt" style="color:#ef4444;"></i></div>
+                        <h2>Daily Healthy Habits</h2>
+                        <p>Build consistency. Keep the fire burning!</p>
+
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background: rgba(255,255,255,0.5); padding:15px; border-radius:15px;">
+                            <div>
+                                <span style="font-size:0.9rem; color:var(--text-secondary);">Current Streak</span>
+                                <div style="font-size:1.5rem; font-weight:800; color:#ef4444;" id="total-streak">0
+                                    Days
+                                </div>
+                            </div>
+                            <i class="fas fa-fire" style="font-size:2.5rem; color:#ef4444; opacity:0.8;"></i>
                         </div>
-                    </div>
-                    <div class="stat-card" style="cursor: pointer;" onclick="filterDoctorDashboard('urgent')">
-                        <div class="stat-icon icon-red"><i class="fas fa-star-of-life"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-value">3</span>
-                            <span class="stat-label">Urgent Cases</span>
+
+                        <div class="input-actions" style="margin-bottom:20px;">
+                            <input type="text" id="new-habit-input" placeholder="New habit (e.g. Read 10 pages)"
+                                style="padding:10px; border-radius:10px; border:1px solid #ddd; flex:1;">
+                            <button class="btn-primary" onclick="addHabit()" style="width:auto;"><i
+                                    class="fas fa-plus"></i></button>
+                        </div>
+
+                        <div id="habits-list" class="habits-grid">
+                            <!-- Habits Injected Here -->
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <div class="glass-panel" style="padding: 25px;">
+            <!-- SLEEP CALCULATOR -->
+            <section id="view-sleep" class="view-section" style="display: none">
+                <div class="glass-panel tool-card">
+                    <div class="tool-content">
+                        <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i
+                                class="fas fa-arrow-left"></i> Back</button>
+                        <div class="tool-icon"><i class="fas fa-moon" style="color:#6366f1;"></i></div>
+                        <h2>Sleep Cycle Calculator</h2>
+                        <p>Wake up feeling refreshed by sleeping in 90-minute cycles.</p>
+
+                        <div class="card-toggle-row" style="display:flex; gap:10px; margin-bottom:20px; width:100%;">
+                            <button class="btn-outline active" id="btn-wake-at" onclick="toggleSleepMode('wake-at')"
+                                style="flex:1;">I want to wake at...</button>
+                            <button class="btn-outline" id="btn-sleep-now" onclick="toggleSleepMode('sleep-now')"
+                                style="flex:1;">I'm sleeping now</button>
+                        </div>
+
+                        <div id="sleep-input-container">
+                            <label>Wake Up Time</label>
+                            <input type="time" id="wake-time"
+                                style="width:100%; padding:15px; border-radius:10px; border:1px solid #ccc; font-size:1.2rem; margin-bottom:15px;">
+                            <button class="btn-primary full-width" onclick="calculateSleep()">Calculate Best
+                                Bedtimes</button>
+                        </div>
+
+                        <div id="sleep-results" class="results-grid" style="margin-top:20px;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LAB REPORT ANALYZER -->
+            <section id="view-lab" class="view-section" style="display: none">
+                <div class="glass-panel input-container">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i
+                            class="fas fa-arrow-left"></i> Back</button>
+                    <div class="input-header">
+                        <i class="fas fa-microscope"></i>
+                        <span>Lab Report Analyzer</span>
+                    </div>
+                    <div class="upload-container" id="upload-box" onclick="document.getElementById('lab-file').click()">
+                        <input type="file" id="lab-file" accept=".txt,.pdf" hidden onchange="handleFileSelect(this)">
+                        <div class="upload-icon"><i class="fas fa-paperclip"></i></div>
+                        <div class="upload-text" id="upload-label">Click to upload Lab Report (PDF/TXT)</div>
+                    </div>
+
+                    <div class="input-actions" style="margin-top:20px; text-align:center;">
+                        <button class="btn-primary full-width" onclick="triggerLabAnalysis()">Analyze Report <i
+                                class="fas fa-magic"></i></button>
+                    </div>
+                </div>
+
+                <div id="lab-loader" class="loader" style="display:none;">
+                    <div class="spinner"></div>
+                    <span>AI is reading your report...</span>
+                </div>
+
+                <div id="lab-result" class="glass-panel" style="display:none; margin-top:20px; padding:25px;">
+                    <h3><i class="fas fa-file-medical-alt"></i> Analysis Result</h3>
+                    <div id="lab-result-content" style="line-height:1.6; color:var(--text-primary);"></div>
+                </div>
+            </section>
+
+            <section id="view-appointments" class="view-section" style="display: none">
+                <div class="glass-panel tool-card">
+                    <div class="tool-content">
+                        <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i
+                                class="fas fa-arrow-left"></i> Back</button>
+                        <div class="tool-icon icon-blue"><i class="fas fa-calendar-plus"></i></div>
+                        <h2>Book Appointment</h2>
+                        <p>Schedule a consultation with our available specialists.</p>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>Select Doctor</label>
+                            <select id="book-doctor">
+                                <option value="Dr. Sarah Smith">Dr. Sarah Smith (General Physician)</option>
+                                <option value="Dr. James Wilson">Dr. James Wilson (Cardiologist)</option>
+                                <option value="Dr. Linda Ray">Dr. Linda Ray (Dermatologist)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Date & Time</label>
+                            <input type="datetime-local" id="book-date">
+                        </div>
+                        <div class="form-group">
+                            <label>Reason for Visit</label>
+                            <textarea id="book-reason" placeholder="Describe your symptoms..."
+                                style="height: 80px;"></textarea>
+                        </div>
+
+                        <button class="btn-primary full-width" onclick="bookAppointment()">Confirm Booking</button>
+                    </div>
+                </div>
+                <div class="glass-panel" style="padding: 25px; margin-top: 30px;">
                     <div class="panel-header" style="margin-bottom: 20px;">
-                        <h3 id="doc-list-title"><i class="far fa-clock"></i> Upcoming Appointments</h3>
-                        <button class="btn-outline" style="padding: 5px 15px; font-size: 0.8rem; margin-top: 10px;"
-                            onclick="openCalendarModal()">View Calendar</button>
+                        <h3><i class="fas fa-users-medical"></i> Patient Directory</h3>
+                        <div style="position: relative;">
+                            <input type="text" placeholder="Search patients..."
+                                style="padding: 8px 30px 8px 15px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 0.9rem;">
+                            <i class="fas fa-search"
+                                style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.8rem;"></i>
+                        </div>
                     </div>
 
-                    <div id="doc-appointments-list" class="results-grid">
-                        <!-- Injected -->
+                    <div id="doctor-patient-list" class="patient-list">
+                        <!-- Populated by JS -->
+                        <div style="text-align:center; color:var(--text-secondary); padding: 20px;">Loading
+                            patients...
+                        </div>
                     </div>
                 </div>
-            </section>
-            </section>
-            </main>
-            >>>>>>> feature-test-1
+
+                <section id="view-doctor-dashboard" class="view-section" style="display: none">
+                    <div style="margin-bottom: 25px;">
+                        <h2 style="margin-bottom: 5px; display:flex; align-items:center; gap:10px;">
+                            <i class="far fa-calendar-check" style="color:var(--text-main);"></i> All Upcoming
+                            Appointments
+                        </h2>
+                        <button class="btn-outline" style="padding: 6px 16px; border-radius: 12px; margin-top: 10px;"
+                            onclick="switchView('calendar')">View Calendar</button>
+                    </div>
+
+                    <div id="doc-dashboard-content" class="appointments-grid">
+                        <!-- Appointments Injected Here -->
+                    </div>
+                </section>
     </div>
 
     <!-- SOS OVERLAY REMOVED -->
@@ -984,33 +788,19 @@
     <!-- DATE INPUT MODAL -->
     <div id="date-modal" class="modal-overlay">
         <div class="modal-box">
-            <<<<<<< HEAD <div class="modal-icon"><i class="far fa-calendar-alt" style="color: var(--primary);"></i>
+            <div class="modal-icon"><i class="far fa-calendar-alt" style="color: var(--primary);"></i></div>
+            <h2>Schedule Visit</h2>
+            <p style="margin-bottom: 20px; color: var(--text-secondary);">When would you like to see <span
+                    id="modal-doc-name" style="font-weight:700;">the doctor</span>?</p>
+            <input type="text" id="appt-date-input" placeholder="Tomorrow at 10 AM"
+                style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-outline" style="flex:1; justify-content:center;"
+                    onclick="closeDateModal()">Cancel</button>
+                <button class="btn-primary" style="flex:1; justify-content:center;"
+                    onclick="confirmAppointment()">Confirm</button>
+            </div>
         </div>
-        <h2>Schedule Visit</h2>
-        <p style="margin-bottom: 20px; color: var(--text-secondary);">When would you like to see <span
-                id="modal-doc-name" style="font-weight:700;">the doctor</span>?</p>
-        <input type="text" id="appt-date-input" placeholder="Tomorrow at 10 AM"
-            style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 20px;">
-        <div style="display: flex; gap: 10px;">
-            <button class="btn-outline" style="flex:1; justify-content:center;"
-                onclick="closeDateModal()">Cancel</button>
-            <button class="btn-primary" style="flex:1; justify-content:center;"
-                onclick="confirmAppointment()">Confirm</button>
-        </div>
-        =======
-        <div class="modal-icon"><i class="far fa-calendar-alt" style="color: var(--primary);"></i></div>
-        <h2>Schedule Visit</h2>
-        <p style="margin-bottom: 20px; color: var(--text-secondary);">When would you like to see <span
-                id="modal-doc-name" style="font-weight:700;">the doctor</span>?</p>
-        <input type="text" id="appt-date-input" placeholder="e.g. Tomorrow at 10 AM"
-            style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 20px;">
-        <div style="display: flex; gap: 10px;">
-            <button class="btn-outline" style="flex:1; justify-content:center;"
-                onclick="closeDateModal()">Cancel</button>
-            <button class="btn-primary" style="flex:1; justify-content:center;"
-                onclick="confirmAppointment()">Confirm</button>
-        </div>
-    </div>
     </div>
 
     <!-- CALENDAR MODAL (NEW) -->
@@ -1047,7 +837,6 @@
 
             <button class="btn-outline full-width" style="margin-top:20px;"
                 onclick="closeCalendarModal()">Close</button>
-            >>>>>>> feature-test-1
         </div>
     </div>
 
