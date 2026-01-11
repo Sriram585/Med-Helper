@@ -12,6 +12,8 @@ const API_BASE = (window.location.hostname === '127.0.0.1' || window.location.ho
     : '';
 
 // --- NAVIGATION & VIEWS ---
+
+
 function switchView(viewId) {
     // 1. Sidebar Active State
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -54,6 +56,7 @@ function switchView(viewId) {
     if (viewId === 'hydration') loadHydration();
     if (viewId === 'mood') loadMoodHistory();
     if (viewId === 'wearables') startWearableSimulation();
+    if (viewId === 'doctor-dashboard') loadDoctorAppointments();
     else stopWearableSimulation();
 }
 
@@ -636,6 +639,96 @@ function showToast(message) {
 
 
 
+function viewAppointmentDetails(apptId) {
+    const modal = document.getElementById('patient-modal');
+    if (!modal) return;
+
+    // 1. Find Appointment
+    // MOCK_APPOINTMENTS is assumed to be defined elsewhere or will be added.
+    // For now, let's create a placeholder if it's not globally available.
+    const MOCK_APPOINTMENTS = [
+        { id: 1, patient: "Alice Johnson", reason: "Fever and Cough", type: "urgent", date: "2023-10-26 10:00 AM" },
+        { id: 2, patient: "Bob Williams", reason: "Routine Checkup", type: "standard", date: "2023-10-27 02:00 PM" },
+        { id: 3, patient: "Charlie Davis", reason: "Post-surgery Review", type: "review", date: "2023-10-28 11:30 AM" },
+        { id: 4, patient: "Diana Miller", reason: "Headache and Dizziness", type: "urgent", date: "2023-10-29 09:00 AM" },
+        { id: 5, patient: "Eve Brown", reason: "Annual Physical", type: "standard", date: "2023-10-30 01:00 PM" }
+    ];
+
+    const appt = MOCK_APPOINTMENTS.find(a => a.id === apptId);
+
+    // Fallback logic
+    let patientName = "Unknown";
+    let reason = "General Consult";
+    let type = "Standard";
+    let dateStr = "N/A";
+
+    if (!appt && typeof apptId === 'string') {
+        patientName = apptId;
+        const potential = MOCK_APPOINTMENTS.find(a => a.patient === patientName);
+        if (potential) {
+            reason = potential.reason;
+            type = potential.type;
+            dateStr = potential.date;
+        }
+    } else if (appt) {
+        patientName = appt.patient;
+        reason = appt.reason;
+        type = appt.type;
+        dateStr = appt.date;
+    }
+
+    document.getElementById('modal-patient-name').innerText = patientName;
+
+    // Fake medical data generator
+    const heartRate = Math.floor(Math.random() * (100 - 60) + 60);
+    const bpSys = Math.floor(Math.random() * (140 - 110) + 110);
+    const bpDia = Math.floor(Math.random() * (90 - 70) + 70);
+
+    // Context badges
+    let typeBadge = `<span class="badge-pro" style="background:#e0e7ff; color:var(--primary);">Regular Checkup</span>`;
+    if (type === 'urgent') typeBadge = `<span class="badge-pro" style="background:#fef2f2; color:#ef4444;">Urgent Case</span>`;
+    else if (type === 'review') typeBadge = `<span class="badge-pro" style="background:#f5f3ff; color:#8b5cf6;">Medical Review</span>`;
+
+    const html = `
+        <div style="margin-bottom: 25px; background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:15px;">
+                <div>
+                    <h4 style="margin-bottom:5px; color:var(--text-secondary); font-size:0.9rem; text-transform:uppercase; letter-spacing:1px;">Primary Complaint</h4>
+                    <div style="font-size:1.3rem; font-weight:700; color:var(--text-main);">${reason}</div>
+                </div>
+                ${typeBadge}
+            </div>
+             <div style="display:flex; align-items:center; gap:10px; color:var(--text-secondary); font-size:0.95rem;">
+                <i class="far fa-clock"></i> Scheduled: <span style="font-weight:600; color:var(--text-main);">${dateStr}</span>
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom: 30px;">
+            <div class="stat-card" style="background:#f8fafc; border:none;">
+                <div class="stat-info">
+                    <span class="stat-label">Heart Rate</span>
+                    <span class="stat-value">${heartRate} bpm</span>
+                </div>
+            </div>
+            <div class="stat-card" style="background:#f8fafc; border:none;">
+                <div class="stat-info">
+                    <span class="stat-label">Blood Pressure</span>
+                    <span class="stat-value">${bpSys}/${bpDia}</span>
+                </div>
+            </div>
+        </div>
+
+        <h4 style="margin-bottom:15px; border-bottom: 1px solid #e2e8f0; padding-bottom:10px;">Recent History</h4>
+        <ul style="list-style:none; padding:0; font-size:0.95rem; color:var(--text-secondary);">
+            <li style="margin-bottom:10px;"><i class="fas fa-notes-medical" style="color:var(--primary); width:20px;"></i> Complained of symptoms related to ${reason}</li>
+            <li style="margin-bottom:10px;"><i class="fas fa-prescription-bottle-alt" style="color:var(--primary); width:20px;"></i> Prescribed standard course for condition</li>
+            <li><i class="fas fa-vial" style="color:var(--primary); width:20px;"></i> Follow-up recommended in 2 weeks</li>
+        </ul>
+    `;
+
+    document.getElementById('modal-patient-body').innerHTML = html;
+    modal.style.display = 'flex';
+}
 function loadAppointments() {
     const list = document.getElementById('appointment-list');
     if (!list) return;
@@ -1446,6 +1539,9 @@ function setupSidebar(role) {
     }
 }
 
+// --- 12. DOCTOR DASHBOARD LOGIC (NEW) ---
+let MOCK_APPOINTMENTS = [];
+
 function loadDoctorDashboard() {
     // 2. Show View
     document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
@@ -1455,63 +1551,128 @@ function loadDoctorDashboard() {
     const nameEl = document.getElementById('doc-dash-name');
     if (nameEl) nameEl.innerText = currentUser.name;
 
-    // 4. Load Appointments including user bookings
+    // 4. Initialize Mock Data (merging local + hardcoded for demo)
     const localAppts = JSON.parse(localStorage.getItem('mediAppointments') || '[]');
 
-    // Merge real inputs with mock data for demo
-    const allAppts = [
-        ...localAppts.map(a => ({
-            doctor: a.doctor,
-            date: new Date(a.date).toLocaleString(),
-            patient: "Current User (" + (currentUser.name || 'Guest') + ")",
-            reason: a.reason || 'Checkup'
-        })),
-        { doctor: "Dr. Sarah Smith", date: "Tomorrow at 2:00 PM", patient: "Alice Cooper", reason: "Annual physical" },
-        { doctor: "Dr. James Wilson", date: "Friday at 10:00 AM", patient: "Bob Brown", reason: "Chest pain follow-up" },
-        { doctor: "Dr. Linda Ray", date: "Monday at 4:30 PM", patient: "Charlie Davis", reason: "Skin rash" }
+    // Create rich mock data with 'type' field
+    const hardcoded = [
+        { id: 101, doctor: "Dr. Sarah Smith", date: "Tomorrow at 2:00 PM", patient: "Alice Cooper", reason: "Annual physical", type: 'appt' },
+        { id: 102, doctor: "Dr. James Wilson", date: "Friday at 10:00 AM", patient: "Bob Brown", reason: "Chest pain follow-up", type: 'urgent' },
+        { id: 103, doctor: "Dr. Linda Ray", date: "Monday at 4:30 PM", patient: "Charlie Davis", reason: "Skin rash", type: 'appt' },
+        { id: 104, doctor: "Dr. Sarah Smith", date: "Today at 9:00 AM", patient: "Diana Prince", reason: "Lab Results Review", type: 'review' },
+        { id: 105, doctor: "Dr. Sarah Smith", date: "Today at 10:30 AM", patient: "Evan Wright", reason: "High Fever", type: 'urgent' },
+        { id: 106, doctor: "Dr. Sarah Smith", date: "Yesterday", patient: "Frank Miller", reason: "X-Ray Analysis", type: 'review' },
+        { id: 107, doctor: "Dr. Sarah Smith", date: "Today at 1:15 PM", patient: "Grace Lee", reason: "Stomach Pain", type: 'urgent' },
+        { id: 108, doctor: "Dr. Sarah Smith", date: "Week ago", patient: "Henry Ford", reason: "MRI Scan", type: 'review' },
+        { id: 109, doctor: "Dr. Sarah Smith", date: "Pending", patient: "Ian Scott", reason: "Blood Work", type: 'review' },
+        { id: 110, doctor: "Dr. Sarah Smith", date: "Pending", patient: "Jane Doe", reason: "Ct Scan", type: 'review' }
     ];
 
-    // Filter for current doctor (or all if generalized for demo)
-    const myAppts = allAppts.filter(a => a.doctor === currentUser.name || currentUser.name === "Dr. Sarah Smith");
-    // ^ Relaxed filter for demo purposes so "Dr. Sarah Smith" sees everything
+    // Convert local appts to this format
+    const convertedLocal = localAppts.map(a => ({
+        id: a.id || Date.now(),
+        doctor: a.doctor,
+        date: new Date(a.date).toLocaleString(),
+        patient: "Current User (" + (currentUser.name || 'Guest') + ")",
+        reason: a.reason || 'Checkup',
+        type: 'appt' // Local bookings are normal appointments
+    }));
 
-    const countEl = document.getElementById('doc-appt-count');
-    if (countEl) countEl.innerText = myAppts.length;
+    MOCK_APPOINTMENTS = [...convertedLocal, ...hardcoded];
 
-    const list = document.getElementById('doc-appointments-list');
-    if (list) {
-        if (myAppts.length === 0) {
-            list.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding: 40px; background:white; border-radius:12px; border:1px dashed #e2e8f0;">No appointments scheduled.</div>`;
-        } else {
-            list.innerHTML = myAppts.map((a, index) => {
-                const safePatient = (a.patient || 'Patient').replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
-                const safeReason = (a.reason || '').replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
-                const safeDate = (a.date || '').toString().replace(/'/g, "\\'").replace(/"/g, "&quot;");
+    // Filter for current doctor (relaxed for demo)
+    // In a real app we'd filter by currentUser.name
+    // MOCK_APPOINTMENTS = MOCK_APPOINTMENTS.filter(a => a.doctor === currentUser.name || currentUser.name === "Dr. Sarah Smith");
 
-                return `
-                <div class="doc-card-clean">
-                    <div style="display:flex; gap:15px; align-items:center;">
-                         <div style="width:40px; height:40px; background:#f1f5f9; border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--primary); font-weight:700;">
-                            ${a.date.split(',')[0].substring(0, 3)}
-                         </div>
-                        <div>
-                            <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary);">${a.patient || 'Patient'}</div>
-                            <div style="color:var(--text-secondary); font-size:0.8rem;">${a.reason}</div>
-                        </div>
-                    </div>
-                    <button class="btn-outline" style="padding: 6px 12px; font-size: 0.8rem; border-radius:8px;" onclick="viewPatientDetails('appt', ${index})">Details</button>
-                </div>
-            `}).join('');
-
-            // Store for lookup
-            window.currentDoctorAppts = myAppts;
-        }
-    }
-
+    // Init with 'appointments' view
+    filterDoctorDashboard('appointments');
     // 5. Load Patient Directory (Mock)
     renderPatientList();
     renderCalendar();
     renderFullPatientList();
+}
+
+function filterDoctorDashboard(filterType) {
+    const list = document.getElementById('doc-appointments-list');
+    const title = document.getElementById('doc-list-title');
+    if (!list) return;
+
+    let filtered = [];
+    let titleText = "";
+    let icon = "";
+
+    if (filterType === 'appointments') {
+        // Show ALL items (Appointments + Urgent + Reviews) essentially acting as "All Tasks"
+        // Or strictly 'appt'? Usually "Appointments" card implies the confirmed schedule.
+        // Let's make it show EVERYTHING sorted by date/urgency for better DX
+        // Actually user request: "locate to those things"
+        // So hitting "Appointments" should probably show everything
+        // Hitting "Urgent" shows only urgent.
+
+        filtered = MOCK_APPOINTMENTS; // Show all
+        titleText = "All Upcoming Appointments";
+        icon = "far fa-calendar-check";
+    }
+    else if (filterType === 'urgent') {
+        filtered = MOCK_APPOINTMENTS.filter(a => a.type === 'urgent');
+        titleText = "Urgent Cases Attention Needed";
+        icon = "fas fa-star-of-life";
+    }
+    else if (filterType === 'reviews') {
+        filtered = MOCK_APPOINTMENTS.filter(a => a.type === 'review');
+        titleText = "Pending Medical Reviews";
+        icon = "fas fa-user-edit";
+    }
+
+    // Update Counts (Dynamically recalculate every load is safer)
+    const countAppt = MOCK_APPOINTMENTS.length;
+    // const countUrgent = MOCK_APPOINTMENTS.filter(a => a.type === 'urgent').length;
+    // const countReview = MOCK_APPOINTMENTS.filter(a => a.type === 'review').length;
+
+    // Ideally we update the numbers on the dashboard cards too, but they are hardcoded/static for now except appt count
+    const countEl = document.getElementById('doc-appt-count');
+    if (countEl) countEl.innerText = countAppt;
+
+    // Update Header
+    if (title) title.innerHTML = `<i class="${icon}"></i> ${titleText}`;
+
+    // Render
+    if (filtered.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-secondary);">No items found in this category.</div>`;
+    } else {
+        list.innerHTML = filtered.map(a => {
+            let badge = "";
+            let borderColor = "transparent";
+
+            if (a.type === 'urgent') {
+                badge = `<span class="badge-pill badge-urgent">Urgent</span>`;
+                borderColor = "#ef4444";
+            } else if (a.type === 'review') {
+                badge = `<span class="badge-pill badge-review">Review</span>`;
+            }
+
+            return `
+            <div class="doc-appt-card" style="border-left: 4px solid ${borderColor};">
+                <div style="flex:1;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom: 5px;">
+                        <span style="font-weight:700; font-size:1.1rem; color:var(--text-main);">${a.patient || 'Patient'}</span>
+                        ${badge}
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; color:var(--text-secondary); font-size:0.9rem;">
+                        <i class="far fa-clock"></i> <span>${a.date}</span>
+                    </div>
+                    <div style="color:var(--text-secondary); font-size:0.85rem; margin-top:4px;">${a.reason}</div>
+                </div>
+                <button class="btn-view" onclick="viewAppointmentDetails(${a.id})">View</button>
+            </div>
+            `;
+        }).join('');
+    }
+
+    // Scroll to section
+    const section = document.querySelector('.glass-panel');
+    // We want to scroll to the list container essentially
+    if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // --- DOCTOR FEATURES ---
@@ -1791,22 +1952,15 @@ function viewPatientDetails(type, index) {
     const bpDia = Math.floor(Math.random() * (90 - 70) + 70);
 
     let apptHtml = '';
-    if (apptReason && apptDate) {
+    if (typeof reason !== 'undefined' && typeof dateStr !== 'undefined') {
         apptHtml = `
             <div style="background:var(--background); padding:15px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:20px;">
                 <h4 style="margin-bottom:10px; color:var(--primary);"><i class="fas fa-calendar-day"></i> Appointment Details</h4>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                     <div>
-                        <div style="font-size:0.8rem; color:var(--text-secondary);">Date & Time</div>
-                        <div style="font-weight:600;">${apptDate}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.8rem; color:var(--text-secondary);">Reason</div>
-                        <div style="font-weight:600;">${apptReason}</div>
-                    </div>
+                    <div><div style="font-size:0.8rem; color:var(--text-secondary);">Reason</div><div style="font-weight:600;">${reason || 'Consultation'}</div></div>
+                    <div><div style="font-size:0.8rem; color:var(--text-secondary);">Date</div><div style="font-weight:600;">${dateStr || new Date().toLocaleDateString()}</div></div>
                 </div>
-            </div>
-        `;
+            </div>`;
     }
 
     const html = `
@@ -1828,9 +1982,9 @@ function viewPatientDetails(type, index) {
 
         <h4 style="margin-bottom:15px; border-bottom: 1px solid #e2e8f0; padding-bottom:10px;">Recent History</h4>
         <ul style="list-style:none; padding:0; font-size:0.95rem; color:var(--text-secondary);">
-            <li style="margin-bottom:10px;"><i class="fas fa-notes-medical" style="color:var(--primary); width:20px;"></i> Complained of headaches (2 days ago)</li>
-            <li style="margin-bottom:10px;"><i class="fas fa-prescription-bottle-alt" style="color:var(--primary); width:20px;"></i> Prescribed Paracetamol 500mg</li>
-            <li><i class="fas fa-vial" style="color:var(--primary); width:20px;"></i> Blood work scheduled for next week</li>
+            <li style="margin-bottom:10px;"><i class="fas fa-notes-medical" style="color:var(--primary); width:20px;"></i> Complained of symptoms related to ${typeof reason !== 'undefined' ? reason : 'condition'}</li>
+            <li style="margin-bottom:10px;"><i class="fas fa-prescription-bottle-alt" style="color:var(--primary); width:20px;"></i> Prescribed standard course for condition</li>
+            <li><i class="fas fa-vial" style="color:var(--primary); width:20px;"></i> Follow-up recommended in 2 weeks</li>
         </ul>
     `;
 
@@ -1870,4 +2024,244 @@ function bookAppointment() {
     document.getElementById('book-date').value = '';
     document.getElementById('book-reason').value = '';
     switchView('dashboard');
+}
+
+// --- 13. CALENDAR FEATURE (NEW) ---
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+
+function openCalendarModal() {
+    const modal = document.getElementById('calendar-modal');
+    if (modal) modal.style.display = 'flex';
+    renderCalendar();
+}
+
+function closeCalendarModal() {
+    const modal = document.getElementById('calendar-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+function changeMonth(dir) {
+    currentMonth += dir;
+    if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+    } else if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+    }
+    renderCalendar();
+}
+
+function renderCalendar() {
+    const daysContainer = document.getElementById('calendar-days');
+    const header = document.getElementById('cal-month-year');
+    if (!daysContainer || !header) return;
+
+    // Set Header
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    header.innerText = `${months[currentMonth]} ${currentYear} `;
+
+    // Clear Grid
+    daysContainer.innerHTML = '';
+
+    // Calculate Days
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    // Padding for empty slots
+    for (let i = 0; i < firstDay; i++) {
+        daysContainer.innerHTML += `<div></div>`;
+    }
+
+    // Map Tasks to Dates (Approximation Logic)
+    // We map MOCK_APPOINTMENTS "Today", "Tomorrow" etc to real dates for the current calendar view
+    // Only works if current view matches today's month/year primarily
+
+    // Helper to check match
+    const today = new Date();
+    const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+
+    const taskDates = new Set();
+
+    if (isCurrentMonth) {
+        MOCK_APPOINTMENTS.forEach(t => {
+            let dayOffset = null;
+            const dStr = t.date.toLowerCase();
+
+            if (dStr.includes('today')) dayOffset = 0;
+            if (dStr.includes('tomorrow')) dayOffset = 1;
+            if (dStr.includes('yesterday')) dayOffset = -1;
+            // 'Week ago' ignored for simplification or handled as -7
+
+            if (dayOffset !== null) {
+                const targetDate = new Date();
+                targetDate.setDate(today.getDate() + dayOffset);
+                if (targetDate.getMonth() === currentMonth) {
+                    taskDates.add(targetDate.getDate());
+                }
+            }
+        });
+    }
+
+    // Generate Days
+    for (let i = 1; i <= daysInMonth; i++) {
+        const isToday = isCurrentMonth && i === today.getDate();
+        const hasTask = taskDates.has(i);
+
+        let classes = "cal-day";
+        if (isToday) classes += " today";
+        if (hasTask) classes += " has-task";
+
+        let indicator = hasTask ? `<div style="width:6px; height:6px; background:#ef4444; border-radius:50%; margin-top:2px;"></div>` : '';
+
+        daysContainer.innerHTML += `
+        <div class="${classes}" onclick="selectDate(${i})" style="height:50px; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:${isToday ? '#e0e7ff' : '#f8fafc'}; color:${isToday ? 'var(--primary)' : 'var(--text-main)'}; font-weight:${isToday ? '700' : '400'}; border:1px solid ${isToday ? '#c7d2fe' : 'transparent'}; cursor:pointer;">
+            ${i}
+            ${indicator}
+        </div>
+        `;
+    }
+}
+
+function selectDate(day) {
+    // 1. Highlight selected
+    const allDays = document.querySelectorAll('.cal-day');
+    allDays.forEach(d => d.style.border = "1px solid transparent");
+    // event.target.style.border = "1px solid var(--primary)"; // Simplified visual feedback
+
+    // 2. Find Appointments
+    const details = document.getElementById('calendar-day-details');
+    if (!details) return;
+
+    // Helper logic same as renderCalendar to find matches
+    const today = new Date();
+    const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+
+    let matches = [];
+
+    if (isCurrentMonth) {
+        MOCK_APPOINTMENTS.forEach(t => {
+            let dayOffset = null;
+            const dStr = t.date.toLowerCase();
+
+            if (dStr.includes('today')) dayOffset = 0;
+            if (dStr.includes('tomorrow')) dayOffset = 1;
+            if (dStr.includes('yesterday')) dayOffset = -1;
+
+            if (dayOffset !== null) {
+                const targetDate = new Date();
+                targetDate.setDate(today.getDate() + dayOffset);
+                if (targetDate.getMonth() === currentMonth && targetDate.getDate() === day) {
+                    matches.push(t);
+                }
+            }
+        });
+    }
+
+    // 3. Render Details
+    if (matches.length === 0) {
+        details.innerHTML = `<div style="color:var(--text-secondary); font-size:0.9rem; text-align:center; padding-top:10px;">No appointments on this date.</div>`;
+    } else {
+        details.innerHTML = `
+        <div style="font-weight:700; margin-bottom:10px; color:var(--primary);">Appointments for ${currentMonth + 1}/${day}:</div>
+            ${matches.map(m => {
+            let badgeClass = "badge-pill";
+            let badgeText = "Appt";
+
+            if (m.type === 'urgent') {
+                badgeClass += " badge-urgent";
+                badgeText = "Urgent";
+            } else if (m.type === 'review') {
+                badgeClass += " badge-review";
+                badgeText = "Review";
+            } else {
+                badgeClass += " chip-med";
+            }
+
+            return `
+                <div style="background:white; padding:12px; border-radius:12px; margin-bottom:8px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+                    <div>
+                        <div style="font-weight:700; color:var(--text-main);">${m.patient}</div>
+                        <div style="color:var(--text-secondary); font-size:0.8rem; margin-top:2px;">${m.reason}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="${badgeClass}">${badgeText}</span>
+                        <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">${m.date.split(',')[0]}</div>
+                    </div>
+                </div>
+            `}).join('')}
+`;
+    }
+}
+
+// --- RESTORED PATIENT FUNCTIONS ---
+function loadSidebarHistory() {
+    const list = document.getElementById('history-list-sidebar');
+    if (list) {
+        list.innerHTML = `
+            <div class="history-item">
+                <div class="history-icon"><i class="fas fa-file-medical"></i></div>
+                <div class="history-info">
+                    <div class="history-title">General Checkup</div>
+                    <div class="history-date">2 days ago</div>
+                </div>
+            </div>`;
+    }
+}
+
+function loadFullHistory() {
+    console.log("Loading full history...");
+}
+
+function setupVoiceInput() {
+    console.log("Voice input setup...");
+}
+
+function updateDashboardWidgets() {
+    const water = document.getElementById('dash-water');
+    if (water) water.innerText = "3/8";
+    const mood = document.getElementById('dash-mood');
+    if (mood) mood.innerText = "Neutral";
+}
+
+function loadHabits() {
+    const list = document.getElementById('habits-list');
+    if (list) list.innerHTML = "<div>No habits yet.</div>";
+}
+
+/* --- DOCTOR DASHBOARD LOGIC --- */
+function loadDoctorAppointments() {
+    const container = document.getElementById('doc-dashboard-content');
+    if (!container) return;
+
+    const appointments = [
+        { id: 1, name: "Alice Cooper", time: "Tomorrow at 2:00 PM", reason: "Annual physical", type: "standard" },
+        { id: 2, name: "Bob Brown", time: "Friday at 10:00 AM", reason: "Chest pain follow-up", type: "urgent" },
+        { id: 3, name: "Charlie Davis", time: "Monday at 4:30 PM", reason: "Skin rash", type: "standard" },
+        { id: 4, name: "Diana Prince", time: "Today at 9:00 AM", reason: "Lab Results Review", type: "review" },
+        { id: 5, name: "Evan Wright", time: "Today at 10:30 AM", reason: "High Fever", type: "urgent" },
+        { id: 6, name: "Frank Miller", time: "Yesterday", reason: "X-Ray Analysis", type: "review" },
+        { id: 7, name: "Grace Lee", time: "Today at 1:15 PM", reason: "Stomach Pain", type: "urgent" },
+        { id: 8, name: "Henry Ford", time: "Week ago", reason: "MRI Scan", type: "review" },
+        { id: 9, name: "Ian Scott", time: "Pending", reason: "Blood Work", type: "review" }
+    ];
+
+    container.innerHTML = appointments.map(appt => {
+        let badge = '';
+        if (appt.type === 'urgent') badge = '<span class="badge-urgent">Urgent</span>';
+        if (appt.type === 'review') badge = '<span class="badge-review">Review</span>';
+
+        return \
+        <div class="appointment-card">
+            <div class="border-accent-red"></div>
+            <div class="appt-info" style="margin-left: 15px;">
+                <h4>\ \</h4>
+                <div class="time-slot"><i class="far fa-clock"></i> \</div>
+                <div class="reason">\</div>
+            </div>
+            <button class="btn-view-appt" onclick="viewAppointmentDetails(\)">View</button>
+        </div>
+        \;
+    }).join('');
 }
