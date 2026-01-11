@@ -34,6 +34,7 @@ function switchView(viewId) {
         'dashboard': ['Dashboard', 'AI-Powered Symptom Checker'],
         'medical-chat': ['Health Assistant', 'Ask general medical questions'],
         'doctor-dashboard': ['Doctor Dashboard', 'Welcome back, Dr. Sarah Smith'],
+        'doctor-symptom-analyser': ['Symptom Analyser', 'AI Diagnostic Assistant'],
         'doc-patients': ['My Patients', 'Manage Patient Records'],
         'doc-schedule': ['Schedule', 'Calendar & Events'],
         'history': ['Medical History', 'Your past consultations log'],
@@ -56,6 +57,10 @@ function switchView(viewId) {
         if (titles[viewId]) {
             document.getElementById('page-title').innerText = titles[viewId][0];
             document.getElementById('page-subtitle').innerText = titles[viewId][1];
+        } else if (viewId.startsWith('doctor-')) {
+            // Fallback for doctor views
+            document.getElementById('page-title').innerText = "Doctor Portal";
+            document.getElementById('page-subtitle').innerText = "Medical Management";
         }
     }
 
@@ -74,18 +79,20 @@ function switchView(viewId) {
 }
 
 // --- 1. SYMPTOM CHECKER ---
-async function analyzeSymptoms() {
-    const input = document.getElementById('symptoms');
-    const resultsContainer = document.getElementById('results-container');
-    const loader = document.getElementById('loader');
+// --- 1. SYMPTOM CHECKER ---
+async function analyzeSymptoms(mode = 'patient') { // mode: 'patient' or 'doc'
+    const prefix = mode === 'doc' ? 'doc-' : '';
+    const input = document.getElementById(`${prefix}symptoms`);
+    const resultsContainer = document.getElementById(`${prefix}results-container`);
+    const loader = document.getElementById(`${prefix}loader`);
 
-    if (!input.value.trim()) {
-        alert("Please describe your symptoms.");
+    if (!input || !input.value.trim()) {
+        alert("Please describe symptoms.");
         return;
     }
 
     resultsContainer.innerHTML = '';
-    loader.style.display = 'flex'; // Changed to flex for centering
+    if (loader) loader.style.display = 'flex';
 
     try {
         const response = await fetch(`${API_BASE}/analyze`, {
@@ -95,14 +102,14 @@ async function analyzeSymptoms() {
         });
 
         const data = await response.json();
-        loader.style.display = 'none';
+        if (loader) loader.style.display = 'none';
 
         if (!data.results || data.results.length === 0) {
             resultsContainer.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-secondary);">No matches found. Try more specific symptoms.</div>`;
             return;
         }
 
-        saveHistory(input.value);
+        if (mode === 'patient') saveHistory(input.value);
 
         data.results.slice(0, 3).forEach((item) => {
             const card = document.createElement('div');
@@ -144,7 +151,7 @@ async function analyzeSymptoms() {
         });
 
     } catch (e) {
-        loader.style.display = 'none';
+        if (loader) loader.style.display = 'none';
         alert("Server Error. Ensure backend is running.");
         console.error(e);
     }
@@ -253,10 +260,11 @@ function setupVoiceInput() {
     };
 }
 
-function toggleVoiceInput() {
+function toggleVoiceInput(mode = 'patient') {
     if (!recognition) return;
-    const btn = document.getElementById('btn-mic');
-    if (btn.classList.contains('listening')) recognition.stop();
+    const prefix = mode === 'doc' ? 'doc-' : '';
+    const btn = document.getElementById(`${prefix}btn-mic`);
+    if (btn && btn.classList.contains('listening')) recognition.stop();
     else recognition.start();
 }
 

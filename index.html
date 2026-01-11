@@ -121,7 +121,7 @@
                 <span>MediMind</span>
             </div>
 
-            <div class="menu-label">Main Menu</div>
+            <div class="menu-label">MAIN MENU</div>
             <nav class="nav-menu">
                 <!-- PATIENT MENU -->
                 <div id="nav-patient">
@@ -176,8 +176,10 @@
                         <i class="fas fa-columns"></i> <span>Dashboard</span>
                     </button>
 
-                    <div class="menu-label" style="margin-top: 20px;">Tools</div>
-
+                    <div class="menu-label" style="margin-top: 20px;">TOOLS</div>
+                    <button class="nav-item" onclick="switchView('doctor-symptom-analyser')">
+                        <i class="fas fa-stethoscope"></i> <span>Symptom Analyser</span>
+                    </button>
                     <button class="nav-item" onclick="switchView('medical-chat')">
                         <i class="fas fa-robot"></i> <span>AI Health Chat</span>
                     </button>
@@ -393,6 +395,41 @@
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <!-- DOCTOR SYMPTOM ANALYSER -->
+            <section id="view-doctor-symptom-analyser" class="view-section" style="display: none">
+                <div style="margin-bottom: 30px;">
+                    <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-main);">Symptom Analyser</h1>
+                    <p style="color: var(--text-secondary);">AI-Powered Diagnostic Assistance</p>
+                </div>
+
+                <div class="glass-panel input-container">
+                    <div class="input-header">
+                        <i class="fas fa-stethoscope"></i>
+                        <span>Describe Patient Symptoms</span>
+                    </div>
+                    <div class="textarea-wrapper">
+                        <textarea id="doc-symptoms"
+                            placeholder="e.g. Patient presents with severe headache, sensitivity to light, and nausea..."></textarea>
+                        <button id="doc-btn-mic" class="btn-mic" title="Start Voice Input"
+                            onclick="toggleVoiceInput('doc')">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                    <div class="input-actions">
+                        <button class="btn-primary" onclick="analyzeSymptoms('doc')">
+                            Run Analysis <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="doc-loader" class="loader">
+                    <div class="spinner"></div>
+                    <span>Consulting Knowledge Graph...</span>
+                </div>
+
+                <div id="doc-results-container" class="results-grid"></div>
             </section>
 
             <!-- HISTORY -->
