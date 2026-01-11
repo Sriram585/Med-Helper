@@ -1502,3 +1502,101 @@ function bookAppointment() {
     document.getElementById('book-reason').value = '';
     switchView('dashboard');
 }
+
+// --- 13. CALENDAR FEATURE (NEW) ---
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+
+function openCalendarModal() {
+    const modal = document.getElementById('calendar-modal');
+    if (modal) modal.style.display = 'flex';
+    renderCalendar();
+}
+
+function closeCalendarModal() {
+    const modal = document.getElementById('calendar-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+function changeMonth(dir) {
+    currentMonth += dir;
+    if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+    } else if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+    }
+    renderCalendar();
+}
+
+function renderCalendar() {
+    const daysContainer = document.getElementById('calendar-days');
+    const header = document.getElementById('cal-month-year');
+    if (!daysContainer || !header) return;
+
+    // Set Header
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    header.innerText = `${months[currentMonth]} ${currentYear}`;
+
+    // Clear Grid
+    daysContainer.innerHTML = '';
+
+    // Calculate Days
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    // Padding for empty slots
+    for (let i = 0; i < firstDay; i++) {
+        daysContainer.innerHTML += `<div></div>`;
+    }
+
+    // Map Tasks to Dates (Approximation Logic)
+    // We map MOCK_APPOINTMENTS "Today", "Tomorrow" etc to real dates for the current calendar view
+    // Only works if current view matches today's month/year primarily
+
+    // Helper to check match
+    const today = new Date();
+    const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+
+    const taskDates = new Set();
+
+    if (isCurrentMonth) {
+        MOCK_APPOINTMENTS.forEach(t => {
+            let dayOffset = null;
+            const dStr = t.date.toLowerCase();
+
+            if (dStr.includes('today')) dayOffset = 0;
+            if (dStr.includes('tomorrow')) dayOffset = 1;
+            if (dStr.includes('yesterday')) dayOffset = -1;
+            // 'Week ago' ignored for simplification or handled as -7
+
+            if (dayOffset !== null) {
+                const targetDate = new Date();
+                targetDate.setDate(today.getDate() + dayOffset);
+                if (targetDate.getMonth() === currentMonth) {
+                    taskDates.add(targetDate.getDate());
+                }
+            }
+        });
+    }
+
+    // Generate Days
+    for (let i = 1; i <= daysInMonth; i++) {
+        const isToday = isCurrentMonth && i === today.getDate();
+        const hasTask = taskDates.has(i);
+
+        let classes = "cal-day";
+        if (isToday) classes += " today";
+        if (hasTask) classes += " has-task";
+
+        let indicator = hasTask ? `<div style="width:6px; height:6px; background:#ef4444; border-radius:50%; margin-top:2px;"></div>` : '';
+
+        daysContainer.innerHTML += `
+            <div class="${classes}" style="height:50px; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:${isToday ? '#e0e7ff' : '#f8fafc'}; color:${isToday ? 'var(--primary)' : 'var(--text-main)'}; font-weight:${isToday ? '700' : '400'}; border:1px solid ${isToday ? '#c7d2fe' : 'transparent'};">
+                ${i}
+                ${indicator}
+            </div>
+        `;
+    }
+}
