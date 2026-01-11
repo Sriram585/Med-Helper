@@ -1194,6 +1194,159 @@ function setLoginRole(role) {
     }
 }
 
+
+
+function toggleAuthMode(mode) {
+    if (mode === 'signup') {
+        document.getElementById('login-view').style.display = 'none';
+        document.getElementById('signup-view').style.display = 'block';
+    } else {
+        document.getElementById('login-view').style.display = 'block';
+        document.getElementById('signup-view').style.display = 'none';
+    }
+}
+
+// --- Forgot Password Logic ---
+function forgotPassword() {
+    // Reset to Step 1
+    document.getElementById('fp-step-1').style.display = 'block';
+    document.getElementById('fp-step-2').style.display = 'none';
+    document.getElementById('fp-step-3').style.display = 'none';
+
+    // Clear fields
+    document.getElementById('forgot-email').value = '';
+    document.getElementById('forgot-otp').value = '';
+    document.getElementById('forgot-new-pass').value = '';
+    document.getElementById('forgot-confirm-pass').value = '';
+
+    document.getElementById('forgot-password-modal').style.display = 'flex';
+}
+
+function closeForgotModal() {
+    document.getElementById('forgot-password-modal').style.display = 'none';
+}
+
+function sendOTP() {
+    const email = document.getElementById('forgot-email').value;
+    if (!email) {
+        alert("Please enter your email address.");
+        return;
+    }
+
+    if (!email.includes('@')) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    // Move to Step 2
+    document.getElementById('fp-step-1').style.display = 'none';
+    document.getElementById('fp-step-2').style.display = 'block';
+
+    // Just a toast, don't close modal
+    // alert(`OTP Sent to ${email} (Mock: 1234)`);
+}
+
+function validateOTP() {
+    const otp = document.getElementById('forgot-otp').value;
+    if (otp.length !== 4) {
+        alert("Please enter a valid 4-digit OTP.");
+        return;
+    }
+
+    // Mock Validation
+    if (otp === "1234") {
+        // Validation Success -> Step 3
+        document.getElementById('fp-step-2').style.display = 'none';
+        document.getElementById('fp-step-3').style.display = 'block';
+    } else {
+        alert("Invalid OTP. Try 1234.");
+    }
+}
+
+function resetPassword() {
+    const p1 = document.getElementById('forgot-new-pass').value;
+    const p2 = document.getElementById('forgot-confirm-pass').value;
+
+    if (!p1 || !p2) {
+        alert("Please fill in both fields.");
+        return;
+    }
+
+    if (p1 !== p2) {
+        alert("Passwords do not match.");
+        return;
+    }
+
+    // Success
+    closeForgotModal();
+    showSuccessModal("Password Updated", "Your password has been changed successfully. Please login.");
+
+    // Redirect to Login
+    if (document.getElementById('app-layout').style.display === 'flex') {
+        handleLogout(); // Force logout if somehow logged in
+    }
+
+    // Ensure Login View
+    document.getElementById('login-screen').style.display = 'flex';
+    toggleAuthMode('login');
+}
+
+async function handleSignUp() {
+    const name = document.getElementById('reg-name').value;
+    const user = document.getElementById('reg-user').value;
+    const pass = document.getElementById('reg-pass').value;
+    const role = document.getElementById('reg-role').value;
+
+    const mobile = document.getElementById('reg-mobile').value;
+    const email = document.getElementById('reg-email').value;
+    const confirmPass = document.getElementById('reg-pass-confirm').value;
+
+    if (!name || !mobile || !email || !user || !pass || !confirmPass) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    if (pass !== confirmPass) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    // Determine Role Logic (Basic)
+    let newUser = {
+        name: name,
+        role: role
+    };
+
+    // Auto-login
+    currentUser = newUser;
+    selectedRole = role; // Ensure sidebar setup uses this
+
+    alert("Account Created! Logging you in...");
+
+    // Proceed to login logic
+    const loginScreen = document.getElementById('login-screen');
+    if (loginScreen) loginScreen.style.display = 'none';
+
+    const appLayout = document.getElementById('app-layout');
+    if (appLayout) appLayout.style.display = 'flex';
+
+    setupSidebar(currentUser.role);
+
+    if (currentUser.role === 'doctor') {
+        loadDoctorDashboard();
+    } else {
+        loadSidebarHistory();
+        loadFullHistory();
+        setupVoiceInput();
+        loadHabits();
+        updateDashboardWidgets();
+        switchView('dashboard');
+    }
+
+    // Reset view for next time
+    toggleAuthMode('login');
+}
+
 async function handleLogin() {
     // BYPASS CREDENTIALS FOR SMOOTH DEMO
     const role = selectedRole || 'patient';
@@ -1302,8 +1455,8 @@ function loadDoctorDashboard() {
             list.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding: 40px; background:white; border-radius:12px; border:1px dashed #e2e8f0;">No appointments scheduled.</div>`;
         } else {
             list.innerHTML = myAppts.map((a, index) => {
-                const safePatient = (a.patient || 'Patient').replace(/'/g, "\\'").replace(/"/g, "&quot;");
-                const safeReason = (a.reason || '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                const safePatient = (a.patient || 'Patient').replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
+                const safeReason = (a.reason || '').replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
                 const safeDate = (a.date || '').toString().replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
                 return `
@@ -1317,9 +1470,12 @@ function loadDoctorDashboard() {
                             <div style="color:var(--text-secondary); font-size:0.8rem;">${a.reason}</div>
                         </div>
                     </div>
-                    <button class="btn-outline" style="padding: 6px 12px; font-size: 0.8rem; border-radius:8px;" onclick="viewPatientDetails('${safePatient}', '${safeReason}', '${safeDate}')">Details</button>
+                    <button class="btn-outline" style="padding: 6px 12px; font-size: 0.8rem; border-radius:8px;" onclick="viewPatientDetails('appt', ${index})">Details</button>
                 </div>
             `}).join('');
+
+            // Store for lookup
+            window.currentDoctorAppts = myAppts;
         }
     }
 
@@ -1368,9 +1524,9 @@ function renderPatientList() {
 
     // Show top 5 on dashboard
     list.innerHTML = mockPatients.slice(0, 5).map(p => {
-        const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
         return `
-        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${safeName}')">
+        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('patient', ${mockPatients.indexOf(p)})">
             <div style="display:flex; align-items:center; gap:12px;">
                 <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=32" style="border-radius:50%;">
                 <div>
@@ -1388,9 +1544,9 @@ function renderFullPatientList() {
     if (!list) return;
 
     list.innerHTML = mockPatients.map(p => {
-        const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
         return `
-        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${safeName}')">
+        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('patient', ${mockPatients.indexOf(p)})">
             <div style="display:flex; align-items:center; gap:15px;">
                 <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=48" style="border-radius:48%;">
                 <div>
@@ -1400,7 +1556,7 @@ function renderFullPatientList() {
             </div>
             <div style="text-align:right;">
                 <div style="font-size:0.85rem; color:var(--text-secondary);">Last Visit: ${p.lastVisit}</div>
-                <button class="btn-outline" style="margin-top:5px; padding: 4px 10px; font-size:0.8rem;" onclick="viewPatientDetails('${safeName}')">Profile</button>
+                <button class="btn-outline" style="margin-top:5px; padding: 4px 10px; font-size:0.8rem;" onclick="event.stopPropagation(); viewPatientDetails('patient', ${mockPatients.indexOf(p)})">Profile</button>
             </div>
         </div>
     `}).join('');
@@ -1415,9 +1571,10 @@ function filterPatients(source) {
 
     // Render (Mini maps to slice logic usually, but search overrides slice for utility)
     targetList.innerHTML = filtered.map(p => {
-        const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        // Find original index
+        const originalIndex = mockPatients.indexOf(p);
         return `
-        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${safeName}')">
+        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('patient', ${originalIndex})">
             <div style="display:flex; align-items:center; gap:${source === 'mini' ? '12px' : '15px'};">
                 <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=${source === 'mini' ? '32' : '48'}" style="border-radius:50%;">
                 <div>
@@ -1568,7 +1725,32 @@ function toggleNotifications() {
 }
 
 
-function viewPatientDetails(patientName, apptReason, apptDate) {
+// function viewPatientDetails(patientName, apptReason, apptDate) { 
+// REFACTORED to use lookup
+function viewPatientDetails(type, index) {
+    let data;
+    if (type === 'appt') {
+        data = window.currentDoctorAppts[index];
+    } else if (type === 'patient') {
+        // Find in mockPatients by index if passed as number, or if we change to use filtered list:
+        // Ideally we should use the filtered list if searching.
+        // For now, let's assume we pass the INDEX of the filtered list if we store it, 
+        // OR we pass the name and look it up in mockPatients (safer if uniqueness is guaranteed-ish).
+        // Let's stick to the index of the source array if possible.
+        // ACTUALLY: The patient list functions rely on `mockPatients`.
+        data = window.mockPatients[index];
+    }
+
+    if (!data) {
+        // Fallback for search results where we might pass the name directly or need a different lookup
+        console.error("No data found for", type, index);
+        return;
+    }
+
+    const patientName = data.patient || data.name; // 'patient' in appt, 'name' in patient obj
+    const apptReason = data.reason || (type === 'patient' ? data.condition : '');
+    const apptDate = data.date || (type === 'patient' ? 'Last Visit: ' + data.lastVisit : '');
+
     const modal = document.getElementById('patient-modal');
     if (!modal) return;
 
