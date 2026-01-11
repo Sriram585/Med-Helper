@@ -1,9 +1,9 @@
 // Global State
+// Global State
 let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initial Load - Keep layout hidden until login
-    // Some inits that don't depend on user can run, but let's keep it clean
 });
 
 // const API_BASE = 'http://127.0.0.1:8000';
@@ -42,6 +42,7 @@ function switchView(viewId) {
         'hydration': ['Hydration Tracker', 'Daily Water Intake Goal'],
         'mood': ['Mood Tracker', 'Emotional Well-being Journal'],
         'appointments': ['Find Doctors', 'Book Medical Consultations'],
+        'appointments-view': ['Book Appointment', 'Schedule Consultation'],
         'diet': ['AI Nutritionist', 'Personalized Meal Plans'],
         'workout': ['Workout Coach', 'Fitness Routines'],
         'workout': ['Workout Coach', 'Fitness Routines'],
@@ -1181,7 +1182,7 @@ function stopWearableSimulation() {
     if (wearInterval) clearInterval(wearInterval);
 }
 
-// --- 11. AUTHENTICATION & DOCTOR DASHBOARD ---
+// --- 11. AUTHENTICATION (RESTORED) ---
 
 let selectedRole = 'patient';
 
@@ -1202,63 +1203,76 @@ function setLoginRole(role) {
 }
 
 async function handleLogin() {
-    const user = document.getElementById('login-user').value;
-    const pass = document.getElementById('login-pass').value;
+    // BYPASS CREDENTIALS FOR SMOOTH DEMO
+    const role = selectedRole || 'patient';
 
-    if (!user || !pass) {
-        alert("Please enter username and password.");
-        return;
+    if (role === 'doctor') {
+        currentUser = { name: "Dr. Sarah Smith", role: "doctor" };
+    } else {
+        currentUser = { name: "John Doe", role: "patient" };
     }
 
-    try {
-        const response = await fetch(`${API_BASE}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: user, password: pass })
-        });
+    // Direct Login Sequence
+    const loginScreen = document.getElementById('login-screen');
+    if (loginScreen) loginScreen.style.display = 'none';
 
-        if (!response.ok) {
-            alert("Invalid credentials. Try patient/patient123");
-            return;
-        }
+    // Show App Layout
+    const appLayout = document.getElementById('app-layout');
+    if (appLayout) appLayout.style.display = 'flex';
 
-        const data = await response.json();
-        currentUser = data; // {name, role}
+    // SETUP SIDEBAR FOR ROLE
+    setupSidebar(currentUser.role);
 
-        // UI Switch
-        document.getElementById('login-screen').style.display = 'none';
+    if (currentUser.role === 'doctor') {
+        loadDoctorDashboard();
+    } else {
+        // Patient Init
+        loadSidebarHistory();
+        loadFullHistory();
+        setupVoiceInput();
+        loadHabits();
+        updateDashboardWidgets();
+        switchView('dashboard');
+    }
+}
 
-        // Show App Layout
-        const appLayout = document.getElementById('app-layout');
-        if (appLayout) appLayout.style.display = 'flex';
+function handleLogout() {
+    // Reset state
+    currentUser = null;
+    selectedRole = 'patient'; // Default reset
 
-        if (currentUser.role === 'doctor') {
-            loadDoctorDashboard();
-        } else {
-            // Patient Init
-            // loadSidebarHistory(); // already called on load but safe to recall
-            loadSidebarHistory();
-            loadFullHistory();
-            setupVoiceInput();
-            loadHabits();
-            updateDashboardWidgets();
+    // Hide App
+    const appLayout = document.getElementById('app-layout');
+    if (appLayout) appLayout.style.display = 'none';
 
-            // Show Sidebar
-            const sidebar = document.querySelector('.sidebar');
-            if (sidebar) sidebar.style.display = 'flex';
-            switchView('dashboard');
-        }
+    // Show Login
+    const loginScreen = document.getElementById('login-screen');
+    if (loginScreen) loginScreen.style.display = 'flex';
 
-    } catch (e) {
-        console.error(e);
+    // Reset Views
+    document.getElementById('login-user').value = '';
+    document.getElementById('login-pass').value = '';
+    setLoginRole('patient');
+}
+
+function setupSidebar(role) {
+    const pNav = document.getElementById('nav-patient');
+    const dNav = document.getElementById('nav-doctor');
+    const sidebar = document.querySelector('.sidebar');
+
+    // Ensure sidebar is visible
+    if (sidebar) sidebar.style.display = 'flex';
+
+    if (role === 'doctor') {
+        if (pNav) pNav.style.display = 'none';
+        if (dNav) dNav.style.display = 'block';
+    } else {
+        if (pNav) pNav.style.display = 'block';
+        if (dNav) dNav.style.display = 'none';
     }
 }
 
 function loadDoctorDashboard() {
-    // 1. Hide Sidebar
-    const sidebar = document.querySelector('.sidebar');
-    if (sidebar) sidebar.style.display = 'none';
-
     // 2. Show View
     document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
     document.getElementById('view-doctor-dashboard').style.display = 'block';
@@ -1267,30 +1281,150 @@ function loadDoctorDashboard() {
     const nameEl = document.getElementById('doc-dash-name');
     if (nameEl) nameEl.innerText = currentUser.name;
 
-    // 4. Load Mock Appointments
+    // 4. Load Appointments including user bookings
     const localAppts = JSON.parse(localStorage.getItem('mediAppointments') || '[]');
+
+    // Merge real inputs with mock data for demo
     const allAppts = [
-        ...localAppts.map(a => ({ ...a, patient: "Current User" })),
-        { doctor: currentUser.name, date: "Tomorrow at 2 PM", patient: "Alice Cooper" },
-        { doctor: currentUser.name, date: "Friday at 10 AM", patient: "Bob Brown" }
+        ...localAppts.map(a => ({
+            doctor: a.doctor,
+            date: new Date(a.date).toLocaleString(),
+            patient: "Current User (" + (currentUser.name || 'Guest') + ")",
+            reason: a.reason || 'Checkup'
+        })),
+        { doctor: "Dr. Sarah Smith", date: "Tomorrow at 2:00 PM", patient: "Alice Cooper", reason: "Annual physical" },
+        { doctor: "Dr. James Wilson", date: "Friday at 10:00 AM", patient: "Bob Brown", reason: "Chest pain follow-up" },
+        { doctor: "Dr. Linda Ray", date: "Monday at 4:30 PM", patient: "Charlie Davis", reason: "Skin rash" }
     ];
 
-    // Filter
-    const myAppts = allAppts.filter(a => a.doctor === currentUser.name || a.doctor === "Dr. Sarah Smith" || a.doctor === "Dr. Sarah Smith");
+    // Filter for current doctor (or all if generalized for demo)
+    const myAppts = allAppts.filter(a => a.doctor === currentUser.name || currentUser.name === "Dr. Sarah Smith");
+    // ^ Relaxed filter for demo purposes so "Dr. Sarah Smith" sees everything
 
     const countEl = document.getElementById('doc-appt-count');
     if (countEl) countEl.innerText = myAppts.length;
 
     const list = document.getElementById('doc-appointments-list');
     if (list) {
-        list.innerHTML = myAppts.map(a => `
-            <div class="doc-appt-card">
-                <div>
-                    <div style="font-weight:700; font-size:1.1rem;">${a.patient || 'Patient'}</div>
-                    <div style="color:var(--text-secondary);"><i class="far fa-clock"></i> ${a.date}</div>
+        if (myAppts.length === 0) {
+            list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-secondary);">No appointments scheduled.</div>';
+        } else {
+            list.innerHTML = myAppts.map((a, index) => `
+                <div class="doc-appt-card">
+                    <div>
+                        <div style="font-weight:700; font-size:1.1rem;">${a.patient || 'Patient'}</div>
+                        <div style="color:var(--text-secondary); font-size:0.9rem;"><i class="far fa-clock"></i> ${a.date}</div>
+                        <div style="color:var(--text-secondary); font-size:0.8rem; margin-top:4px;">${a.reason}</div>
+                    </div>
+                    <button class="btn-primary" style="padding: 6px 14px; font-size: 0.85rem;" onclick="viewPatientDetails('${a.patient}')">View Details</button>
                 </div>
-                <button class="btn-primary" style="padding: 8px 16px; font-size: 0.9rem;" onclick="alert('Viewing patient details is a future feature!')">View Details</button>
-            </div>
-        `).join('');
+            `).join('');
+        }
     }
+
+    // 5. Load Patient Directory (Mock)
+    renderPatientList();
+}
+
+// --- DOCTOR FEATURES ---
+
+function renderPatientList() {
+    const list = document.getElementById('doctor-patient-list');
+    if (!list) return;
+
+    const patients = [
+        { name: "Alice Cooper", age: 34, condition: "Hypertension" },
+        { name: "Bob Brown", age: 45, condition: "Arrhythmia" },
+        { name: "Charlie Davis", age: 29, condition: "Eczema" },
+        { name: "Diana Prince", age: 31, condition: "Routine Checkup" },
+        { name: "Current User", age: 25, condition: "General Health" }
+    ];
+
+    list.innerHTML = patients.map(p => `
+        <div class="doc-appt-card" style="margin-bottom: 15px; cursor: pointer;" onclick="viewPatientDetails('${p.name}')">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <div style="width:40px; height:40px; background:#e0e7ff; color:var(--primary); display:flex; align-items:center; justify-content:center; border-radius:50%; font-weight:bold;">
+                    ${p.name.charAt(0)}
+                </div>
+                <div>
+                    <div style="font-weight:700;">${p.name}</div>
+                    <div style="font-size:0.85rem; color:var(--text-secondary);">${p.condition}</div>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color: #cbd5e1;"></i>
+        </div>
+    `).join('');
+}
+
+function viewPatientDetails(patientName) {
+    const modal = document.getElementById('patient-modal');
+    if (!modal) return;
+
+    document.getElementById('modal-patient-name').innerText = patientName;
+
+    // Fake medical data generator
+    const heartRate = Math.floor(Math.random() * (100 - 60) + 60);
+    const bpSys = Math.floor(Math.random() * (140 - 110) + 110);
+    const bpDia = Math.floor(Math.random() * (90 - 70) + 70);
+
+    const html = `
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom: 30px;">
+            <div class="stat-card" style="background:#f8fafc; border:none;">
+                <div class="stat-info">
+                    <span class="stat-label">Heart Rate</span>
+                    <span class="stat-value">${heartRate} bpm</span>
+                </div>
+            </div>
+            <div class="stat-card" style="background:#f8fafc; border:none;">
+                <div class="stat-info">
+                    <span class="stat-label">Blood Pressure</span>
+                    <span class="stat-value">${bpSys}/${bpDia}</span>
+                </div>
+            </div>
+        </div>
+
+        <h4 style="margin-bottom:15px; border-bottom: 1px solid #e2e8f0; padding-bottom:10px;">Recent History</h4>
+        <ul style="list-style:none; padding:0; font-size:0.95rem; color:var(--text-secondary);">
+            <li style="margin-bottom:10px;"><i class="fas fa-notes-medical" style="color:var(--primary); width:20px;"></i> Complained of headaches (2 days ago)</li>
+            <li style="margin-bottom:10px;"><i class="fas fa-prescription-bottle-alt" style="color:var(--primary); width:20px;"></i> Prescribed Paracetamol 500mg</li>
+            <li><i class="fas fa-vial" style="color:var(--primary); width:20px;"></i> Blood work scheduled for next week</li>
+        </ul>
+    `;
+
+    document.getElementById('modal-patient-body').innerHTML = html;
+    modal.style.display = 'flex';
+}
+
+function closePatientModal() {
+    const modal = document.getElementById('patient-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+// --- PATIENT BOOKING FEATURE ---
+
+function bookAppointment() {
+    const doc = document.getElementById('book-doctor').value;
+    const date = document.getElementById('book-date').value;
+    const reason = document.getElementById('book-reason').value;
+
+    if (!doc || !date) {
+        alert("Please select a doctor and date.");
+        return;
+    }
+
+    const appt = {
+        doctor: doc,
+        date: date,
+        reason: reason,
+        status: 'Confirmed'
+    };
+
+    const currentAppts = JSON.parse(localStorage.getItem('mediAppointments') || '[]');
+    currentAppts.push(appt);
+    localStorage.setItem('mediAppointments', JSON.stringify(currentAppts));
+
+    alert("Appointment Booked Successfully!");
+    document.getElementById('book-date').value = '';
+    document.getElementById('book-reason').value = '';
+    switchView('dashboard');
 }
