@@ -177,18 +177,16 @@
                     </button>
 
                     <div class="menu-label" style="margin-top: 20px;">Tools</div>
-                    <button class="nav-item" onclick="switchView('doctor-dashboard')">
-                        <i class="fas fa-stethoscope"></i> <span>Doctor Tools</span>
-                    </button>
+
                     <button class="nav-item" onclick="switchView('medical-chat')">
                         <i class="fas fa-robot"></i> <span>AI Health Chat</span>
                     </button>
 
                     <div class="menu-label" style="margin-top: 20px;">Management</div>
-                    <button class="nav-item" onclick="alert('Patients view is on the dashboard for now.')">
+                    <button class="nav-item" onclick="switchView('doc-patients')">
                         <i class="fas fa-users"></i> <span>My Patients</span>
                     </button>
-                    <button class="nav-item" onclick="alert('Calendar is coming soon.')">
+                    <button class="nav-item" onclick="switchView('doc-schedule')">
                         <i class="fas fa-calendar-alt"></i> <span>Schedule</span>
                     </button>
                 </div>
@@ -816,7 +814,7 @@
                                 Upcoming Appointments
                             </h3>
                         </div>
-                        <button class="btn-outline" onclick="openCalendarModal()"
+                        <button class="btn-outline" onclick="switchView('doc-schedule')"
                             style="border: 2px solid #6366f1; color: #6366f1; padding: 8px 18px; border-radius: 20px; background: transparent; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition:0.2s;">
                             View Calendar
                         </button>
@@ -833,6 +831,63 @@
 
             <!-- TOAST CONTAINER -->
             <div id="toast-container" class="toast-container"></div>
+
+            <!-- MY PATIENTS VIEW -->
+            <section id="view-doc-patients" class="view-section" style="display: none">
+                <div class="glass-panel" style="padding: 25px;">
+                    <div class="panel-header" style="margin-bottom: 20px;">
+                        <h3><i class="fas fa-users-medical"></i> All Patients Directory</h3>
+                        <div style="position: relative; width: 300px;">
+                            <input type="text" id="patient-search-full" placeholder="Search patients..." onkeyup="filterPatients('full')"
+                                style="width:100%; padding: 10px 40px 10px 15px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 0.95rem;">
+                            <i class="fas fa-search"
+                                style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                        </div>
+                    </div>
+
+                    <div id="full-patient-list" class="doctor-grid" style="grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));">
+                        <!-- Populated by JS -->
+                    </div> 
+                </div> 
+            </section>
+
+            <!-- SCHEDULE VIEW (CALENDAR) -->
+            <section id="view-doc-schedule" class="view-section" style="display: none">
+                <div class="glass-panel" style="padding: 30px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
+                        <h2 id="cal-month-year" style="margin:0; font-size: 1.8rem; color:var(--text-main);">Month Year</h2>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-outline" onclick="openEventModal()"><i class="fas fa-plus"></i> Add Event</button>
+                            <div style="display:flex; gap:5px;">
+                                <button class="btn-circle" onclick="changeMonth(-1)"><i
+                                        class="fas fa-chevron-left"></i></button>
+                                <button class="btn-circle" onclick="changeMonth(1)"><i
+                                        class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calendar-grid-header"
+                        style="display:grid; grid-template-columns: repeat(7, 1fr); text-align:center; font-weight:700; color:var(--text-secondary); margin-bottom:15px; font-size: 0.9rem; text-transform: uppercase;">
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
+                    </div>
+                    <div id="calendar-days" class="calendar-grid"
+                        style="display:grid; grid-template-columns: repeat(7, 1fr); gap: 10px;">
+                        <!-- Injected JS -->
+                    </div>
+
+                    <div id="calendar-day-details"
+                        style="margin-top:25px; border-top:1px solid #f1f5f9; padding-top:20px; min-height:50px;">
+                        
+                    </div>
+                </div>
+            </section>
 
             <!-- SUCCESS MODAL (App Popup) -->
             <div id="success-modal" class="modal-overlay">
@@ -864,45 +919,7 @@
                 </div>
             </div>
 
-            <!-- CALENDAR MODAL (NEW) -->
-            <div id="calendar-modal" class="modal-overlay">
-                <div class="modal-box" style="max-width: 500px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-                        <h2 id="cal-month-year" style="margin:0;">Month Year</h2>
-                        <div style="display:flex; gap:10px;">
-                            <button class="btn-circle" onclick="changeMonth(-1)"><i
-                                    class="fas fa-chevron-left"></i></button>
-                            <button class="btn-circle" onclick="changeMonth(1)"><i
-                                    class="fas fa-chevron-right"></i></button>
-                        </div>
-                    </div>
 
-                    <div class="calendar-grid-header"
-                        style="display:grid; grid-template-columns: repeat(7, 1fr); text-align:center; font-weight:700; color:var(--text-secondary); margin-bottom:10px;">
-                        <div>S</div>
-                        <div>M</div>
-                        <div>T</div>
-                        <div>W</div>
-                        <div>T</div>
-                        <div>F</div>
-                        <div>S</div>
-                    </div>
-                    <div id="calendar-days" class="calendar-grid"
-                        style="display:grid; grid-template-columns: repeat(7, 1fr); gap: 5px;">
-                        <!-- Injected JS -->
-                    </div>
-
-                    <div id="calendar-day-details"
-                        style="margin-top:15px; border-top:1px solid #f1f5f9; padding-top:10px; min-height:50px;">
-                        <div style="color:var(--text-secondary); font-size:0.9rem; text-align:center;">Click a date
-                            to view
-                            details</div>
-                    </div>
-
-                    <button class="btn-outline full-width" style="margin-top:20px;"
-                        onclick="closeCalendarModal()">Close</button>
-                </div>
-            </div>
 
             <!-- AI CAUTION MODAL -->
             <div id="ai-caution-modal" class="modal-overlay">

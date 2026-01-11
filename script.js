@@ -34,6 +34,8 @@ function switchView(viewId) {
         'dashboard': ['Dashboard', 'AI-Powered Symptom Checker'],
         'medical-chat': ['Health Assistant', 'Ask general medical questions'],
         'doctor-dashboard': ['Doctor Dashboard', 'Welcome back, Dr. Sarah Smith'],
+        'doc-patients': ['My Patients', 'Manage Patient Records'],
+        'doc-schedule': ['Schedule', 'Calendar & Events'],
         'history': ['Medical History', 'Your past consultations log'],
         'profile': ['User Profile', 'Manage your personal details'],
         'appointments': ['Find Doctors', 'Book Medical Consultations'],
@@ -64,7 +66,11 @@ function switchView(viewId) {
     if (viewId === 'mood') loadMoodHistory();
     if (viewId === 'wearables') startWearableSimulation();
     if (viewId === 'doctor-dashboard') loadDoctorDashboard();
-    else stopWearableSimulation();
+    if (viewId === 'doc-patients') renderFullPatientList();
+    if (viewId === 'doc-schedule') renderCalendar();
+
+    // Stop simulation if not wearables
+    if (viewId !== 'wearables') stopWearableSimulation();
 }
 
 // --- 1. SYMPTOM CHECKER ---
@@ -1542,16 +1548,35 @@ function setupSidebar(role) {
 
 // --- 12. DOCTOR DASHBOARD LOGIC (NEW) ---
 let MOCK_APPOINTMENTS = [
-    { id: 101, patient: "Alice Cooper", date: "Tomorrow at 2:00 PM", reason: "Annual physical", type: "standard" },
-    { id: 102, patient: "Bob Brown", date: "Friday at 10:00 AM", reason: "Chest pain follow-up", type: "urgent" },
-    { id: 103, patient: "Charlie Davis", date: "Monday at 4:30 PM", reason: "Skin rash", type: "standard" },
-    { id: 104, patient: "Diana Prince", date: "Wednesday at 9:00 AM", reason: "Migraine check", type: "review" }
+    { id: 101, patient: "Alice Cooper", date: "Today at 2:00 PM", reason: "Annual physical", type: "standard" },
+    { id: 102, patient: "Bob Brown", date: "Today at 3:15 PM", reason: "Chest pain follow-up", type: "urgent" },
+    { id: 103, patient: "Charlie Davis", date: "Today at 4:30 PM", reason: "Skin rash evaluation", type: "standard" },
+    { id: 104, patient: "Diana Prince", date: "Tomorrow at 9:00 AM", reason: "Migraine check", type: "review" },
+    { id: 105, patient: "Evan Wright", date: "Tomorrow at 10:30 AM", reason: "Diabetes management", type: "review" },
+    { id: 106, patient: "Fiona Green", date: "Tomorrow at 11:45 AM", reason: "High fever & cough", type: "urgent" },
+    { id: 107, patient: "George Hall", date: "Tomorrow at 2:00 PM", reason: "Arthritis consultation", type: "standard" },
+    { id: 108, patient: "Hannah Lee", date: "Wed at 9:15 AM", reason: "Lab results discussion", type: "review" },
+    { id: 109, patient: "Ian Scott", date: "Wed at 10:00 AM", reason: "Back pain therapy", type: "standard" },
+    { id: 110, patient: "Jane Doe", date: "Wed at 1:30 PM", reason: "Severe allergic reaction", type: "urgent" },
+    { id: 111, patient: "Kevin Mack", date: "Thu at 8:45 AM", reason: "Blood pressure check", type: "standard" },
+    { id: 112, patient: "Liam Neeson", date: "Thu at 11:00 AM", reason: "Throat infection", type: "standard" },
+    { id: 113, patient: "Mia Wong", date: "Thu at 3:00 PM", reason: "Post-surgery review", type: "review" },
+    { id: 114, patient: "Noah Villes", date: "Fri at 9:30 AM", reason: "Vaccination", type: "standard" },
+    { id: 115, patient: "Olivia Pope", date: "Fri at 10:45 AM", reason: "Anxiety consultation", type: "standard" },
+    { id: 116, patient: "Peter Pan", date: "Fri at 1:00 PM", reason: "Growth chart check", type: "standard" },
+    { id: 117, patient: "Quinn Fabray", date: "Sat at 10:00 AM", reason: "Broken arm follow-up", type: "urgent" },
+    { id: 118, patient: "Rachel Berry", date: "Sat at 11:30 AM", reason: "Vocal strain", type: "standard" },
+    { id: 119, patient: "Sam Evans", date: "Mon at 9:00 AM", reason: "Sports injury", type: "standard" },
+    { id: 120, patient: "Tina Cohen", date: "Mon at 2:00 PM", reason: "Sleep disorder", type: "review" },
+    { id: 121, patient: "Ursula K.", date: "Mon at 3:30 PM", reason: "Thyroid check", type: "review" },
+    { id: 122, patient: "Victor Stone", date: "Tue at 10:15 AM", reason: "Prosthetic adjustment", type: "urgent" }
 ];
 
 function loadDoctorDashboard() {
-    // 1. Update Stats (Mock)
+    // 1. Update Stats (Dynamic)
     document.getElementById('doc-stat-appt').innerText = MOCK_APPOINTMENTS.length;
-    document.getElementById('doc-stat-review').innerText = "5"; // Hardcoded in design
+    document.getElementById('doc-stat-review').innerText = MOCK_APPOINTMENTS.filter(a => a.type === 'review').length;
+    document.getElementById('doc-stat-urgent').innerText = MOCK_APPOINTMENTS.filter(a => a.type === 'urgent').length;
     document.getElementById('doc-stat-urgent').innerText = "3"; // Hardcoded in design
 
     // 2. Render All Upcoming by Default
@@ -1562,13 +1587,18 @@ function renderAppointmentGrid(appointments) {
     const container = document.getElementById('doc-upcoming-list');
     if (!container) return;
 
+    // Use CSS class for layout instead of inline styles
+    container.className = 'upcoming-appointments-grid';
+    // Clear any potential inline overrides if they exist on the element (though unlikely from code, safe to ensure)
+    container.style = '';
+
     // Remove horizontal scroll styles for grid (Ensuring styles are set)
-    container.style.display = 'grid';
-    container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(300px, 1fr))';
-    container.style.gap = '20px';
-    container.style.overflowX = 'visible';
-    container.style.width = '100%';
-    container.style.paddingBottom = '0';
+    // container.style.display = 'grid';
+    // container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(300px, 1fr))';
+    // container.style.gap = '20px';
+    // container.style.overflowX = 'visible';
+    // container.style.width = '100%';
+    // container.style.paddingBottom = '0';
 
     if (appointments.length === 0) {
         container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-secondary);">No appointments found for this category.</div>`;
@@ -1745,71 +1775,7 @@ function filterPatients(source) {
     }
 }
 
-function renderCalendar() {
-    const grid = document.getElementById('calendar-grid');
-    if (!grid) return;
 
-    // Remove old days (keep headers)
-    const headers = grid.querySelectorAll('div').length >= 7 ? Array.from(grid.querySelectorAll('div')).slice(0, 7) : [];
-    // Just rebuild simpler: innerHTML is safer if we just hardcode headers in JS or preserve them
-    // Let's assume the headers are static HTML and we append or just overwrite. 
-    // Actually, let's just overwrite for simplicity with the same grid style.
-
-    let events = JSON.parse(localStorage.getItem('docEvents') || '[]');
-
-    let html = `
-        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Sun</div>
-        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Mon</div>
-        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Tue</div>
-        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Wed</div>
-        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Thu</div>
-        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Fri</div>
-        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Sat</div>
-    `;
-
-    // Simple current month generator
-    const date = new Date();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const today = date.getDate();
-
-    // Empty slots
-    for (let i = 0; i < firstDay; i++) {
-        html += `<div></div>`;
-    }
-
-    // Days
-    for (let i = 1; i <= daysInMonth; i++) {
-        const isToday = i === today;
-        // Mock events + saved events
-        const hasEvent = [5, 12, 20, 25].includes(i) || events.some(e => parseInt(e.day) === i);
-
-        html += `
-            <div style="
-                height: 80px; 
-                border: 1px solid #f1f5f9; 
-                border-radius: 8px; 
-                position: relative; 
-                background: ${isToday ? '#eef2ff' : 'white'};
-                display: flex;
-                align-items: flex-start;
-                justify-content: flex-start;
-                padding: 5px;
-                font-size: 0.9rem;
-                font-weight: ${isToday ? '700' : 'normal'};
-                color: ${isToday ? 'var(--primary)' : 'inherit'};
-                cursor: pointer;
-            " onclick="viewDayEvents(${i})">
-                ${i}
-                ${hasEvent ? '<div style="position:absolute; bottom:5px; right:5px; width:6px; height:6px; background:#ef4444; border-radius:50%;"></div>' : ''}
-            </div>
-        `;
-    }
-
-    grid.innerHTML = html;
-}
 
 // --- CALENDAR EVENTS ---
 function openEventModal() {
@@ -1892,7 +1858,7 @@ function viewPatientDetails(type, index) {
         // OR we pass the name and look it up in mockPatients (safer if uniqueness is guaranteed-ish).
         // Let's stick to the index of the source array if possible.
         // ACTUALLY: The patient list functions rely on `mockPatients`.
-        data = window.mockPatients[index];
+        data = mockPatients[index]; // Fixed: Access directly, not via window
     }
 
     if (!data) {
@@ -1994,16 +1960,7 @@ function bookAppointment() {
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 
-function openCalendarModal() {
-    const modal = document.getElementById('calendar-modal');
-    if (modal) modal.style.display = 'flex';
-    renderCalendar();
-}
 
-function closeCalendarModal() {
-    const modal = document.getElementById('calendar-modal');
-    if (modal) modal.style.display = 'none';
-}
 
 function changeMonth(dir) {
     currentMonth += dir;
