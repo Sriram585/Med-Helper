@@ -1267,6 +1267,9 @@ function setupSidebar(role) {
     }
 }
 
+// --- 12. DOCTOR DASHBOARD LOGIC (NEW) ---
+let MOCK_APPOINTMENTS = [];
+
 function loadDoctorDashboard() {
     // 2. Show View
     document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
@@ -1276,49 +1279,125 @@ function loadDoctorDashboard() {
     const nameEl = document.getElementById('doc-dash-name');
     if (nameEl) nameEl.innerText = currentUser.name;
 
-    // 4. Load Appointments including user bookings
+    // 4. Initialize Mock Data (merging local + hardcoded for demo)
     const localAppts = JSON.parse(localStorage.getItem('mediAppointments') || '[]');
 
-    // Merge real inputs with mock data for demo
-    const allAppts = [
-        ...localAppts.map(a => ({
-            doctor: a.doctor,
-            date: new Date(a.date).toLocaleString(),
-            patient: "Current User (" + (currentUser.name || 'Guest') + ")",
-            reason: a.reason || 'Checkup'
-        })),
-        { doctor: "Dr. Sarah Smith", date: "Tomorrow at 2:00 PM", patient: "Alice Cooper", reason: "Annual physical" },
-        { doctor: "Dr. James Wilson", date: "Friday at 10:00 AM", patient: "Bob Brown", reason: "Chest pain follow-up" },
-        { doctor: "Dr. Linda Ray", date: "Monday at 4:30 PM", patient: "Charlie Davis", reason: "Skin rash" }
+    // Create rich mock data with 'type' field
+    const hardcoded = [
+        { id: 101, doctor: "Dr. Sarah Smith", date: "Tomorrow at 2:00 PM", patient: "Alice Cooper", reason: "Annual physical", type: 'appt' },
+        { id: 102, doctor: "Dr. James Wilson", date: "Friday at 10:00 AM", patient: "Bob Brown", reason: "Chest pain follow-up", type: 'urgent' },
+        { id: 103, doctor: "Dr. Linda Ray", date: "Monday at 4:30 PM", patient: "Charlie Davis", reason: "Skin rash", type: 'appt' },
+        { id: 104, doctor: "Dr. Sarah Smith", date: "Today at 9:00 AM", patient: "Diana Prince", reason: "Lab Results Review", type: 'review' },
+        { id: 105, doctor: "Dr. Sarah Smith", date: "Today at 10:30 AM", patient: "Evan Wright", reason: "High Fever", type: 'urgent' },
+        { id: 106, doctor: "Dr. Sarah Smith", date: "Yesterday", patient: "Frank Miller", reason: "X-Ray Analysis", type: 'review' },
+        { id: 107, doctor: "Dr. Sarah Smith", date: "Today at 1:15 PM", patient: "Grace Lee", reason: "Stomach Pain", type: 'urgent' },
+        { id: 108, doctor: "Dr. Sarah Smith", date: "Week ago", patient: "Henry Ford", reason: "MRI Scan", type: 'review' },
+        { id: 109, doctor: "Dr. Sarah Smith", date: "Pending", patient: "Ian Scott", reason: "Blood Work", type: 'review' },
+        { id: 110, doctor: "Dr. Sarah Smith", date: "Pending", patient: "Jane Doe", reason: "Ct Scan", type: 'review' }
     ];
 
-    // Filter for current doctor (or all if generalized for demo)
-    const myAppts = allAppts.filter(a => a.doctor === currentUser.name || currentUser.name === "Dr. Sarah Smith");
-    // ^ Relaxed filter for demo purposes so "Dr. Sarah Smith" sees everything
+    // Convert local appts to this format
+    const convertedLocal = localAppts.map(a => ({
+        id: a.id || Date.now(),
+        doctor: a.doctor,
+        date: new Date(a.date).toLocaleString(),
+        patient: "Current User (" + (currentUser.name || 'Guest') + ")",
+        reason: a.reason || 'Checkup',
+        type: 'appt' // Local bookings are normal appointments
+    }));
 
-    const countEl = document.getElementById('doc-appt-count');
-    if (countEl) countEl.innerText = myAppts.length;
+    MOCK_APPOINTMENTS = [...convertedLocal, ...hardcoded];
 
-    const list = document.getElementById('doc-appointments-list');
-    if (list) {
-        if (myAppts.length === 0) {
-            list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-secondary);">No appointments scheduled.</div>';
-        } else {
-            list.innerHTML = myAppts.map((a, index) => `
-                <div class="doc-appt-card">
-                    <div>
-                        <div style="font-weight:700; font-size:1.1rem;">${a.patient || 'Patient'}</div>
-                        <div style="color:var(--text-secondary); font-size:0.9rem;"><i class="far fa-clock"></i> ${a.date}</div>
-                        <div style="color:var(--text-secondary); font-size:0.8rem; margin-top:4px;">${a.reason}</div>
-                    </div>
-                    <button class="btn-primary" style="padding: 6px 14px; font-size: 0.85rem;" onclick="viewPatientDetails('${a.patient}')">View Details</button>
-                </div>
-            `).join('');
-        }
-    }
+    // Filter for current doctor (relaxed for demo)
+    // In a real app we'd filter by currentUser.name
+    // MOCK_APPOINTMENTS = MOCK_APPOINTMENTS.filter(a => a.doctor === currentUser.name || currentUser.name === "Dr. Sarah Smith");
+
+    // Init with 'appointments' view
+    filterDoctorDashboard('appointments');
 
     // 5. Load Patient Directory (Mock)
     renderPatientList();
+}
+
+function filterDoctorDashboard(filterType) {
+    const list = document.getElementById('doc-appointments-list');
+    const title = document.getElementById('doc-list-title');
+    if (!list) return;
+
+    let filtered = [];
+    let titleText = "";
+    let icon = "";
+
+    if (filterType === 'appointments') {
+        // Show ALL items (Appointments + Urgent + Reviews) essentially acting as "All Tasks"
+        // Or strictly 'appt'? Usually "Appointments" card implies the confirmed schedule.
+        // Let's make it show EVERYTHING sorted by date/urgency for better DX
+        // Actually user request: "locate to those things"
+        // So hitting "Appointments" should probably show everything
+        // Hitting "Urgent" shows only urgent.
+
+        filtered = MOCK_APPOINTMENTS; // Show all
+        titleText = "All Upcoming Appointments";
+        icon = "far fa-calendar-check";
+    }
+    else if (filterType === 'urgent') {
+        filtered = MOCK_APPOINTMENTS.filter(a => a.type === 'urgent');
+        titleText = "Urgent Cases Attention Needed";
+        icon = "fas fa-star-of-life";
+    }
+    else if (filterType === 'reviews') {
+        filtered = MOCK_APPOINTMENTS.filter(a => a.type === 'review');
+        titleText = "Pending Medical Reviews";
+        icon = "fas fa-user-edit";
+    }
+
+    // Update Counts (Dynamically recalculate every load is safer)
+    const countAppt = MOCK_APPOINTMENTS.length;
+    // const countUrgent = MOCK_APPOINTMENTS.filter(a => a.type === 'urgent').length;
+    // const countReview = MOCK_APPOINTMENTS.filter(a => a.type === 'review').length;
+
+    // Ideally we update the numbers on the dashboard cards too, but they are hardcoded/static for now except appt count
+    const countEl = document.getElementById('doc-appt-count');
+    if (countEl) countEl.innerText = countAppt;
+
+    // Update Header
+    if (title) title.innerHTML = `<i class="${icon}"></i> ${titleText}`;
+
+    // Render
+    if (filtered.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-secondary);">No items found in this category.</div>`;
+    } else {
+        list.innerHTML = filtered.map(a => {
+            let badge = "";
+            let borderColor = "transparent";
+
+            if (a.type === 'urgent') {
+                badge = `<span class="badge-pro" style="background:#fef2f2; color:#ef4444; border:1px solid #fca5a5;">Urgent</span>`;
+                borderColor = "#ef4444";
+            } else if (a.type === 'review') {
+                badge = `<span class="badge-pro" style="background:#f5f3ff; color:#8b5cf6;">Review</span>`;
+            }
+
+            return `
+            <div class="doc-appt-card" style="border-left: 4px solid ${borderColor};">
+                <div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-weight:700; font-size:1.1rem;">${a.patient || 'Patient'}</span>
+                        ${badge}
+                    </div>
+                    <div style="color:var(--text-secondary); font-size:0.9rem;"><i class="far fa-clock"></i> ${a.date}</div>
+                    <div style="color:var(--text-secondary); font-size:0.8rem; margin-top:4px;">${a.reason}</div>
+                </div>
+                <button class="btn-primary" style="padding: 6px 14px; font-size: 0.85rem;" onclick="viewPatientDetails('${a.patient}')">View</button>
+            </div>
+            `;
+        }).join('');
+    }
+
+    // Scroll to section
+    const section = document.querySelector('.glass-panel');
+    // We want to scroll to the list container essentially
+    if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // --- DOCTOR FEATURES ---
