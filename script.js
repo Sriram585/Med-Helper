@@ -33,7 +33,7 @@ function switchView(viewId) {
     const titles = {
         'dashboard': ['Dashboard', 'AI-Powered Symptom Checker'],
         'medical-chat': ['Health Assistant', 'Ask general medical questions'],
-        'doctor-dashboard': ['Doctor Dashboard', 'Manage Patients & Appointments'],
+        'doctor-dashboard': ['Doctor Dashboard', 'Welcome back, Dr. Sarah Smith'],
         'history': ['Medical History', 'Your past consultations log'],
         'profile': ['User Profile', 'Manage your personal details'],
         'appointments': ['Find Doctors', 'Book Medical Consultations'],
@@ -45,9 +45,16 @@ function switchView(viewId) {
         'sleep': ['Sleep Calculator', 'Optimize your rest'],
         'lab': ['Lab Analyzer', 'AI Report Interpretation']
     };
-    if (titles[viewId]) {
-        document.getElementById('page-title').innerText = titles[viewId][0];
-        document.getElementById('page-subtitle').innerText = titles[viewId][1];
+
+    const headerEl = document.querySelector('.topbar');
+    if (viewId === 'doctor-dashboard') {
+        if (headerEl) headerEl.style.display = 'none';
+    } else {
+        if (headerEl) headerEl.style.display = 'flex';
+        if (titles[viewId]) {
+            document.getElementById('page-title').innerText = titles[viewId][0];
+            document.getElementById('page-subtitle').innerText = titles[viewId][1];
+        }
     }
 
     // 5. Special Loads
@@ -56,7 +63,7 @@ function switchView(viewId) {
     if (viewId === 'hydration') loadHydration();
     if (viewId === 'mood') loadMoodHistory();
     if (viewId === 'wearables') startWearableSimulation();
-    if (viewId === 'doctor-dashboard') loadDoctorAppointments();
+    if (viewId === 'doctor-dashboard') loadDoctorDashboard();
     else stopWearableSimulation();
 }
 
@@ -643,38 +650,32 @@ function viewAppointmentDetails(apptId) {
     const modal = document.getElementById('patient-modal');
     if (!modal) return;
 
-    // 1. Find Appointment
-    // MOCK_APPOINTMENTS is assumed to be defined elsewhere or will be added.
-    // For now, let's create a placeholder if it's not globally available.
-    const MOCK_APPOINTMENTS = [
-        { id: 1, patient: "Alice Johnson", reason: "Fever and Cough", type: "urgent", date: "2023-10-26 10:00 AM" },
-        { id: 2, patient: "Bob Williams", reason: "Routine Checkup", type: "standard", date: "2023-10-27 02:00 PM" },
-        { id: 3, patient: "Charlie Davis", reason: "Post-surgery Review", type: "review", date: "2023-10-28 11:30 AM" },
-        { id: 4, patient: "Diana Miller", reason: "Headache and Dizziness", type: "urgent", date: "2023-10-29 09:00 AM" },
-        { id: 5, patient: "Eve Brown", reason: "Annual Physical", type: "standard", date: "2023-10-30 01:00 PM" }
-    ];
-
+    // 1. Find Appointment (Use Global MOCK_APPOINTMENTS)
     const appt = MOCK_APPOINTMENTS.find(a => a.id === apptId);
 
-    // Fallback logic
+    // Initial Variables
     let patientName = "Unknown";
     let reason = "General Consult";
     let type = "Standard";
     let dateStr = "N/A";
 
-    if (!appt && typeof apptId === 'string') {
-        patientName = apptId;
-        const potential = MOCK_APPOINTMENTS.find(a => a.patient === patientName);
-        if (potential) {
-            reason = potential.reason;
-            type = potential.type;
-            dateStr = potential.date;
-        }
-    } else if (appt) {
+    if (appt) {
         patientName = appt.patient;
         reason = appt.reason;
         type = appt.type;
         dateStr = appt.date;
+    } else {
+        console.warn("Appointment not found:", apptId);
+        // Optional: Simple fallback if passed string name for backward compatibility
+        if (typeof apptId === 'string') {
+            patientName = apptId;
+            const potential = MOCK_APPOINTMENTS.find(a => a.patient === patientName);
+            if (potential) {
+                reason = potential.reason;
+                type = potential.type;
+                dateStr = potential.date;
+            }
+        }
     }
 
     document.getElementById('modal-patient-name').innerText = patientName;
@@ -1540,16 +1541,37 @@ function setupSidebar(role) {
 }
 
 // --- 12. DOCTOR DASHBOARD LOGIC (NEW) ---
-let MOCK_APPOINTMENTS = [];
+let MOCK_APPOINTMENTS = [
+    { id: 101, patient: "Alice Cooper", date: "Tomorrow at 2:00 PM", reason: "Annual physical", type: "standard" },
+    { id: 102, patient: "Bob Brown", date: "Friday at 10:00 AM", reason: "Chest pain follow-up", type: "urgent" },
+    { id: 103, patient: "Charlie Davis", date: "Monday at 4:30 PM", reason: "Skin rash", type: "standard" },
+    { id: 104, patient: "Diana Prince", date: "Wednesday at 9:00 AM", reason: "Migraine check", type: "review" }
+];
 
 function loadDoctorDashboard() {
-    // Updated for simpler logic
-    loadDoctorAppointments();
+    // 1. Update Stats (Mock)
+    document.getElementById('doc-stat-appt').innerText = MOCK_APPOINTMENTS.length;
+    document.getElementById('doc-stat-review').innerText = "5"; // Hardcoded in design
+    document.getElementById('doc-stat-urgent').innerText = "3"; // Hardcoded in design
 
-    // Load other doctor data if needed
-    renderPatientList();
-    renderCalendar();
-    renderFullPatientList();
+    // 2. Render Upcoming Horizontal List
+    const container = document.getElementById('doc-upcoming-list');
+    if (!container) return;
+
+    container.innerHTML = MOCK_APPOINTMENTS.map(appt => `
+        <div style="min-width: 300px; background: white; padding: 20px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+                <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 5px; color:var(--text-main);">${appt.patient}</div>
+                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2px; display:flex; align-items:center; gap:6px;">
+                    <i class="far fa-clock" style="color:var(--primary);"></i> ${appt.date}
+                </div>
+                <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 15px;">${appt.reason}</div>
+            </div>
+            <button onclick="viewAppointmentDetails(${appt.id})" style="width: 100%; background: #6366f1; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; transition:0.2s; display:flex; align-items:center; justify-content:center; gap:8px;">
+                View Details
+            </button>
+        </div>
+    `).join('');
 }
 
 function filterDoctorDashboard(filterType) {
@@ -2192,49 +2214,5 @@ function loadHabits() {
 
 /* --- DOCTOR DASHBOARD LOGIC --- */
 function loadDoctorAppointments() {
-    console.log("Attempting to load doctor appointments...");
-    const container = document.getElementById('doc-dashboard-content');
-    if (!container) {
-        console.error("Error: #doc-dashboard-content not found in DOM.");
-        return;
-    }
-
-    const appointments = [
-        { id: 1, name: "Alice Cooper", time: "Tomorrow at 2:00 PM", reason: "Annual physical", type: "standard" },
-        { id: 2, name: "Bob Brown", time: "Friday at 10:00 AM", reason: "Chest pain follow-up", type: "urgent" },
-        { id: 3, name: "Charlie Davis", time: "Monday at 4:30 PM", reason: "Skin rash", type: "standard" },
-        { id: 4, name: "Diana Prince", time: "Today at 9:00 AM", reason: "Lab Results Review", type: "review" },
-        { id: 5, name: "Evan Wright", time: "Today at 10:30 AM", reason: "High Fever", type: "urgent" },
-        { id: 6, name: "Frank Miller", time: "Yesterday", reason: "X-Ray Analysis", type: "review" },
-        { id: 7, name: "Grace Lee", time: "Today at 1:15 PM", reason: "Stomach Pain", type: "urgent" },
-        { id: 8, name: "Henry Ford", time: "Week ago", reason: "MRI Scan", type: "review" },
-        { id: 9, name: "Ian Scott", time: "Pending", reason: "Blood Work", type: "review" }
-    ];
-
-    container.innerHTML = appointments.map(appt => {
-        let badge = '';
-        let borderAccent = '';
-
-        if (appt.type === 'urgent') {
-            badge = '<span class="badge-urgent">Urgent</span>';
-            borderAccent = '<div class="border-accent-red"></div>';
-        }
-        if (appt.type === 'review') {
-            badge = '<span class="badge-review">Review</span>';
-            borderAccent = '<div class="border-accent-purple"></div>';
-        }
-
-        return `
-        <div class="appointment-card">
-            ${borderAccent}
-            <div class="appt-info" style="margin-left: 15px;">
-                <h4>${appt.name} ${badge}</h4>
-                <div class="time-slot"><i class="far fa-clock"></i> ${appt.time}</div>
-                <div class="reason">${appt.reason}</div>
-            </div>
-            <button class="btn-view-details" onclick="viewAppointmentDetails(${appt.id})">View Details</button>
-        </div>
-        `;
-    }).join('');
-    console.log("Rendered " + appointments.length + " appointments.");
+    // BLANK - WAITING FOR NEW IMPLEMENTATION
 }
