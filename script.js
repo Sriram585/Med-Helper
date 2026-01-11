@@ -2192,8 +2192,12 @@ function loadHabits() {
 
 /* --- DOCTOR DASHBOARD LOGIC --- */
 function loadDoctorAppointments() {
+    console.log("Attempting to load doctor appointments...");
     const container = document.getElementById('doc-dashboard-content');
-    if (!container) return;
+    if (!container) {
+        console.error("Error: #doc-dashboard-content not found in DOM.");
+        return;
+    }
 
     const appointments = [
         { id: 1, name: "Alice Cooper", time: "Tomorrow at 2:00 PM", reason: "Annual physical", type: "standard" },
@@ -2228,8 +2232,9 @@ function loadDoctorAppointments() {
                 <div class="time-slot"><i class="far fa-clock"></i> ${appt.time}</div>
                 <div class="reason">${appt.reason}</div>
             </div>
-            <button class="btn-view-appt" onclick="viewAppointmentDetails(${appt.id})">View</button>
+            <button class="btn-view-details" onclick="viewAppointmentDetails(${appt.id})">View Details</button>
         </div>
         `;
     }).join('');
+    console.log("Rendered " + appointments.length + " appointments.");
 }
