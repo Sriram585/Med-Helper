@@ -1302,9 +1302,9 @@ function loadDoctorDashboard() {
             list.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding: 40px; background:white; border-radius:12px; border:1px dashed #e2e8f0;">No appointments scheduled.</div>`;
         } else {
             list.innerHTML = myAppts.map((a, index) => {
-                const safePatient = (a.patient || 'Patient').replace(/'/g, "\\'");
-                const safeReason = (a.reason || '').replace(/'/g, "\\'");
-                const safeDate = (a.date || '').toString().replace(/'/g, "\\'");
+                const safePatient = (a.patient || 'Patient').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                const safeReason = (a.reason || '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                const safeDate = (a.date || '').toString().replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
                 return `
                 <div class="doc-card-clean">
@@ -1367,8 +1367,10 @@ function renderPatientList() {
     if (!list) return;
 
     // Show top 5 on dashboard
-    list.innerHTML = mockPatients.slice(0, 5).map(p => `
-        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${p.name}')">
+    list.innerHTML = mockPatients.slice(0, 5).map(p => {
+        const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        return `
+        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${safeName}')">
             <div style="display:flex; align-items:center; gap:12px;">
                 <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=32" style="border-radius:50%;">
                 <div>
@@ -1378,17 +1380,19 @@ function renderPatientList() {
             </div>
             <i class="fas fa-chevron-right" style="color: #cbd5e1; font-size:0.8rem;"></i>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function renderFullPatientList() {
     const list = document.getElementById('full-patient-list');
     if (!list) return;
 
-    list.innerHTML = mockPatients.map(p => `
-        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${p.name}')">
+    list.innerHTML = mockPatients.map(p => {
+        const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        return `
+        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${safeName}')">
             <div style="display:flex; align-items:center; gap:15px;">
-                <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=48" style="border-radius:50%;">
+                <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=48" style="border-radius:48%;">
                 <div>
                     <div style="font-weight:700; font-size:1.1rem; color:var(--text-primary);">${p.name}</div>
                     <div style="font-size:0.9rem; color:var(--text-secondary);"><i class="fas fa-notes-medical"></i> ${p.condition} • Age: ${p.age}</div>
@@ -1396,10 +1400,10 @@ function renderFullPatientList() {
             </div>
             <div style="text-align:right;">
                 <div style="font-size:0.85rem; color:var(--text-secondary);">Last Visit: ${p.lastVisit}</div>
-                <button class="btn-outline" style="margin-top:5px; padding: 4px 10px; font-size:0.8rem;">Profile</button>
+                <button class="btn-outline" style="margin-top:5px; padding: 4px 10px; font-size:0.8rem;" onclick="viewPatientDetails('${safeName}')">Profile</button>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function filterPatients(source) {
@@ -1410,8 +1414,10 @@ function filterPatients(source) {
     const filtered = mockPatients.filter(p => p.name.toLowerCase().includes(query) || p.condition.toLowerCase().includes(query));
 
     // Render (Mini maps to slice logic usually, but search overrides slice for utility)
-    targetList.innerHTML = filtered.map(p => `
-        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${p.name}')">
+    targetList.innerHTML = filtered.map(p => {
+        const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        return `
+        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${safeName}')">
             <div style="display:flex; align-items:center; gap:${source === 'mini' ? '12px' : '15px'};">
                 <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=${source === 'mini' ? '32' : '48'}" style="border-radius:50%;">
                 <div>
@@ -1421,7 +1427,7 @@ function filterPatients(source) {
             </div>
              ${source === 'full' ? `<div style="text-align:right; font-size:0.85rem; color:var(--text-secondary);">Last Visit: ${p.lastVisit}</div>` : `<i class="fas fa-chevron-right" style="color: #cbd5e1; font-size:0.8rem;"></i>`}
         </div>
-    `).join('');
+    `}).join('');
 
     if (filtered.length === 0) {
         targetList.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-secondary);">No patients found.</div>`;
@@ -1437,6 +1443,8 @@ function renderCalendar() {
     // Just rebuild simpler: innerHTML is safer if we just hardcode headers in JS or preserve them
     // Let's assume the headers are static HTML and we append or just overwrite. 
     // Actually, let's just overwrite for simplicity with the same grid style.
+
+    let events = JSON.parse(localStorage.getItem('docEvents') || '[]');
 
     let html = `
         <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Sun</div>
@@ -1464,7 +1472,8 @@ function renderCalendar() {
     // Days
     for (let i = 1; i <= daysInMonth; i++) {
         const isToday = i === today;
-        const hasEvent = [5, 12, 20, 25].includes(i); // Mock events
+        // Mock events + saved events
+        const hasEvent = [5, 12, 20, 25].includes(i) || events.some(e => parseInt(e.day) === i);
 
         html += `
             <div style="
@@ -1480,7 +1489,8 @@ function renderCalendar() {
                 font-size: 0.9rem;
                 font-weight: ${isToday ? '700' : 'normal'};
                 color: ${isToday ? 'var(--primary)' : 'inherit'};
-            ">
+                cursor: pointer;
+            " onclick="viewDayEvents(${i})">
                 ${i}
                 ${hasEvent ? '<div style="position:absolute; bottom:5px; right:5px; width:6px; height:6px; background:#ef4444; border-radius:50%;"></div>' : ''}
             </div>
@@ -1489,6 +1499,74 @@ function renderCalendar() {
 
     grid.innerHTML = html;
 }
+
+// --- CALENDAR EVENTS ---
+function openEventModal() {
+    document.getElementById('event-modal').style.display = 'flex';
+}
+
+function closeEventModal() {
+    document.getElementById('event-modal').style.display = 'none';
+}
+
+function saveEvent() {
+    const name = document.getElementById('event-name').value;
+    const day = document.getElementById('event-day').value;
+    const type = document.getElementById('event-type').value;
+
+    if (!name) {
+        alert("Please enter an event name.");
+        return;
+    }
+
+    let events = JSON.parse(localStorage.getItem('docEvents') || '[]');
+    events.push({ name, day, type });
+    localStorage.setItem('docEvents', JSON.stringify(events));
+
+    showSuccessModal("Event Saved", `${name} added to your schedule.`);
+    closeEventModal();
+    renderCalendar();
+}
+
+function viewDayEvents(day) {
+    let events = JSON.parse(localStorage.getItem('docEvents') || '[]');
+    const dayEvents = events.filter(e => parseInt(e.day) === day);
+    const defaults = [5, 12, 20, 25].includes(day) ? ["Routine Checkups"] : [];
+
+    const all = [...defaults, ...dayEvents.map(e => e.name)];
+
+    if (all.length > 0) {
+        alert(`Events on ${day}th:\n- ` + all.join('\n- '));
+    } else {
+        // Optional: Open modal to add event for this day
+        // document.getElementById('event-day').value = day;
+        // openEventModal();
+    }
+}
+
+// --- NOTIFICATIONS ---
+function toggleNotifications() {
+    const dropdown = document.getElementById('notif-dropdown');
+    if (dropdown.style.display === 'block') {
+        dropdown.style.display = 'none';
+    } else {
+        dropdown.style.display = 'block';
+        // Mock notifications
+        const list = document.getElementById('notif-list');
+        list.innerHTML = `
+            <div style="padding:10px; border-bottom:1px solid #f1f5f9; cursor:pointer;" onclick="switchView('appointments')">
+                <div style="font-weight:bold; font-size:0.9rem;">New Appointment</div>
+                <div style="font-size:0.8rem; color:var(--text-secondary);">Alice initialized a booking.</div>
+            </div>
+            <div style="padding:10px; border-bottom:1px solid #f1f5f9;">
+                <div style="font-weight:bold; font-size:0.9rem;">System Update</div>
+                <div style="font-size:0.8rem; color:var(--text-secondary);">Dashboard v2.0 is live.</div>
+            </div>
+        `;
+        document.getElementById('notif-badge').style.display = 'none';
+    }
+}
+
 
 function viewPatientDetails(patientName, apptReason, apptDate) {
     const modal = document.getElementById('patient-modal');
