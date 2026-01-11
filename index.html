@@ -94,12 +94,6 @@
               <button class="nav-item" onclick="switchView('bmi')">
                 <i class="fas fa-weight"></i> <span>BMI Calculator</span>
               </button>
-              <button class="nav-item" onclick="switchView('hydration')">
-                <i class="fas fa-tint"></i> <span>Hydration</span>
-              </button>
-              <button class="nav-item" onclick="switchView('mood')">
-                <i class="fas fa-smile"></i> <span>Mood Tracker</span>
-              </button>
               <button class="nav-item" onclick="switchView('sleep')">
                 <i class="fas fa-bed"></i> <span>Sleep Calculator</span>
               </button>
@@ -131,10 +125,10 @@
                 </button>
 
                 <div class="menu-label" style="margin-top: 20px;">Management</div>
-                <button class="nav-item" onclick="alert('Patients view is on the dashboard for now.')">
+                <button class="nav-item" onclick="switchView('my-patients')">
                     <i class="fas fa-users"></i> <span>My Patients</span>
                 </button>
-                 <button class="nav-item" onclick="alert('Calendar is coming soon.')">
+                 <button class="nav-item" onclick="switchView('calendar')">
                     <i class="fas fa-calendar-alt"></i> <span>Schedule</span>
                 </button>
             </div>
@@ -173,21 +167,9 @@
         <!-- DASHBOARD (SYMPTOM CHECKER) -->
         <section id="view-dashboard" class="view-section active">
           <!-- NEW: DASHBOARD SUMMARY WIDGETS -->
-          <div class="dashboard-stats">
-              <div class="stat-card" onclick="switchView('hydration')">
-                  <div class="stat-icon icon-blue"><i class="fas fa-tint"></i></div>
-                  <div class="stat-info">
-                      <span class="stat-value" id="dash-water">0/8</span>
-                      <span class="stat-label">Hydration</span>
-                  </div>
-              </div>
-              <div class="stat-card" onclick="switchView('mood')">
-                  <div class="stat-icon icon-yellow"><i class="fas fa-smile"></i></div>
-                  <div class="stat-info">
-                      <span class="stat-value" id="dash-mood">-</span>
-                      <span class="stat-label">Last Mood</span>
-                  </div>
-              </div>
+          <!-- NEW: DASHBOARD SUMMARY WIDGETS -->
+          <div class="dashboard-stats" style="display:none;">
+              <!-- Removed Hydration/Mood as requested -->
           </div>
 
           <div class="glass-panel input-container">
@@ -271,77 +253,6 @@
             </div>
         </section>
 
-        <!-- HYDRATION TRACKER -->
-        <section id="view-hydration" class="view-section" style="display: none">
-            <div class="glass-panel tool-card">
-                <div class="tool-content">
-                    <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
-                    <div class="tool-icon"><i class="fas fa-tint"></i></div>
-                    <h2>Daily Hydration</h2>
-                    <p>Stay hydrated! Tracking your water intake helps improve energy and focus.</p>
-
-                    <div class="hydration-circle">
-                        <div class="wave"></div>
-                        <div class="hydration-info">
-                            <span id="water-count" class="water-number">0</span>
-                            <span class="water-label">/ 8 Glasses</span>
-                        </div>
-                    </div>
-
-                    <div class="control-row">
-                        <button class="btn-circle btn-minus" onclick="updateWater(-1)"><i class="fas fa-minus"></i></button>
-                        <button class="btn-circle btn-plus" onclick="updateWater(1)"><i class="fas fa-plus"></i></button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- MOOD TRACKER -->
-        <section id="view-mood" class="view-section" style="display: none">
-             <div class="glass-panel tool-card">
-                <div class="tool-content">
-                    <button class="btn-back" onclick="switchView('dashboard')" style="align-self: flex-start;"><i class="fas fa-arrow-left"></i> Back</button>
-                    <div class="tool-icon"><i class="fas fa-smile-beam"></i></div>
-                    <h2>How are you feeling?</h2>
-                    <p>Track your mood to see patterns over time.</p>
-
-                    <div class="mood-selector">
-                        <button class="mood-btn" onclick="logMood('great')">
-                            <span class="emoji">🤩</span>
-                            <span>Great</span>
-                        </button>
-                        <button class="mood-btn" onclick="logMood('good')">
-                            <span class="emoji">🙂</span>
-                            <span>Good</span>
-                        </button>
-                         <button class="mood-btn" onclick="logMood('okay')">
-                            <span class="emoji">😐</span>
-                            <span>Okay</span>
-                        </button>
-                        <button class="mood-btn" onclick="logMood('bad')">
-                            <span class="emoji">😔</span>
-                            <span>Bad</span>
-                        </button>
-                         <button class="mood-btn" onclick="logMood('awful')">
-                            <span class="emoji">😫</span>
-                            <span>Awful</span>
-                        </button>
-                    </div>
-
-                    <div id="mood-history" class="mood-history-list">
-                        <!-- History injected here -->
-                    </div>
-                    
-                    <!-- NEW: MOOD STATS -->
-                    <div class="mood-stats-container" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                        <h3>Mood Trends (Last 50 Entries)</h3>
-                        <div id="mood-chart" class="simple-bar-chart">
-                            <!-- Bars injected via JS -->
-                        </div>
-                    </div>
-                </div>
-             </div>
-        </section>
 
         <!-- HISTORY -->
         <section id="view-history" class="view-section" style="display: none">
@@ -683,45 +594,115 @@
             </div>
         </section>
         <section id="view-doctor-dashboard" class="view-section" style="display: none">
-            <div style="margin-bottom: 25px;">
-                <h2 style="margin-bottom: 5px;">Doctor Dashboard</h2>
-                <p style="color: var(--text-secondary);">Welcome back, <span id="doc-dash-name" style="font-weight:700; color:var(--primary);">Doctor</span>.</p>
+            <div style="margin-bottom: 30px; display:flex; justify-content:space-between; align-items:end;">
+                <div>
+                    <h2 style="margin-bottom: 5px;">Doctor Dashboard</h2>
+                    <p style="color: var(--text-secondary);">Welcome back, <span id="doc-dash-name" style="font-weight:700; color:var(--primary);">Doctor</span>.</p>
+                </div>
+                <div id="doc-status-badge" onclick="toggleDocStatus()" style="cursor:pointer; font-size:0.9rem; color:var(--text-secondary); background:white; padding:8px 15px; border-radius:30px; border:1px solid #e2e8f0; user-select:none;">
+                    <i class="fas fa-circle" style="color:#22c55e; font-size:0.6rem; vertical-align:middle;"></i> Online
+                </div>
             </div>
             
-            <div class="dashboard-stats" style="margin-bottom: 30px;">
-                <div class="stat-card">
-                    <div class="stat-icon icon-blue"><i class="fas fa-calendar-check"></i></div>
+            <!-- Clean Stats Row -->
+            <div class="dashboard-stats" style="margin-bottom: 40px; gap: 20px;">
+                <div class="stat-card-minimal">
+                    <div class="stat-icon icon-blue" style="width:45px; height:45px; font-size:1.1rem;"><i class="fas fa-calendar-check"></i></div>
                     <div class="stat-info">
-                        <span class="stat-value" id="doc-appt-count">0</span>
-                        <span class="stat-label">Appointments</span>
+                        <span class="stat-value" id="doc-appt-count" style="font-size:1.5rem;">0</span>
+                        <span class="stat-label" style="font-size:0.85rem;">Appointments</span>
                     </div>
                 </div>
-                    <div class="stat-card">
-                    <div class="stat-icon icon-purple"><i class="fas fa-user-injured"></i></div>
+                    <div class="stat-card-minimal">
+                    <div class="stat-icon icon-purple" style="width:45px; height:45px; font-size:1.1rem;"><i class="fas fa-user-injured"></i></div>
                     <div class="stat-info">
-                        <span class="stat-value">5</span>
-                        <span class="stat-label">Pending Reviews</span>
+                        <span class="stat-value" style="font-size:1.5rem;">5</span>
+                        <span class="stat-label" style="font-size:0.85rem;">Pending Reviews</span>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon icon-red"><i class="fas fa-star-of-life"></i></div>
+                <div class="stat-card-minimal">
+                    <div class="stat-icon icon-red" style="width:45px; height:45px; font-size:1.1rem;"><i class="fas fa-notes-medical"></i></div>
                     <div class="stat-info">
-                        <span class="stat-value">3</span>
-                        <span class="stat-label">Urgent Cases</span>
+                        <span class="stat-value" style="font-size:1.5rem;">3</span>
+                        <span class="stat-label" style="font-size:0.85rem;">Urgent Cases</span>
                     </div>
                 </div>
             </div>
 
+            <!-- Two Column Grid -->
+            <div class="doc-dash-grid">
+                
+                <!-- Appointments Column -->
+                <div>
+                     <div class="doc-section-header">
+                        <h3>Upcoming Appointments</h3>
+                        <button class="btn-outline" style="padding: 5px 12px; font-size: 0.8rem; border-radius:8px;" onclick="switchView('calendar')">View Calendar</button>
+                    </div>
+                    <div id="doc-appointments-list">
+                        <!-- Injected -->
+                         <div style="text-align:center; color:var(--text-secondary); padding: 40px; background:white; border-radius:12px; border:1px dashed #e2e8f0;">
+                            No appointments yet.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patients Column -->
+                 <div>
+                    <div class="doc-section-header">
+                        <h3>Patient Directory</h3>
+                        <div style="position: relative;">
+                            <input type="text" id="patient-search-mini" placeholder="Search..." onkeyup="filterPatients('mini')" style="background:white; padding: 6px 30px 6px 15px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 0.85rem; width:180px;">
+                            <i class="fas fa-search" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.7rem;"></i>
+                        </div>
+                    </div>
+                     <div id="doctor-patient-list">
+                        <!-- Populated by JS -->
+                    </div>
+                    <button class="btn-outline full-width" style="margin-top:15px; border-radius:10px; font-size:0.9rem;" onclick="switchView('my-patients')">View All Patients</button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- DOCTOR CALENDAR VIEW -->
+        <section id="view-calendar" class="view-section" style="display: none">
             <div class="glass-panel" style="padding: 25px;">
-                <div class="panel-header" style="margin-bottom: 20px;">
-                    <h3><i class="far fa-clock"></i> Upcoming Appointments</h3>
-                    <button class="btn-outline" style="padding: 5px 15px; font-size: 0.8rem;">View Calendar</button>
+                 <button class="btn-back" onclick="switchView('doctor-dashboard')" style="margin-bottom:20px;"><i class="fas fa-arrow-left"></i> Back to Dashboard</button>
+                 <div class="doc-section-header">
+                    <h2><i class="far fa-calendar-alt"></i> Schedule</h2>
+                    <button class="btn-primary" onclick="alert('New Event feature coming later')"><i class="fas fa-plus"></i> New Event</button>
+                </div>
+                <!-- Clean Calendar Grid -->
+                 <div id="calendar-grid" style="display:grid; grid-template-columns: repeat(7, 1fr); gap:10px; text-align:center;">
+                    <!-- Headers -->
+                    <div style="font-weight:bold; color:var(--text-secondary);">Sun</div>
+                    <div style="font-weight:bold; color:var(--text-secondary);">Mon</div>
+                    <div style="font-weight:bold; color:var(--text-secondary);">Tue</div>
+                    <div style="font-weight:bold; color:var(--text-secondary);">Wed</div>
+                    <div style="font-weight:bold; color:var(--text-secondary);">Thu</div>
+                    <div style="font-weight:bold; color:var(--text-secondary);">Fri</div>
+                    <div style="font-weight:bold; color:var(--text-secondary);">Sat</div>
+                    <!-- Days injected via JS -->
+                 </div>
+            </div>
+        </section>
+
+        <!-- DOCTOR MY PATIENTS VIEW -->
+        <section id="view-my-patients" class="view-section" style="display: none">
+             <div class="glass-panel" style="padding: 25px;">
+                 <button class="btn-back" onclick="switchView('doctor-dashboard')" style="margin-bottom:20px;"><i class="fas fa-arrow-left"></i> Back</button>
+                 <div class="doc-section-header">
+                    <h2><i class="fas fa-users"></i> My Patients</h2>
+                     <div style="position: relative;">
+                        <input type="text" id="patient-search-full" placeholder="Search by name..." onkeyup="filterPatients('full')" style="background:white; padding: 10px 40px 10px 20px; border-radius: 30px; border: 1px solid #e2e8f0; font-size: 1rem; width:300px;">
+                        <i class="fas fa-search" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                    </div>
                 </div>
                 
-                <div id="doc-appointments-list" class="results-grid">
-                    <!-- Injected -->
+                <div id="full-patient-list" class="results-grid">
+                    <!-- Injected JS -->
                 </div>
-            </div>
+             </div>
         </section>
         </section>
       </main>

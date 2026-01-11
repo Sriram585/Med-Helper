@@ -34,9 +34,6 @@ function switchView(viewId) {
         'doctor-dashboard': ['Doctor Dashboard', 'Manage Patients & Appointments'],
         'history': ['Medical History', 'Your past consultations log'],
         'profile': ['User Profile', 'Manage your personal details'],
-        'bmi': ['BMI Calculator', 'Body Mass Index Assessment'],
-        'hydration': ['Hydration Tracker', 'Daily Water Intake Goal'],
-        'mood': ['Mood Tracker', 'Emotional Well-being Journal'],
         'appointments': ['Find Doctors', 'Book Medical Consultations'],
         'appointments-view': ['Book Appointment', 'Schedule Consultation'],
         'diet': ['AI Nutritionist', 'Personalized Meal Plans'],
@@ -1302,56 +1299,198 @@ function loadDoctorDashboard() {
     const list = document.getElementById('doc-appointments-list');
     if (list) {
         if (myAppts.length === 0) {
-            list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-secondary);">No appointments scheduled.</div>';
+            list.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding: 40px; background:white; border-radius:12px; border:1px dashed #e2e8f0;">No appointments scheduled.</div>`;
         } else {
-            list.innerHTML = myAppts.map((a, index) => `
-                <div class="doc-appt-card">
-                    <div>
-                        <div style="font-weight:700; font-size:1.1rem;">${a.patient || 'Patient'}</div>
-                        <div style="color:var(--text-secondary); font-size:0.9rem;"><i class="far fa-clock"></i> ${a.date}</div>
-                        <div style="color:var(--text-secondary); font-size:0.8rem; margin-top:4px;">${a.reason}</div>
+            list.innerHTML = myAppts.map((a, index) => {
+                const safePatient = (a.patient || 'Patient').replace(/'/g, "\\'");
+                const safeReason = (a.reason || '').replace(/'/g, "\\'");
+                const safeDate = (a.date || '').toString().replace(/'/g, "\\'");
+
+                return `
+                <div class="doc-card-clean">
+                    <div style="display:flex; gap:15px; align-items:center;">
+                         <div style="width:40px; height:40px; background:#f1f5f9; border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--primary); font-weight:700;">
+                            ${a.date.split(',')[0].substring(0, 3)}
+                         </div>
+                        <div>
+                            <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary);">${a.patient || 'Patient'}</div>
+                            <div style="color:var(--text-secondary); font-size:0.8rem;">${a.reason}</div>
+                        </div>
                     </div>
-                    <button class="btn-primary" style="padding: 6px 14px; font-size: 0.85rem;" onclick="viewPatientDetails('${a.patient}')">View Details</button>
+                    <button class="btn-outline" style="padding: 6px 12px; font-size: 0.8rem; border-radius:8px;" onclick="viewPatientDetails('${safePatient}', '${safeReason}', '${safeDate}')">Details</button>
                 </div>
-            `).join('');
+            `}).join('');
         }
     }
 
     // 5. Load Patient Directory (Mock)
     renderPatientList();
+    renderCalendar();
+    renderFullPatientList();
 }
 
 // --- DOCTOR FEATURES ---
+
+let docStatus = 'Online';
+function toggleDocStatus() {
+    const statuses = ['Online', 'Away', 'Busy'];
+    const colors = ['#22c55e', '#eab308', '#ef4444'];
+
+    let currentIdx = statuses.indexOf(docStatus);
+    let nextIdx = (currentIdx + 1) % statuses.length;
+
+    docStatus = statuses[nextIdx];
+    const color = colors[nextIdx];
+
+    const badge = document.getElementById('doc-status-badge');
+    if (badge) {
+        badge.innerHTML = `<i class="fas fa-circle" style="color:${color}; font-size:0.6rem; vertical-align:middle;"></i> ${docStatus}`;
+    }
+}
+
+
+// --- DOCTOR FEATURES ---
+
+// Mock Patients Data
+const mockPatients = [
+    { name: "Alice Cooper", age: 34, condition: "Hypertension", lastVisit: "2 days ago" },
+    { name: "Bob Brown", age: 45, condition: "Arrhythmia", lastVisit: "1 week ago" },
+    { name: "Charlie Davis", age: 29, condition: "Eczema", lastVisit: "Yesterday" },
+    { name: "Diana Prince", age: 31, condition: "Routine Checkup", lastVisit: "Today" },
+    { name: "Evan Wright", age: 50, condition: "Diabetes Type 2", lastVisit: "3 weeks ago" },
+    { name: "Fiona Green", age: 22, condition: "Migraine", lastVisit: "1 month ago" },
+    { name: "George Hall", age: 60, condition: "Arthritis", lastVisit: "5 days ago" }
+];
 
 function renderPatientList() {
     const list = document.getElementById('doctor-patient-list');
     if (!list) return;
 
-    const patients = [
-        { name: "Alice Cooper", age: 34, condition: "Hypertension" },
-        { name: "Bob Brown", age: 45, condition: "Arrhythmia" },
-        { name: "Charlie Davis", age: 29, condition: "Eczema" },
-        { name: "Diana Prince", age: 31, condition: "Routine Checkup" },
-        { name: "Current User", age: 25, condition: "General Health" }
-    ];
-
-    list.innerHTML = patients.map(p => `
-        <div class="doc-appt-card" style="margin-bottom: 15px; cursor: pointer;" onclick="viewPatientDetails('${p.name}')">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <div style="width:40px; height:40px; background:#e0e7ff; color:var(--primary); display:flex; align-items:center; justify-content:center; border-radius:50%; font-weight:bold;">
-                    ${p.name.charAt(0)}
-                </div>
+    // Show top 5 on dashboard
+    list.innerHTML = mockPatients.slice(0, 5).map(p => `
+        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${p.name}')">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=32" style="border-radius:50%;">
                 <div>
-                    <div style="font-weight:700;">${p.name}</div>
-                    <div style="font-size:0.85rem; color:var(--text-secondary);">${p.condition}</div>
+                    <div style="font-weight:700; font-size:0.9rem;">${p.name}</div>
+                    <div style="font-size:0.75rem; color:var(--text-secondary);">${p.condition}</div>
                 </div>
             </div>
-            <i class="fas fa-chevron-right" style="color: #cbd5e1;"></i>
+            <i class="fas fa-chevron-right" style="color: #cbd5e1; font-size:0.8rem;"></i>
         </div>
     `).join('');
 }
 
-function viewPatientDetails(patientName) {
+function renderFullPatientList() {
+    const list = document.getElementById('full-patient-list');
+    if (!list) return;
+
+    list.innerHTML = mockPatients.map(p => `
+        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${p.name}')">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=48" style="border-radius:50%;">
+                <div>
+                    <div style="font-weight:700; font-size:1.1rem; color:var(--text-primary);">${p.name}</div>
+                    <div style="font-size:0.9rem; color:var(--text-secondary);"><i class="fas fa-notes-medical"></i> ${p.condition} • Age: ${p.age}</div>
+                </div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:0.85rem; color:var(--text-secondary);">Last Visit: ${p.lastVisit}</div>
+                <button class="btn-outline" style="margin-top:5px; padding: 4px 10px; font-size:0.8rem;">Profile</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function filterPatients(source) {
+    const query = document.getElementById(source === 'mini' ? 'patient-search-mini' : 'patient-search-full').value.toLowerCase();
+    const targetList = document.getElementById(source === 'mini' ? 'doctor-patient-list' : 'full-patient-list');
+
+    // Filter
+    const filtered = mockPatients.filter(p => p.name.toLowerCase().includes(query) || p.condition.toLowerCase().includes(query));
+
+    // Render (Mini maps to slice logic usually, but search overrides slice for utility)
+    targetList.innerHTML = filtered.map(p => `
+        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('${p.name}')">
+            <div style="display:flex; align-items:center; gap:${source === 'mini' ? '12px' : '15px'};">
+                <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=${source === 'mini' ? '32' : '48'}" style="border-radius:50%;">
+                <div>
+                    <div style="font-weight:700; font-size:${source === 'mini' ? '0.9rem' : '1.1rem'};">${p.name}</div>
+                    <div style="font-size:${source === 'mini' ? '0.75rem' : '0.9rem'}; color:var(--text-secondary);">${p.condition}</div>
+                </div>
+            </div>
+             ${source === 'full' ? `<div style="text-align:right; font-size:0.85rem; color:var(--text-secondary);">Last Visit: ${p.lastVisit}</div>` : `<i class="fas fa-chevron-right" style="color: #cbd5e1; font-size:0.8rem;"></i>`}
+        </div>
+    `).join('');
+
+    if (filtered.length === 0) {
+        targetList.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-secondary);">No patients found.</div>`;
+    }
+}
+
+function renderCalendar() {
+    const grid = document.getElementById('calendar-grid');
+    if (!grid) return;
+
+    // Remove old days (keep headers)
+    const headers = grid.querySelectorAll('div').length >= 7 ? Array.from(grid.querySelectorAll('div')).slice(0, 7) : [];
+    // Just rebuild simpler: innerHTML is safer if we just hardcode headers in JS or preserve them
+    // Let's assume the headers are static HTML and we append or just overwrite. 
+    // Actually, let's just overwrite for simplicity with the same grid style.
+
+    let html = `
+        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Sun</div>
+        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Mon</div>
+        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Tue</div>
+        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Wed</div>
+        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Thu</div>
+        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Fri</div>
+        <div style="font-weight:bold; color:var(--text-secondary); padding-bottom:10px;">Sat</div>
+    `;
+
+    // Simple current month generator
+    const date = new Date();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const today = date.getDate();
+
+    // Empty slots
+    for (let i = 0; i < firstDay; i++) {
+        html += `<div></div>`;
+    }
+
+    // Days
+    for (let i = 1; i <= daysInMonth; i++) {
+        const isToday = i === today;
+        const hasEvent = [5, 12, 20, 25].includes(i); // Mock events
+
+        html += `
+            <div style="
+                height: 80px; 
+                border: 1px solid #f1f5f9; 
+                border-radius: 8px; 
+                position: relative; 
+                background: ${isToday ? '#eef2ff' : 'white'};
+                display: flex;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding: 5px;
+                font-size: 0.9rem;
+                font-weight: ${isToday ? '700' : 'normal'};
+                color: ${isToday ? 'var(--primary)' : 'inherit'};
+            ">
+                ${i}
+                ${hasEvent ? '<div style="position:absolute; bottom:5px; right:5px; width:6px; height:6px; background:#ef4444; border-radius:50%;"></div>' : ''}
+            </div>
+        `;
+    }
+
+    grid.innerHTML = html;
+}
+
+function viewPatientDetails(patientName, apptReason, apptDate) {
     const modal = document.getElementById('patient-modal');
     if (!modal) return;
 
@@ -1362,7 +1501,27 @@ function viewPatientDetails(patientName) {
     const bpSys = Math.floor(Math.random() * (140 - 110) + 110);
     const bpDia = Math.floor(Math.random() * (90 - 70) + 70);
 
+    let apptHtml = '';
+    if (apptReason && apptDate) {
+        apptHtml = `
+            <div style="background:var(--background); padding:15px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:20px;">
+                <h4 style="margin-bottom:10px; color:var(--primary);"><i class="fas fa-calendar-day"></i> Appointment Details</h4>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                     <div>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">Date & Time</div>
+                        <div style="font-weight:600;">${apptDate}</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">Reason</div>
+                        <div style="font-weight:600;">${apptReason}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     const html = `
+        ${apptHtml}
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom: 30px;">
             <div class="stat-card" style="background:#f8fafc; border:none;">
                 <div class="stat-info">
