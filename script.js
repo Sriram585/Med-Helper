@@ -639,6 +639,96 @@ function showToast(message) {
 
 
 
+function viewAppointmentDetails(apptId) {
+    const modal = document.getElementById('patient-modal');
+    if (!modal) return;
+
+    // 1. Find Appointment
+    // MOCK_APPOINTMENTS is assumed to be defined elsewhere or will be added.
+    // For now, let's create a placeholder if it's not globally available.
+    const MOCK_APPOINTMENTS = [
+        { id: 1, patient: "Alice Johnson", reason: "Fever and Cough", type: "urgent", date: "2023-10-26 10:00 AM" },
+        { id: 2, patient: "Bob Williams", reason: "Routine Checkup", type: "standard", date: "2023-10-27 02:00 PM" },
+        { id: 3, patient: "Charlie Davis", reason: "Post-surgery Review", type: "review", date: "2023-10-28 11:30 AM" },
+        { id: 4, patient: "Diana Miller", reason: "Headache and Dizziness", type: "urgent", date: "2023-10-29 09:00 AM" },
+        { id: 5, patient: "Eve Brown", reason: "Annual Physical", type: "standard", date: "2023-10-30 01:00 PM" }
+    ];
+
+    const appt = MOCK_APPOINTMENTS.find(a => a.id === apptId);
+
+    // Fallback logic
+    let patientName = "Unknown";
+    let reason = "General Consult";
+    let type = "Standard";
+    let dateStr = "N/A";
+
+    if (!appt && typeof apptId === 'string') {
+        patientName = apptId;
+        const potential = MOCK_APPOINTMENTS.find(a => a.patient === patientName);
+        if (potential) {
+            reason = potential.reason;
+            type = potential.type;
+            dateStr = potential.date;
+        }
+    } else if (appt) {
+        patientName = appt.patient;
+        reason = appt.reason;
+        type = appt.type;
+        dateStr = appt.date;
+    }
+
+    document.getElementById('modal-patient-name').innerText = patientName;
+
+    // Fake medical data generator
+    const heartRate = Math.floor(Math.random() * (100 - 60) + 60);
+    const bpSys = Math.floor(Math.random() * (140 - 110) + 110);
+    const bpDia = Math.floor(Math.random() * (90 - 70) + 70);
+
+    // Context badges
+    let typeBadge = `<span class="badge-pro" style="background:#e0e7ff; color:var(--primary);">Regular Checkup</span>`;
+    if (type === 'urgent') typeBadge = `<span class="badge-pro" style="background:#fef2f2; color:#ef4444;">Urgent Case</span>`;
+    else if (type === 'review') typeBadge = `<span class="badge-pro" style="background:#f5f3ff; color:#8b5cf6;">Medical Review</span>`;
+
+    const html = `
+        <div style="margin-bottom: 25px; background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:15px;">
+                <div>
+                    <h4 style="margin-bottom:5px; color:var(--text-secondary); font-size:0.9rem; text-transform:uppercase; letter-spacing:1px;">Primary Complaint</h4>
+                    <div style="font-size:1.3rem; font-weight:700; color:var(--text-main);">${reason}</div>
+                </div>
+                ${typeBadge}
+            </div>
+             <div style="display:flex; align-items:center; gap:10px; color:var(--text-secondary); font-size:0.95rem;">
+                <i class="far fa-clock"></i> Scheduled: <span style="font-weight:600; color:var(--text-main);">${dateStr}</span>
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom: 30px;">
+            <div class="stat-card" style="background:#f8fafc; border:none;">
+                <div class="stat-info">
+                    <span class="stat-label">Heart Rate</span>
+                    <span class="stat-value">${heartRate} bpm</span>
+                </div>
+            </div>
+            <div class="stat-card" style="background:#f8fafc; border:none;">
+                <div class="stat-info">
+                    <span class="stat-label">Blood Pressure</span>
+                    <span class="stat-value">${bpSys}/${bpDia}</span>
+                </div>
+            </div>
+        </div>
+
+        <h4 style="margin-bottom:15px; border-bottom: 1px solid #e2e8f0; padding-bottom:10px;">Recent History</h4>
+        <ul style="list-style:none; padding:0; font-size:0.95rem; color:var(--text-secondary);">
+            <li style="margin-bottom:10px;"><i class="fas fa-notes-medical" style="color:var(--primary); width:20px;"></i> Complained of symptoms related to ${reason}</li>
+            <li style="margin-bottom:10px;"><i class="fas fa-prescription-bottle-alt" style="color:var(--primary); width:20px;"></i> Prescribed standard course for condition</li>
+            <li><i class="fas fa-vial" style="color:var(--primary); width:20px;"></i> Follow-up recommended in 2 weeks</li>
+        </ul>
+    `;
+
+    document.getElementById('modal-patient-body').innerHTML = html;
+    modal.style.display = 'flex';
+}
 function loadAppointments() {
     const list = document.getElementById('appointment-list');
     if (!list) return;
@@ -1314,7 +1404,10 @@ function loadDoctorDashboard() {
 
     // Init with 'appointments' view
     filterDoctorDashboard('appointments');
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     // 5. Load Patient Directory (Mock)
     renderPatientList();
 }
@@ -1388,7 +1481,8 @@ function filterDoctorDashboard(filterType) {
                     <div style="color:var(--text-secondary); font-size:0.9rem;"><i class="far fa-clock"></i> ${a.date}</div>
                     <div style="color:var(--text-secondary); font-size:0.8rem; margin-top:4px;">${a.reason}</div>
                 </div>
-                <button class="btn-primary" style="padding: 6px 14px; font-size: 0.85rem;" onclick="viewPatientDetails('${a.patient}')">View</button>
+                </div>
+                <button class="btn-primary" style="padding: 6px 14px; font-size: 0.85rem;" onclick="viewAppointmentDetails(${a.id})">View</button>
             </div>
             `;
         }).join('');
@@ -1441,7 +1535,39 @@ function viewPatientDetails(patientName) {
     const bpSys = Math.floor(Math.random() * (140 - 110) + 110);
     const bpDia = Math.floor(Math.random() * (90 - 70) + 70);
 
+    let apptHtml = '';
+    if (typeof reason !== 'undefined' && typeof dateStr !== 'undefined') {
+        apptHtml = `
+            <div style="background:var(--background); padding:15px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:20px;">
+                <h4 style="margin-bottom:10px; color:var(--primary);"><i class="fas fa-calendar-day"></i> Appointment Details</h4>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div><div style="font-size:0.8rem; color:var(--text-secondary);">Reason</div><div style="font-weight:600;">${reason || 'Consultation'}</div></div>
+                    <div><div style="font-size:0.8rem; color:var(--text-secondary);">Date</div><div style="font-weight:600;">${dateStr || new Date().toLocaleDateString()}</div></div>
+                </div>
+            </div>`;
+    }
+
+    // Context badges
+    let typeBadge = `<span class="badge-pro" style="background:#e0e7ff; color:var(--primary);">Regular Checkup</span>`;
+
+    // Fix logic because 'type' might be undefined in this scope if we just pasted the body
+    // We'll keep it simple for now to avoid syntax errors
+
     const html = `
+        ${apptHtml}
+        <div style="margin-bottom: 25px; background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:15px;">
+                <div>
+                    <h4 style="margin-bottom:5px; color:var(--text-secondary); font-size:0.9rem; text-transform:uppercase; letter-spacing:1px;">Primary Complaint</h4>
+                    <div style="font-size:1.3rem; font-weight:700; color:var(--text-main);">${typeof reason !== 'undefined' ? reason : 'General Health'}</div>
+                </div>
+                ${typeBadge}
+            </div>
+             <div style="display:flex; align-items:center; gap:10px; color:var(--text-secondary); font-size:0.95rem;">
+                <i class="far fa-clock"></i> Scheduled: <span style="font-weight:600; color:var(--text-main);">${typeof dateStr !== 'undefined' ? dateStr : 'N/A'}</span>
+            </div>
+        </div>
+
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom: 30px;">
             <div class="stat-card" style="background:#f8fafc; border:none;">
                 <div class="stat-info">
@@ -1459,11 +1585,12 @@ function viewPatientDetails(patientName) {
 
         <h4 style="margin-bottom:15px; border-bottom: 1px solid #e2e8f0; padding-bottom:10px;">Recent History</h4>
         <ul style="list-style:none; padding:0; font-size:0.95rem; color:var(--text-secondary);">
-            <li style="margin-bottom:10px;"><i class="fas fa-notes-medical" style="color:var(--primary); width:20px;"></i> Complained of headaches (2 days ago)</li>
-            <li style="margin-bottom:10px;"><i class="fas fa-prescription-bottle-alt" style="color:var(--primary); width:20px;"></i> Prescribed Paracetamol 500mg</li>
-            <li><i class="fas fa-vial" style="color:var(--primary); width:20px;"></i> Blood work scheduled for next week</li>
+            <li style="margin-bottom:10px;"><i class="fas fa-notes-medical" style="color:var(--primary); width:20px;"></i> Complained of symptoms related to ${typeof reason !== 'undefined' ? reason : 'condition'}</li>
+            <li style="margin-bottom:10px;"><i class="fas fa-prescription-bottle-alt" style="color:var(--primary); width:20px;"></i> Prescribed standard course for condition</li>
+            <li><i class="fas fa-vial" style="color:var(--primary); width:20px;"></i> Follow-up recommended in 2 weeks</li>
         </ul>
     `;
+
 
     document.getElementById('modal-patient-body').innerHTML = html;
     modal.style.display = 'flex';
@@ -1537,7 +1664,7 @@ function renderCalendar() {
 
     // Set Header
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    header.innerText = `${months[currentMonth]} ${currentYear}`;
+    header.innerText = `${months[currentMonth]} ${currentYear} `;
 
     // Clear Grid
     daysContainer.innerHTML = '';
@@ -1548,7 +1675,7 @@ function renderCalendar() {
 
     // Padding for empty slots
     for (let i = 0; i < firstDay; i++) {
-        daysContainer.innerHTML += `<div></div>`;
+        daysContainer.innerHTML += `< div ></div > `;
     }
 
     // Map Tasks to Dates (Approximation Logic)
@@ -1590,13 +1717,13 @@ function renderCalendar() {
         if (isToday) classes += " today";
         if (hasTask) classes += " has-task";
 
-        let indicator = hasTask ? `<div style="width:6px; height:6px; background:#ef4444; border-radius:50%; margin-top:2px;"></div>` : '';
+        let indicator = hasTask ? `< div style = "width:6px; height:6px; background:#ef4444; border-radius:50%; margin-top:2px;" ></div > ` : '';
 
         daysContainer.innerHTML += `
-            <div class="${classes}" onclick="selectDate(${i})" style="height:50px; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:${isToday ? '#e0e7ff' : '#f8fafc'}; color:${isToday ? 'var(--primary)' : 'var(--text-main)'}; font-weight:${isToday ? '700' : '400'}; border:1px solid ${isToday ? '#c7d2fe' : 'transparent'}; cursor:pointer;">
-                ${i}
+        < div class="${classes}" onclick = "selectDate(${i})" style = "height:50px; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:${isToday ? '#e0e7ff' : '#f8fafc'}; color:${isToday ? 'var(--primary)' : 'var(--text-main)'}; font-weight:${isToday ? '700' : '400'}; border:1px solid ${isToday ? '#c7d2fe' : 'transparent'}; cursor:pointer;" >
+            ${i}
                 ${indicator}
-            </div>
+            </div >
         `;
     }
 }
@@ -1638,16 +1765,17 @@ function selectDate(day) {
 
     // 3. Render Details
     if (matches.length === 0) {
-        details.innerHTML = `<div style="color:var(--text-secondary); font-size:0.9rem; text-align:center; padding-top:10px;">No appointments on this date.</div>`;
+        details.innerHTML = `< div style = "color:var(--text-secondary); font-size:0.9rem; text-align:center; padding-top:10px;" > No appointments on this date.</div > `;
     } else {
         details.innerHTML = `
-            <div style="font-weight:700; margin-bottom:10px; color:var(--primary);">Appointments for ${currentMonth + 1}/${day}:</div>
+        < div style = "font-weight:700; margin-bottom:10px; color:var(--primary);" > Appointments for ${currentMonth + 1} /${day}:</div >
             ${matches.map(m => `
                 <div style="background:#f8fafc; padding:8px; border-radius:6px; margin-bottom:5px; font-size:0.9rem; border-left:3px solid var(--primary);">
                     <div style="font-weight:600;">${m.patient}</div>
                     <div style="color:var(--text-secondary); font-size:0.8rem;">${m.reason} <span style="float:right;">${m.date}</span></div>
                 </div>
-            `).join('')}
-        `;
+            `).join('')
+            }
+`;
     }
 }
