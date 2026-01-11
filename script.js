@@ -16,13 +16,9 @@ function switchView(viewId) {
     // 1. Sidebar Active State
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
-    // Map viewId to button index roughly (not perfect but works for this list)
-    // 0: Dashboard, 1: Chat, 2: Meds, 3: History
-    const buttons = document.querySelectorAll('.nav-item');
-    if (viewId === 'dashboard') buttons[0].classList.add('active');
-    if (viewId === 'medical-chat') buttons[1].classList.add('active');
-    // if (viewId === 'medications') buttons[2].classList.add('active');
-    if (viewId === 'history') buttons[3].classList.add('active');
+    // Robust Active State Handling: Find button that links to this view
+    const buttons = document.querySelectorAll(`.nav-item[onclick="switchView('${viewId}')"]`);
+    buttons.forEach(btn => btn.classList.add('active'));
 
     // 2. Hide all sections
     document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
@@ -35,7 +31,7 @@ function switchView(viewId) {
     const titles = {
         'dashboard': ['Dashboard', 'AI-Powered Symptom Checker'],
         'medical-chat': ['Health Assistant', 'Ask general medical questions'],
-        // 'medications': ['Medication Manager', 'Track your active prescriptions'],
+        'doctor-dashboard': ['Doctor Dashboard', 'Manage Patients & Appointments'],
         'history': ['Medical History', 'Your past consultations log'],
         'profile': ['User Profile', 'Manage your personal details'],
         'bmi': ['BMI Calculator', 'Body Mass Index Assessment'],
@@ -44,7 +40,6 @@ function switchView(viewId) {
         'appointments': ['Find Doctors', 'Book Medical Consultations'],
         'appointments-view': ['Book Appointment', 'Schedule Consultation'],
         'diet': ['AI Nutritionist', 'Personalized Meal Plans'],
-        'workout': ['Workout Coach', 'Fitness Routines'],
         'workout': ['Workout Coach', 'Fitness Routines'],
         'wearables': ['Wearables', 'Device Synchronization'],
         'habits': ['Daily Habits', 'Build healthy routines'],

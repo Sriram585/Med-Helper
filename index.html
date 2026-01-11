@@ -119,17 +119,23 @@
             <!-- DOCTOR MENU -->
             <div id="nav-doctor" style="display: none;">
                 <button class="nav-item active" onclick="switchView('doctor-dashboard')">
-                    <i class="fas fa-user-md"></i> <span>Dashboard</span>
+                    <i class="fas fa-columns"></i> <span>Dashboard</span>
                 </button>
+                
+                <div class="menu-label" style="margin-top: 20px;">Tools</div>
+                <button class="nav-item" onclick="switchView('dashboard')">
+                    <i class="fas fa-stethoscope"></i> <span>Symptom Analyser</span>
+                </button>
+                <button class="nav-item" onclick="switchView('medical-chat')">
+                    <i class="fas fa-robot"></i> <span>AI Health Chat</span>
+                </button>
+
                 <div class="menu-label" style="margin-top: 20px;">Management</div>
                 <button class="nav-item" onclick="alert('Patients view is on the dashboard for now.')">
                     <i class="fas fa-users"></i> <span>My Patients</span>
                 </button>
                  <button class="nav-item" onclick="alert('Calendar is coming soon.')">
                     <i class="fas fa-calendar-alt"></i> <span>Schedule</span>
-                </button>
-                 <button class="nav-item" onclick="alert('Messages are coming soon.')">
-                    <i class="fas fa-envelope"></i> <span>Messages</span>
                 </button>
             </div>
             
