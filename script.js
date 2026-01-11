@@ -12,6 +12,8 @@ const API_BASE = (window.location.hostname === '127.0.0.1' || window.location.ho
     : '';
 
 // --- NAVIGATION & VIEWS ---
+
+
 function switchView(viewId) {
     // 1. Sidebar Active State
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -1404,10 +1406,6 @@ function loadDoctorDashboard() {
 
     // Init with 'appointments' view
     filterDoctorDashboard('appointments');
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     // 5. Load Patient Directory (Mock)
     renderPatientList();
 }
@@ -1465,24 +1463,25 @@ function filterDoctorDashboard(filterType) {
             let borderColor = "transparent";
 
             if (a.type === 'urgent') {
-                badge = `<span class="badge-pro" style="background:#fef2f2; color:#ef4444; border:1px solid #fca5a5;">Urgent</span>`;
+                badge = `<span class="badge-pill badge-urgent">Urgent</span>`;
                 borderColor = "#ef4444";
             } else if (a.type === 'review') {
-                badge = `<span class="badge-pro" style="background:#f5f3ff; color:#8b5cf6;">Review</span>`;
+                badge = `<span class="badge-pill badge-review">Review</span>`;
             }
 
             return `
             <div class="doc-appt-card" style="border-left: 4px solid ${borderColor};">
-                <div>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-weight:700; font-size:1.1rem;">${a.patient || 'Patient'}</span>
+                <div style="flex:1;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom: 5px;">
+                        <span style="font-weight:700; font-size:1.1rem; color:var(--text-main);">${a.patient || 'Patient'}</span>
                         ${badge}
                     </div>
-                    <div style="color:var(--text-secondary); font-size:0.9rem;"><i class="far fa-clock"></i> ${a.date}</div>
-                    <div style="color:var(--text-secondary); font-size:0.8rem; margin-top:4px;">${a.reason}</div>
+                    <div style="display:flex; align-items:center; gap:8px; color:var(--text-secondary); font-size:0.9rem;">
+                        <i class="far fa-clock"></i> <span>${a.date}</span>
+                    </div>
+                    <div style="color:var(--text-secondary); font-size:0.85rem; margin-top:4px;">${a.reason}</div>
                 </div>
-                </div>
-                <button class="btn-primary" style="padding: 6px 14px; font-size: 0.85rem;" onclick="viewAppointmentDetails(${a.id})">View</button>
+                <button class="btn-view" onclick="viewAppointmentDetails(${a.id})">View</button>
             </div>
             `;
         }).join('');
@@ -1774,8 +1773,42 @@ function selectDate(day) {
                     <div style="font-weight:600;">${m.patient}</div>
                     <div style="color:var(--text-secondary); font-size:0.8rem;">${m.reason} <span style="float:right;">${m.date}</span></div>
                 </div>
-            `).join('')
-            }
+            `).join('')}
 `;
     }
+}
+
+// --- RESTORED PATIENT FUNCTIONS ---
+function loadSidebarHistory() {
+    const list = document.getElementById('history-list-sidebar');
+    if (list) {
+        list.innerHTML = `
+            <div class="history-item">
+                <div class="history-icon"><i class="fas fa-file-medical"></i></div>
+                <div class="history-info">
+                    <div class="history-title">General Checkup</div>
+                    <div class="history-date">2 days ago</div>
+                </div>
+            </div>`;
+    }
+}
+
+function loadFullHistory() {
+    console.log("Loading full history...");
+}
+
+function setupVoiceInput() {
+    console.log("Voice input setup...");
+}
+
+function updateDashboardWidgets() {
+    const water = document.getElementById('dash-water');
+    if (water) water.innerText = "3/8";
+    const mood = document.getElementById('dash-mood');
+    if (mood) mood.innerText = "Neutral";
+}
+
+function loadHabits() {
+    const list = document.getElementById('habits-list');
+    if (list) list.innerHTML = "<div>No habits yet.</div>";
 }

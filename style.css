@@ -1568,19 +1568,61 @@ select {
 /* --- DOCTOR DASHBOARD UTILS --- */
 .doc-appt-card {
     background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    border-radius: 20px;
+    margin-bottom: 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #f1f5f9;
 }
 
 .doc-appt-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.1);
+    border-color: #e0e7ff;
+}
+
+.badge-pill {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-urgent {
+    background: #fef2f2;
+    color: #ef4444;
+    border: 1px solid #fee2e2;
+}
+
+.badge-review {
+    background: #f5f3ff;
+    color: #8b5cf6;
+    border: 1px solid #ede9fe;
+}
+
+.btn-view {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.btn-view:hover {
+    background: var(--secondary);
     transform: translateY(-2px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.3);
 }
 
 /* --- NEW LOGIN ROLE CARDS --- */
