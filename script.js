@@ -1196,6 +1196,35 @@ function setLoginRole(role) {
 
 
 
+
+function checkPasswordStrength(inputId, barId, textId) {
+    // barId is unused now, but keeping signature to avoid breaking HTML oninput if not updated there effectively
+    const password = document.getElementById(inputId).value;
+    const text = document.getElementById(textId);
+
+    let strength = 0;
+    if (password.length > 5) strength += 20;
+    if (password.length > 8) strength += 20;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 20;
+    if (/\d/.test(password)) strength += 20;
+    if (/[^a-zA-Z\d]/.test(password)) strength += 20;
+
+    if (strength < 40) {
+        text.innerText = 'Weak';
+        text.style.color = '#ef4444';
+    } else if (strength < 80) {
+        text.innerText = 'Medium';
+        text.style.color = '#f59e0b';
+    } else {
+        text.innerText = 'Strong';
+        text.style.color = '#22c55e';
+    }
+
+    if (password.length === 0) {
+        text.innerText = '';
+    }
+}
+
 function toggleAuthMode(mode) {
     if (mode === 'signup') {
         document.getElementById('login-view').style.display = 'none';
