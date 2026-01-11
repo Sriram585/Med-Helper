@@ -1674,7 +1674,7 @@ function renderCalendar() {
 
     // Padding for empty slots
     for (let i = 0; i < firstDay; i++) {
-        daysContainer.innerHTML += `< div ></div > `;
+        daysContainer.innerHTML += `<div></div>`;
     }
 
     // Map Tasks to Dates (Approximation Logic)
@@ -1716,13 +1716,13 @@ function renderCalendar() {
         if (isToday) classes += " today";
         if (hasTask) classes += " has-task";
 
-        let indicator = hasTask ? `< div style = "width:6px; height:6px; background:#ef4444; border-radius:50%; margin-top:2px;" ></div > ` : '';
+        let indicator = hasTask ? `<div style="width:6px; height:6px; background:#ef4444; border-radius:50%; margin-top:2px;"></div>` : '';
 
         daysContainer.innerHTML += `
-        < div class="${classes}" onclick = "selectDate(${i})" style = "height:50px; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:${isToday ? '#e0e7ff' : '#f8fafc'}; color:${isToday ? 'var(--primary)' : 'var(--text-main)'}; font-weight:${isToday ? '700' : '400'}; border:1px solid ${isToday ? '#c7d2fe' : 'transparent'}; cursor:pointer;" >
+        <div class="${classes}" onclick="selectDate(${i})" style="height:50px; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:${isToday ? '#e0e7ff' : '#f8fafc'}; color:${isToday ? 'var(--primary)' : 'var(--text-main)'}; font-weight:${isToday ? '700' : '400'}; border:1px solid ${isToday ? '#c7d2fe' : 'transparent'}; cursor:pointer;">
             ${i}
-                ${indicator}
-            </div >
+            ${indicator}
+        </div>
         `;
     }
 }
@@ -1764,16 +1764,36 @@ function selectDate(day) {
 
     // 3. Render Details
     if (matches.length === 0) {
-        details.innerHTML = `< div style = "color:var(--text-secondary); font-size:0.9rem; text-align:center; padding-top:10px;" > No appointments on this date.</div > `;
+        details.innerHTML = `<div style="color:var(--text-secondary); font-size:0.9rem; text-align:center; padding-top:10px;">No appointments on this date.</div>`;
     } else {
         details.innerHTML = `
-        < div style = "font-weight:700; margin-bottom:10px; color:var(--primary);" > Appointments for ${currentMonth + 1} /${day}:</div >
-            ${matches.map(m => `
-                <div style="background:#f8fafc; padding:8px; border-radius:6px; margin-bottom:5px; font-size:0.9rem; border-left:3px solid var(--primary);">
-                    <div style="font-weight:600;">${m.patient}</div>
-                    <div style="color:var(--text-secondary); font-size:0.8rem;">${m.reason} <span style="float:right;">${m.date}</span></div>
+        <div style="font-weight:700; margin-bottom:10px; color:var(--primary);">Appointments for ${currentMonth + 1}/${day}:</div>
+            ${matches.map(m => {
+            let badgeClass = "badge-pill";
+            let badgeText = "Appt";
+
+            if (m.type === 'urgent') {
+                badgeClass += " badge-urgent";
+                badgeText = "Urgent";
+            } else if (m.type === 'review') {
+                badgeClass += " badge-review";
+                badgeText = "Review";
+            } else {
+                badgeClass += " chip-med";
+            }
+
+            return `
+                <div style="background:white; padding:12px; border-radius:12px; margin-bottom:8px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+                    <div>
+                        <div style="font-weight:700; color:var(--text-main);">${m.patient}</div>
+                        <div style="color:var(--text-secondary); font-size:0.8rem; margin-top:2px;">${m.reason}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="${badgeClass}">${badgeText}</span>
+                        <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">${m.date.split(',')[0]}</div>
+                    </div>
                 </div>
-            `).join('')}
+            `}).join('')}
 `;
     }
 }
