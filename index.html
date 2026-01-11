@@ -24,12 +24,25 @@
     <!-- LOGIN SCREEN -->
     <div id="login-screen" class="login-container">
         <div class="glass-panel login-box">
-            <div class="brand" style="justify-content: center; margin-bottom: 20px;">
+            <div class="brand" style="justify-content: center; margin-bottom: 30px;">
                 <div class="brand-logo"><i class="fas fa-heart-pulse"></i></div>
                 <span>MediMind</span>
             </div>
-            <h2 style="text-align: center; margin-bottom: 30px; color: var(--text-main);">Welcome Back</h2>
+
+            <!-- Role Selection -->
+            <div class="login-toggle-row">
+                <div class="role-card active" id="role-patient" onclick="setLoginRole('patient')">
+                    <i class="fas fa-user-injured"></i> 
+                    <span>Patient Login</span>
+                </div>
+                <div class="role-card" id="role-doctor" onclick="setLoginRole('doctor')">
+                   <i class="fas fa-user-md"></i>
+                   <span>Doctor Login</span>
+                </div>
+            </div>
             
+            <h3 style="text-align: center; margin-bottom: 20px; color: var(--text-main); font-size:1.1rem;" id="login-subtitle">Access your health dashboard</h3>
+
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" id="login-user" placeholder="Enter username">
@@ -41,7 +54,7 @@
             
             <button class="btn-primary full-width" onclick="handleLogin()">Login</button>
             <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-secondary);">
-                Demo Users: <br> <b>patient / patient123</b> <br> <b>doctor / doctor123</b>
+                Demo: <b>patient / patient123</b> <br> or <b>doctor / doctor123</b>
             </p>
         </div>
     </div>

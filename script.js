@@ -1183,8 +1183,25 @@ function stopWearableSimulation() {
 
 // --- 11. AUTHENTICATION & DOCTOR DASHBOARD ---
 
+let selectedRole = 'patient';
+
+function setLoginRole(role) {
+    selectedRole = role;
+
+    // UI Update
+    document.querySelectorAll('.role-card').forEach(el => el.classList.remove('active'));
+    document.getElementById(`role-${role}`).classList.add('active');
+
+    // Text Update
+    const subtitle = document.getElementById('login-subtitle');
+    if (role === 'doctor') {
+        subtitle.innerText = "Access Doctor Portal";
+    } else {
+        subtitle.innerText = "Access your health dashboard";
+    }
+}
+
 async function handleLogin() {
-    console.log("Login button clicked");
     const user = document.getElementById('login-user').value;
     const pass = document.getElementById('login-pass').value;
 
