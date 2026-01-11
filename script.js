@@ -1491,7 +1491,7 @@ async function handleLogin() {
     setupSidebar(currentUser.role);
 
     if (currentUser.role === 'doctor') {
-        loadDoctorDashboard();
+        switchView('doctor-dashboard');
     } else {
         // Patient Init
         loadSidebarHistory();
@@ -1543,50 +1543,10 @@ function setupSidebar(role) {
 let MOCK_APPOINTMENTS = [];
 
 function loadDoctorDashboard() {
-    // 2. Show View
-    document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
-    document.getElementById('view-doctor-dashboard').style.display = 'block';
+    // Updated for simpler logic
+    loadDoctorAppointments();
 
-    // 3. Set Header Info
-    const nameEl = document.getElementById('doc-dash-name');
-    if (nameEl) nameEl.innerText = currentUser.name;
-
-    // 4. Initialize Mock Data (merging local + hardcoded for demo)
-    const localAppts = JSON.parse(localStorage.getItem('mediAppointments') || '[]');
-
-    // Create rich mock data with 'type' field
-    const hardcoded = [
-        { id: 101, doctor: "Dr. Sarah Smith", date: "Tomorrow at 2:00 PM", patient: "Alice Cooper", reason: "Annual physical", type: 'appt' },
-        { id: 102, doctor: "Dr. James Wilson", date: "Friday at 10:00 AM", patient: "Bob Brown", reason: "Chest pain follow-up", type: 'urgent' },
-        { id: 103, doctor: "Dr. Linda Ray", date: "Monday at 4:30 PM", patient: "Charlie Davis", reason: "Skin rash", type: 'appt' },
-        { id: 104, doctor: "Dr. Sarah Smith", date: "Today at 9:00 AM", patient: "Diana Prince", reason: "Lab Results Review", type: 'review' },
-        { id: 105, doctor: "Dr. Sarah Smith", date: "Today at 10:30 AM", patient: "Evan Wright", reason: "High Fever", type: 'urgent' },
-        { id: 106, doctor: "Dr. Sarah Smith", date: "Yesterday", patient: "Frank Miller", reason: "X-Ray Analysis", type: 'review' },
-        { id: 107, doctor: "Dr. Sarah Smith", date: "Today at 1:15 PM", patient: "Grace Lee", reason: "Stomach Pain", type: 'urgent' },
-        { id: 108, doctor: "Dr. Sarah Smith", date: "Week ago", patient: "Henry Ford", reason: "MRI Scan", type: 'review' },
-        { id: 109, doctor: "Dr. Sarah Smith", date: "Pending", patient: "Ian Scott", reason: "Blood Work", type: 'review' },
-        { id: 110, doctor: "Dr. Sarah Smith", date: "Pending", patient: "Jane Doe", reason: "Ct Scan", type: 'review' }
-    ];
-
-    // Convert local appts to this format
-    const convertedLocal = localAppts.map(a => ({
-        id: a.id || Date.now(),
-        doctor: a.doctor,
-        date: new Date(a.date).toLocaleString(),
-        patient: "Current User (" + (currentUser.name || 'Guest') + ")",
-        reason: a.reason || 'Checkup',
-        type: 'appt' // Local bookings are normal appointments
-    }));
-
-    MOCK_APPOINTMENTS = [...convertedLocal, ...hardcoded];
-
-    // Filter for current doctor (relaxed for demo)
-    // In a real app we'd filter by currentUser.name
-    // MOCK_APPOINTMENTS = MOCK_APPOINTMENTS.filter(a => a.doctor === currentUser.name || currentUser.name === "Dr. Sarah Smith");
-
-    // Init with 'appointments' view
-    filterDoctorDashboard('appointments');
-    // 5. Load Patient Directory (Mock)
+    // Load other doctor data if needed
     renderPatientList();
     renderCalendar();
     renderFullPatientList();
@@ -2249,12 +2209,20 @@ function loadDoctorAppointments() {
 
     container.innerHTML = appointments.map(appt => {
         let badge = '';
-        if (appt.type === 'urgent') badge = '<span class="badge-urgent">Urgent</span>';
-        if (appt.type === 'review') badge = '<span class="badge-review">Review</span>';
+        let borderAccent = '';
+
+        if (appt.type === 'urgent') {
+            badge = '<span class="badge-urgent">Urgent</span>';
+            borderAccent = '<div class="border-accent-red"></div>';
+        }
+        if (appt.type === 'review') {
+            badge = '<span class="badge-review">Review</span>';
+            borderAccent = '<div class="border-accent-purple"></div>';
+        }
 
         return `
         <div class="appointment-card">
-            <div class="border-accent-red"></div>
+            ${borderAccent}
             <div class="appt-info" style="margin-left: 15px;">
                 <h4>${appt.name} ${badge}</h4>
                 <div class="time-slot"><i class="far fa-clock"></i> ${appt.time}</div>

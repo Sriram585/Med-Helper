@@ -1904,3 +1904,13 @@ select {
     border: 1px solid #e9d5ff;
     font-weight: 600;
 }
+/* Purple Left Border Accent */
+.border-accent-purple {
+    position: absolute;
+    left: 0;
+    top: 20px;
+    bottom: 20px;
+    width: 4px;
+    background: #a855f7;
+    border-radius: 0 4px 4px 0;
+}
