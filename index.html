@@ -760,66 +760,52 @@
                 </div>
 
                 <!-- Welcome & Stats -->
-                <div style="margin-bottom: 20px;">
-                    <h3 style="margin-bottom: 15px; color: var(--text-main);">Doctor Dashboard</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Welcome back, <span
-                            style="font-weight: 700; color: var(--primary);">Dr. Sarah Smith</span>.</p>
+                <div style="margin-bottom: 30px;">
+                    <div style="margin-bottom: 30px;">
+                        <h1 style="font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 5px;">Doctor
+                            Dashboard</h1>
+                        <p style="color: var(--text-secondary);">Manage Patients & Appointments</p>
+                    </div>
 
-                    <div class="dashboard-stats"
-                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 5px;">
+                            Doctor Dashboard</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Welcome back, <span
+                                style="font-weight: 700; color: var(--primary);">Dr. Sarah Smith</span>.</p>
+                    </div>
+
+                    <div class="dashboard-stats" style="grid-template-columns: repeat(3, 1fr);">
                         <!-- Appointments -->
-                        <div class="glass-panel"
-                            style="padding: 20px; display: flex; align-items: center; gap: 20px; background: white;">
-                            <div
-                                style="width: 60px; height: 60px; background: #3b82f6; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);">
+                        <div class="stat-card">
+                            <div class="stat-icon icon-blue">
                                 <i class="far fa-calendar-check"></i>
                             </div>
-                            <div>
-                                <div style="font-size: 2.2rem; font-weight: 800; color: var(--text-main); line-height: 1;"
-                                    id="doc-stat-appt">3</div>
-                                <div
-                                    style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px;">
-                                    Appointments</div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="doc-stat-appt">3</div>
+                                <div class="stat-label">Appointments</div>
                             </div>
                         </div>
 
                         <!-- Pending Reviews -->
-                        <div class="glass-panel"
-                            style="padding: 20px; display: flex; align-items: center; gap: 20px; background: white;">
-                            <div
-                                style="width: 60px; height: 60px; background: #a855f7; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3);">
+                        <div class="stat-card">
+                            <div class="stat-icon icon-purple">
                                 <i class="fas fa-user-check"></i>
                             </div>
-                            <div>
-                                <div style="font-size: 2.2rem; font-weight: 800; color: var(--text-main); line-height: 1;"
-                                    id="doc-stat-review">5</div>
-                                <div
-                                    style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px;">
-                                    Pending Reviews</div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="doc-stat-review">5</div>
+                                <div class="stat-label">Pending Reviews</div>
                             </div>
                         </div>
 
                         <!-- Urgent Cases -->
-                        <div class="glass-panel"
-                            style="padding: 20px; display: flex; align-items: center; gap: 20px; background: white;">
-                            <!-- No icon bg for this one based on typical clean design, but let's match others for consistency or make it distinct? 
-                                 Screenshot shows standard white card. Let's stick to the pattern but maybe just text? 
-                                 Actually, let's just use the same pattern but white/red. -->
-                            <!-- Wait, looking at screenshot again (mentally), simpler number display. -->
-                            <!-- I'll stick to the uniform design I created for the first two. -->
-                            <div
-                                style="width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--text-main); font-size: 1.8rem;">
-                                <!-- Just the number? No, the number is next to it. -->
-                                <!-- Let's use a subtle icon or just whitespace if design requested distinctiveness. -->
-                                <!-- Using a red icon for urgent -->
-                                <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+                        <div class="stat-card">
+                            <div class="stat-icon"
+                                style="background: white; color: #ef4444; font-size: 1.8rem; box-shadow: none;">
+                                <i class="fas fa-exclamation-triangle"></i>
                             </div>
-                            <div>
-                                <div style="font-size: 2.2rem; font-weight: 800; color: var(--text-main); line-height: 1;"
-                                    id="doc-stat-urgent">3</div>
-                                <div
-                                    style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px;">
-                                    Urgent Cases</div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="doc-stat-urgent">3</div>
+                                <div class="stat-label">Urgent Cases</div>
                             </div>
                         </div>
                     </div>
