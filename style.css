@@ -1904,6 +1904,7 @@ select {
     border: 1px solid #e9d5ff;
     font-weight: 600;
 }
+
 /* Purple Left Border Accent */
 .border-accent-purple {
     position: absolute;
@@ -1979,4 +1980,134 @@ select {
     font-size: 0.85rem;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* --- APPOINTMENTS GRID (Reskin) --- */
+.appointments-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+@media (max-width: 1200px) {
+    .appointments-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .appointments-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.appt-card-clean {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.appt-card-clean:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+}
+
+.appt-card-clean::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15%;
+    bottom: 15%;
+    width: 4px;
+    background: #ef4444;
+    border-radius: 0 4px 4px 0;
+    display: none;
+}
+
+/* Specific left border variants */
+.border-red-accent {
+    border-left: 4px solid #ef4444;
+}
+
+.border-none-accent {
+    border-left: 4px solid transparent;
+}
+
+.appt-details {
+    flex: 1;
+}
+
+.patient-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.patient-name-clean {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.badge-clean {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-urgent-clean {
+    background: #fef2f2;
+    color: #ef4444;
+    border: 1px solid #fee2e2;
+}
+
+.badge-review-clean {
+    background: #f5f3ff;
+    color: #8b5cf6;
+    border: 1px solid #ede9fe;
+}
+
+.appt-time-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.appt-reason {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.btn-view-clean {
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.btn-view-clean:hover {
+    background: #7c3aed;
+    transform: scale(1.05);
 }

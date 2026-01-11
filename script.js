@@ -1554,24 +1554,54 @@ function loadDoctorDashboard() {
     document.getElementById('doc-stat-review').innerText = "5"; // Hardcoded in design
     document.getElementById('doc-stat-urgent').innerText = "3"; // Hardcoded in design
 
-    // 2. Render Upcoming Horizontal List
+    // 2. Render Upcoming Grid
     const container = document.getElementById('doc-upcoming-list');
     if (!container) return;
 
-    container.innerHTML = MOCK_APPOINTMENTS.map(appt => `
-        <div style="min-width: 300px; background: white; padding: 20px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display:flex; flex-direction:column; justify-content:space-between;">
-            <div>
-                <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 5px; color:var(--text-main);">${appt.patient}</div>
-                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2px; display:flex; align-items:center; gap:6px;">
-                    <i class="far fa-clock" style="color:var(--primary);"></i> ${appt.date}
+    // Remove horizontal scroll styles for grid
+    container.style.display = 'grid';
+    container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(300px, 1fr))';
+    container.style.gap = '20px';
+    container.style.overflowX = 'visible';
+    container.style.width = '100%';
+    container.style.paddingBottom = '0';
+
+    container.innerHTML = MOCK_APPOINTMENTS.map(appt => {
+        let badgeHtml = '';
+        let borderClass = 'border-none-accent';
+
+        if (appt.type === 'urgent') {
+            badgeHtml = `<span class="badge-clean badge-urgent-clean">Urgent</span>`;
+            borderClass = 'border-red-accent';
+        } else if (appt.type === 'review') {
+            badgeHtml = `<span class="badge-clean badge-review-clean">Review</span>`;
+        }
+
+        // Add accent based on type (screenshot has vertical bar)
+        if (appt.type === 'urgent' || appt.type === 'review') {
+            // Logic handled in border-left css classes or manual style
+            if (appt.type === 'urgent') borderClass = 'border-red-accent';
+        }
+
+        return `
+        <div class="appt-card-clean ${borderClass}">
+            <div class="appt-details">
+                <div class="patient-name-row">
+                    <span class="patient-name-clean">${appt.patient}</span>
+                    ${badgeHtml}
                 </div>
-                <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 15px;">${appt.reason}</div>
+                <div class="appt-time-row">
+                    <i class="far fa-clock"></i>
+                    <span>${appt.date}</span>
+                </div>
+                <div class="appt-reason">${appt.reason}</div>
             </div>
-            <button onclick="viewAppointmentDetails(${appt.id})" style="width: 100%; background: #6366f1; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; transition:0.2s; display:flex; align-items:center; justify-content:center; gap:8px;">
-                View Details
+            <button class="btn-view-clean" onclick="viewAppointmentDetails(${appt.id})">
+                View
             </button>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function filterDoctorDashboard(filterType) {
