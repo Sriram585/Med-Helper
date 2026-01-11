@@ -1554,11 +1554,15 @@ function loadDoctorDashboard() {
     document.getElementById('doc-stat-review').innerText = "5"; // Hardcoded in design
     document.getElementById('doc-stat-urgent').innerText = "3"; // Hardcoded in design
 
-    // 2. Render Upcoming Grid
+    // 2. Render All Upcoming by Default
+    renderAppointmentGrid(MOCK_APPOINTMENTS);
+}
+
+function renderAppointmentGrid(appointments) {
     const container = document.getElementById('doc-upcoming-list');
     if (!container) return;
 
-    // Remove horizontal scroll styles for grid
+    // Remove horizontal scroll styles for grid (Ensuring styles are set)
     container.style.display = 'grid';
     container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(300px, 1fr))';
     container.style.gap = '20px';
@@ -1566,7 +1570,12 @@ function loadDoctorDashboard() {
     container.style.width = '100%';
     container.style.paddingBottom = '0';
 
-    container.innerHTML = MOCK_APPOINTMENTS.map(appt => {
+    if (appointments.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-secondary);">No appointments found for this category.</div>`;
+        return;
+    }
+
+    container.innerHTML = appointments.map(appt => {
         let badgeHtml = '';
         let borderClass = 'border-none-accent';
 
@@ -1575,12 +1584,6 @@ function loadDoctorDashboard() {
             borderClass = 'border-red-accent';
         } else if (appt.type === 'review') {
             badgeHtml = `<span class="badge-clean badge-review-clean">Review</span>`;
-        }
-
-        // Add accent based on type (screenshot has vertical bar)
-        if (appt.type === 'urgent' || appt.type === 'review') {
-            // Logic handled in border-left css classes or manual style
-            if (appt.type === 'urgent') borderClass = 'border-red-accent';
         }
 
         return `
@@ -1605,22 +1608,15 @@ function loadDoctorDashboard() {
 }
 
 function filterDoctorDashboard(filterType) {
-    const list = document.getElementById('doc-appointments-list');
     const title = document.getElementById('doc-list-title');
-    if (!list) return;
+    // Scroll to the list
+    document.getElementById('doc-upcoming-list')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     let filtered = [];
     let titleText = "";
     let icon = "";
 
     if (filterType === 'appointments') {
-        // Show ALL items (Appointments + Urgent + Reviews) essentially acting as "All Tasks"
-        // Or strictly 'appt'? Usually "Appointments" card implies the confirmed schedule.
-        // Let's make it show EVERYTHING sorted by date/urgency for better DX
-        // Actually user request: "locate to those things"
-        // So hitting "Appointments" should probably show everything
-        // Hitting "Urgent" shows only urgent.
-
         filtered = MOCK_APPOINTMENTS; // Show all
         titleText = "All Upcoming Appointments";
         icon = "far fa-calendar-check";
@@ -1628,66 +1624,22 @@ function filterDoctorDashboard(filterType) {
     else if (filterType === 'urgent') {
         filtered = MOCK_APPOINTMENTS.filter(a => a.type === 'urgent');
         titleText = "Urgent Cases Attention Needed";
-        icon = "fas fa-star-of-life";
+        icon = "fas fa-exclamation-triangle";
     }
     else if (filterType === 'reviews') {
         filtered = MOCK_APPOINTMENTS.filter(a => a.type === 'review');
         titleText = "Pending Medical Reviews";
-        icon = "fas fa-user-edit";
+        icon = "fas fa-user-check";
     }
-
-    // Update Counts (Dynamically recalculate every load is safer)
-    const countAppt = MOCK_APPOINTMENTS.length;
-    // const countUrgent = MOCK_APPOINTMENTS.filter(a => a.type === 'urgent').length;
-    // const countReview = MOCK_APPOINTMENTS.filter(a => a.type === 'review').length;
-
-    // Ideally we update the numbers on the dashboard cards too, but they are hardcoded/static for now except appt count
-    const countEl = document.getElementById('doc-appt-count');
-    if (countEl) countEl.innerText = countAppt;
 
     // Update Header
-    if (title) title.innerHTML = `<i class="${icon}"></i> ${titleText}`;
+    if (title) title.innerHTML = `<i class="${icon}" style="margin-right:8px;"></i> ${titleText}`;
 
-    // Render
-    if (filtered.length === 0) {
-        list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-secondary);">No items found in this category.</div>`;
-    } else {
-        list.innerHTML = filtered.map(a => {
-            let badge = "";
-            let borderColor = "transparent";
-
-            if (a.type === 'urgent') {
-                badge = `<span class="badge-pill badge-urgent">Urgent</span>`;
-                borderColor = "#ef4444";
-            } else if (a.type === 'review') {
-                badge = `<span class="badge-pill badge-review">Review</span>`;
-            }
-
-            return `
-            <div class="doc-appt-card" style="border-left: 4px solid ${borderColor};">
-                <div style="flex:1;">
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom: 5px;">
-                        <span style="font-weight:700; font-size:1.1rem; color:var(--text-main);">${a.patient || 'Patient'}</span>
-                        ${badge}
-                    </div>
-                    <div style="display:flex; align-items:center; gap:8px; color:var(--text-secondary); font-size:0.9rem;">
-                        <i class="far fa-clock"></i> <span>${a.date}</span>
-                    </div>
-                    <div style="color:var(--text-secondary); font-size:0.85rem; margin-top:4px;">${a.reason}</div>
-                </div>
-                <button class="btn-view" onclick="viewAppointmentDetails(${a.id})">View</button>
-            </div>
-            `;
-        }).join('');
-    }
-
-    // Scroll to section
-    const section = document.querySelector('.glass-panel');
-    // We want to scroll to the list container essentially
-    if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Render Grid
+    renderAppointmentGrid(filtered);
 }
 
-// --- DOCTOR FEATURES ---
+
 
 let docStatus = 'Online';
 function toggleDocStatus() {
