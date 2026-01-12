@@ -2111,3 +2111,28 @@ select {
     background: #7c3aed;
     transform: scale(1.05);
 }
+
+/* --- REFACTORED APPOINTMENTS GRID --- */
+.upcoming-appointments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Ensure cards take full height of grid cell if needed, though default is stretch */
+.appt-card-clean {
+    background: white;
+    border-radius: 20px;
+    padding: 30px; /* Increased padding */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    height: 100%; /* Uniform height */
+}
