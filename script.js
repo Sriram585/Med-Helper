@@ -38,7 +38,7 @@ function switchView(viewId) {
         'history': ['Medical History', 'Your past consultations log'],
         'profile': ['User Profile', 'Manage your personal details'],
         'appointments': ['Find Doctors', 'Book Medical Consultations'],
-        'appointments-view': ['Book Appointment', 'Schedule Consultation'],
+        'book-appointment': ['Book Appointment', 'Schedule Consultation'],
         'diet': ['AI Nutritionist', 'Personalized Meal Plans'],
         'workout': ['Workout Coach', 'Fitness Routines'],
         'wearables': ['Wearables', 'Device Synchronization'],
@@ -1971,7 +1971,7 @@ function closePatientModal() {
 
 // --- PATIENT BOOKING FEATURE ---
 
-function bookAppointment() {
+function confirmManualBooking() {
     const doc = document.getElementById('book-doctor').value;
     const date = document.getElementById('book-date').value;
     const reason = document.getElementById('book-reason').value;
