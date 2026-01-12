@@ -1448,73 +1448,100 @@ async function handleSignUp() {
         return;
     }
 
-    // Determine Role Logic (Basic)
-    let newUser = {
-        name: name,
-        role: role
-    };
+    try {
+        const response = await fetch(`${API_BASE}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: name,
+                username: user,
+                password: pass,
+                role: role,
+                mobile: mobile,
+                email: email
+            })
+        });
 
-    // Auto-login
-    currentUser = newUser;
-    selectedRole = role; // Ensure sidebar setup uses this
+        const data = await response.json();
 
-    alert("Account Created! Logging you in...");
-
-    // Proceed to login logic
-    const loginScreen = document.getElementById('login-screen');
-    if (loginScreen) loginScreen.style.display = 'none';
-
-    const appLayout = document.getElementById('app-layout');
-    if (appLayout) appLayout.style.display = 'flex';
-
-    setupSidebar(currentUser.role);
-
-    if (currentUser.role === 'doctor') {
-        loadDoctorDashboard();
-    } else {
-        loadSidebarHistory();
-        loadFullHistory();
-        setupVoiceInput();
-        loadHabits();
-        updateDashboardWidgets();
-        switchView('dashboard');
+        if (response.ok) {
+            alert("Account Created Successfully! Please Login.");
+            toggleAuthMode('login');
+        } else {
+            alert("Registration Failed: " + (data.detail || "Unknown error"));
+        }
+    } catch (error) {
+        console.error("Registration error:", error);
+        alert("Server Error during registration. Ensure backend is running.");
     }
-
-    // Reset view for next time
-    toggleAuthMode('login');
 }
 
 async function handleLogin() {
-    // BYPASS CREDENTIALS FOR SMOOTH DEMO
-    const role = selectedRole || 'patient';
+    const userInput = document.getElementById('login-user').value;
+    const passInput = document.getElementById('login-pass').value;
+    const role = selectedRole || 'patient'; // selectedRole comes from the toggle switches
 
-    if (role === 'doctor') {
-        currentUser = { name: "Dr. Sarah Smith", role: "doctor" };
-    } else {
-        currentUser = { name: "John Doe", role: "patient" };
+    if (!userInput || !passInput) {
+        alert("Please enter username and password.");
+        return;
     }
 
-    // Direct Login Sequence
-    const loginScreen = document.getElementById('login-screen');
-    if (loginScreen) loginScreen.style.display = 'none';
+    try {
+        const response = await fetch(`${API_BASE}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: userInput,
+                password: passInput,
+                role: role
+            })
+        });
 
-    // Show App Layout
-    const appLayout = document.getElementById('app-layout');
-    if (appLayout) appLayout.style.display = 'flex';
+        const data = await response.json();
 
-    // SETUP SIDEBAR FOR ROLE
-    setupSidebar(currentUser.role);
+        if (response.ok) {
+            // Success
+            currentUser = {
+                name: data.name,
+                username: data.username,
+                role: data.role
+            };
 
-    if (currentUser.role === 'doctor') {
-        switchView('doctor-dashboard');
-    } else {
-        // Patient Init
-        loadSidebarHistory();
-        loadFullHistory();
-        setupVoiceInput();
-        loadHabits();
-        updateDashboardWidgets();
-        switchView('dashboard');
+            // Update local profile name for UI consistency
+            const currentProfile = JSON.parse(localStorage.getItem('mediProfile') || '{}');
+            currentProfile.name = data.name;
+            localStorage.setItem('mediProfile', JSON.stringify(currentProfile));
+
+            // Hide Login
+            const loginScreen = document.getElementById('login-screen');
+            if (loginScreen) loginScreen.style.display = 'none';
+
+            // Show App
+            const appLayout = document.getElementById('app-layout');
+            if (appLayout) appLayout.style.display = 'flex';
+
+            // Setup Sidebar based on role
+            setupSidebar(currentUser.role);
+
+            if (currentUser.role === 'doctor') {
+                switchView('doctor-dashboard');
+            } else {
+                // Patient Init
+                loadSidebarHistory();
+                loadFullHistory();
+                setupVoiceInput();
+                loadHabits();
+                updateDashboardWidgets();
+                switchView('dashboard');
+                loadProfile();
+            }
+
+        } else {
+            alert("Login Failed: " + (data.detail || "Invalid credentials"));
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        alert("Connection failed. Is the server running?");
     }
 }
 
