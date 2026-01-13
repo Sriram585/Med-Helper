@@ -1724,7 +1724,6 @@ function loadDoctorDashboard() {
     document.getElementById('doc-stat-appt').innerText = MOCK_APPOINTMENTS.length;
     document.getElementById('doc-stat-review').innerText = MOCK_APPOINTMENTS.filter(a => a.type === 'review').length;
     document.getElementById('doc-stat-urgent').innerText = MOCK_APPOINTMENTS.filter(a => a.type === 'urgent').length;
-    document.getElementById('doc-stat-urgent').innerText = "3"; // Hardcoded in design
 
     // 2. Render All Upcoming by Default
     renderAppointmentGrid(MOCK_APPOINTMENTS);
