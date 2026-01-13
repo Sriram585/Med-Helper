@@ -1077,6 +1077,7 @@ async function proceedAnalysis() {
             body: formData
         });
         const data = await res.json();
+        currentAnalysisData = data;
 
         document.getElementById('lab-loader').style.display = 'none';
         document.getElementById('lab-result').style.display = 'block';
@@ -2235,4 +2236,76 @@ function loadHabits() {
 /* --- DOCTOR DASHBOARD LOGIC --- */
 function loadDoctorAppointments() {
     // BLANK - WAITING FOR NEW IMPLEMENTATION
+}
+
+// --- 13. INTERACTIVE MOVEMENT PLAN ---
+let currentAnalysisData = null; // Store analysis data globally
+
+function openMovementModal() {
+    const modal = document.getElementById('movement-modal');
+    const container = document.getElementById('movement-steps-container');
+
+    // Check if we have data
+    if (!currentAnalysisData || !currentAnalysisData.movement_advice) {
+        // Fallback for demo if no live data
+        renderMockMovementSteps(container);
+    } else {
+        renderMovementSteps(currentAnalysisData.movement_advice, container);
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeMovementModal(event, force) {
+    if (force || event.target.id === 'movement-modal') {
+        document.getElementById('movement-modal').style.display = 'none';
+    }
+}
+
+function renderMovementSteps(adviceList, container) {
+    const getImg = (text) => {
+        text = text.toLowerCase();
+        if (text.includes('walk') || text.includes('run') || text.includes('cardio')) return 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&q=80&w=600';
+        if (text.includes('yoga') || text.includes('stretch')) return 'https://images.unsplash.com/photo-1544367563-12123d895951?auto=format&fit=crop&q=80&w=600';
+        if (text.includes('strength') || text.includes('weight')) return 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=600';
+        return 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=600';
+    };
+
+    container.innerHTML = adviceList.map((item, index) => `
+        <div class='step-card'>
+            <div class='step-circle'>${index + 1}</div>
+            <div>
+                <div class='step-header'>
+                    <div class='step-title'>${item.activity}</div>
+                    <div class='step-desc'>${item.benefits}</div>
+                </div>
+            </div>
+            <div class='step-img-container'>
+                <img src='${getImg(item.activity)}' class='step-img'>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderMockMovementSteps(container) {
+    const steps = [
+        { title: 'Morning Activation', desc: 'Start with a brisk 15-minute walk to jumpstart your metabolism.', img: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&q=80&w=600' },
+        { title: 'Strength Focus', desc: 'Perform bodyweight squats and lunges to build lower body resilience.', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=600' },
+        { title: 'Mindful Recovery', desc: 'End the day with 10 minutes of yoga or deep stretching to lower cortisol.', img: 'https://images.unsplash.com/photo-1544367563-12123d895951?auto=format&fit=crop&q=80&w=600' }
+    ];
+
+    container.innerHTML = steps.map((item, index) => `
+        <div class='step-card'>
+            <div class='step-circle'>${index + 1}</div>
+            <div>
+                <div class='step-header'>
+                    <div class='step-title'>${item.title}</div>
+                    <div class='step-desc'>${item.desc}</div>
+                </div>
+            </div>
+            <div class='step-img-container'>
+                <img src='${item.img}' class='step-img'>
+            </div>
+        </div>
+    `).join('');
 }

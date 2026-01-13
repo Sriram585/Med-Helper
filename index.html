@@ -21,7 +21,7 @@
     <!-- LOGIN SCREEN - REFRESHED -->
     <!-- LOGIN SCREEN - RESTORED -->
     <div id="login-screen" class="login-container">
-    <div id="login-view" class="glass-panel login-box">
+        <div id="login-view" class="glass-panel login-box">
             <div class="brand" style="justify-content: center; margin-bottom: 30px;">
                 <div class="brand-logo"><i class="fas fa-heart-pulse"></i></div>
                 <span>MediMind</span>
@@ -770,11 +770,15 @@
                             </div>
 
                             <!-- Movement -->
-                            <div class="glass-panel"
-                                style="padding: 24px; background: linear-gradient(145deg, rgba(255,255,255,0.6), rgba(224, 242, 254, 0.4)); border: 1px solid rgba(255,255,255,0.6);">
+                            <div id="movement-panel" class="glass-panel"
+                                style="padding: 24px; background: linear-gradient(145deg, rgba(255,255,255,0.6), rgba(224, 242, 254, 0.4)); border: 1px solid rgba(255,255,255,0.6); cursor: pointer; transition: 0.3s;"
+                                onmouseover="this.style.transform='scale(1.02)'"
+                                onmouseout="this.style.transform='scale(1)'" onclick="openMovementModal()">
                                 <h3
                                     style="color:#0369a1; margin-bottom:15px; display:flex; align-items:center; gap:10px;">
-                                    <i class="fas fa-running"></i> Movement as Medicine
+                                    <i class="fas fa-running"></i> Movement as Medicine <span
+                                        style="font-size:0.7rem; background:white; padding:2px 8px; border-radius:10px; color:#0369a1; box-shadow:0 2px 5px rgba(0,0,0,0.05);">Click
+                                        to view plan</span>
                                 </h3>
                                 <div id="lab-movement-list"></div>
                             </div>
@@ -1189,3 +1193,15 @@
 </body>
 
 </html>
+<!-- MOVEMENT PLAN MODAL -->
+<div id="movement-modal" class="step-modal-overlay" onclick="closeMovementModal(event)">
+    <div style="width:100%; height:100%; overflow-y:auto; display:flex; align-items:center; justify-content:center;">
+        <div class="step-scroll-container" id="movement-steps-container">
+            <!-- Steps injected here -->
+        </div>
+    </div>
+    <button onclick="closeMovementModal(event, true)"
+        style="position:absolute; top:30px; right:30px; background:white; border:none; width:50px; height:50px; border-radius:50%; font-weight:700; cursor:pointer; box-shadow:0 10px 30px rgba(0,0,0,0.2); color:var(--text-main); display:flex; align-items:center; justify-content:center; font-size:1.5rem; transition:0.3s;"
+        onmouseover="this.style.transform='rotate(90deg)'" onmouseout="this.style.transform='rotate(0deg)'"><i
+            class="fas fa-times"></i></button>
+</div>
