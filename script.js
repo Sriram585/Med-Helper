@@ -2265,9 +2265,9 @@ function closeMovementModal(event, force) {
 function renderMovementSteps(adviceList, container) {
     const getImg = (text) => {
         text = text.toLowerCase();
-        if (text.includes('walk') || text.includes('run') || text.includes('cardio')) return 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&q=80&w=600';
-        if (text.includes('yoga') || text.includes('stretch')) return 'https://images.unsplash.com/photo-1544367563-12123d895951?auto=format&fit=crop&q=80&w=600';
-        if (text.includes('strength') || text.includes('weight')) return 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=600';
+        if (text.includes('walk') || text.includes('run') || text.includes('cardio')) return 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=600';
+        if (text.includes('yoga') || text.includes('stretch') || text.includes('flexibility')) return 'https://images.unsplash.com/photo-1599447421405-0e5a879d3744?auto=format&fit=crop&q=80&w=600';
+        if (text.includes('strength') || text.includes('weight') || text.includes('hiit')) return 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=600';
         return 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=600';
     };
 

@@ -2232,6 +2232,7 @@ select {
     border-top: 1px solid #f1f5f9;
     padding-top: 10px;
 }
+
 /* --- MOVEMENT STEP CARDS (RE-ADDED) --- */
 .step-modal-overlay {
     position: fixed;
@@ -2250,52 +2251,53 @@ select {
 
 .step-scroll-container {
     display: flex;
+    flex-wrap: wrap;
     gap: 30px;
-    overflow-x: auto;
     padding: 40px;
-    max-width: 100%;
-    scroll-behavior: smooth;
+    width: 95%;
+    max-width: 1400px;
     justify-content: center;
-    flex-wrap: wrap; 
+    /* Centers the last item if alone */
 }
 
 .step-card {
     background: white;
     border-radius: 30px;
-    width: 320px;
+    width: 300px;
+    /* Fixed width for better centering */
+    min-height: 400px;
     padding: 30px;
-    box-shadow: 0 20px 50px -10px rgba(0,0,0,0.1);
+    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.1);
     position: relative;
     border: 1px solid #f8fafc;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     transition: 0.3s;
-    flex-shrink: 0;
 }
 
 .step-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 30px 60px -15px rgba(0,0,0,0.15);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.15);
 }
 
-.step-header { 
-    margin-bottom: 10px; 
-    padding-right: 20px; 
+.step-header {
+    margin-bottom: 10px;
+    padding-right: 20px;
 }
 
-.step-title { 
-    font-weight: 800; 
-    font-size: 1.4rem; 
-    color: var(--text-main); 
+.step-title {
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: var(--text-main);
     margin-bottom: 10px;
     line-height: 1.2;
 }
 
-.step-desc { 
-    font-size: 1rem; 
-    color: var(--text-secondary); 
-    line-height: 1.6; 
+.step-desc {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
 }
 
 .step-circle {
@@ -2305,7 +2307,7 @@ select {
     width: 50px;
     height: 50px;
     background: white;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -2334,4 +2336,3 @@ select {
 .step-card:hover .step-img {
     transform: scale(1.05);
 }
-
