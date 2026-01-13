@@ -6,3 +6,6 @@ pydantic
 requests
 python-multipart
 pypdf
+sqlalchemy
+passlib
+bcrypt

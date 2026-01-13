@@ -13,6 +13,13 @@ from groq import AsyncGroq
 from dotenv import load_dotenv
 import pypdf
 import io
+from sqlalchemy.orm import Session
+from fastapi import Depends, status
+import models
+from database import engine, get_db
+from hashing import Hash
+# Create Tables automatically
+models.Base.metadata.create_all(bind=engine)
 
 load_dotenv()
 
@@ -33,6 +40,16 @@ client = AsyncGroq(api_key=os.environ.get("GROQ_API_KEY"))
 class LoginRequest(BaseModel):
     username: str
     password: str
+    role: str # 'patient' or 'doctor'
+
+class RegisterRequest(BaseModel):
+    name: str
+    mobile: str
+    email: str
+    username: str
+    password: str
+    role: str
+    specialty: Optional[str] = None
 
 # ... existing models ...
 class SymptomRequest(BaseModel):
@@ -57,23 +74,69 @@ class LabReportRequest(BaseModel):
     report_text: str
 
 # ==========================================
-# 0. AUTHENTICATION (Simple Mock)
+# 0. AUTHENTICATION (Database-Backed)
 # ==========================================
-def load_users():
-    try:
-        with open("users.json", "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
 
-USERS_DB = load_users()
+@app.post("/register")
+async def register(request: RegisterRequest, db: Session = Depends(get_db)):
+    # 1. Select Table based on Role
+    if request.role == 'doctor':
+        model_class = models.Doctor
+    else:
+        model_class = models.Patient
+        
+    # 2. Check if user exists (Mobile or Email)
+    existing = db.query(model_class).filter(
+        (model_class.mobile == request.mobile) | (model_class.email == request.email)
+    ).first()
+    
+    if existing:
+        raise HTTPException(status_code=400, detail="Mobile or Email already registered")
+        
+    # 3. Hash the password
+    hashed_pass = Hash.bcrypt(request.password)
+    
+    # 4. Create Record
+    new_user = model_class(
+        name=request.name,
+        username=request.username,
+        email=request.email,
+        mobile=request.mobile,
+        password_hash=hashed_pass
+    )
+    
+    if request.role == 'doctor' and request.specialty:
+        new_user.specialty = request.specialty
+    
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    
+    return {"message": "Account created successfully", "username": new_user.username, "role": request.role}
 
 @app.post("/login")
-async def login(credentials: LoginRequest):
-    user = USERS_DB.get(credentials.username)
-    if not user or user["password"] != credentials.password:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    return {"name": user["name"], "role": user["role"]}
+async def login(request: LoginRequest, db: Session = Depends(get_db)):
+    # 1. Select Table
+    if request.role == 'doctor':
+        model_class = models.Doctor
+    else:
+        model_class = models.Patient
+        
+    # 2. Find User (by username or mobile? Let's stick to username for now or check both)
+    # The frontend input placeholder says "Enter username or mobile". 
+    # For robust matching:
+    user = db.query(model_class).filter(
+        (model_class.username == request.username) | (model_class.mobile == request.username)
+    ).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    # 3. Verify Password (Strict)
+    if not Hash.verify(request.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Incorrect Password")
+        
+    return {"name": user.name, "username": user.username, "role": request.role}
 
 
 # ==========================================
