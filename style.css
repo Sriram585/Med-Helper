@@ -2125,7 +2125,8 @@ select {
 .appt-card-clean {
     background: white;
     border-radius: 20px;
-    padding: 30px; /* Increased padding */
+    padding: 30px;
+    /* Increased padding */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     border: 1px solid #f1f5f9;
     display: flex;
@@ -2134,5 +2135,99 @@ select {
     transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    height: 100%; /* Uniform height */
+    height: 100%;
+    /* Uniform height */
+}
+
+/* --- LAB ANALYZER PREMIUM STYLES --- */
+.premium-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 0 20px;
+}
+
+.premium-title {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 800;
+    font-size: 2.2rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+}
+
+.premium-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    font-weight: 500;
+}
+
+.lab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.finding-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 24px;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.finding-card:hover {
+    transform: translateY(-5px);
+    background: #f8fafc;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    border-color: var(--primary);
+}
+
+.fc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.fc-metric {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.fc-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+    margin: 10px 0;
+}
+
+.fc-status {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+}
+
+.fc-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-top: 15px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 10px;
 }

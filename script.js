@@ -1079,23 +1079,69 @@ async function proceedAnalysis() {
         const data = await res.json();
 
         document.getElementById('lab-loader').style.display = 'none';
+        document.getElementById('lab-result').style.display = 'block';
 
         if (data.detail) {
             alert("Error: " + data.detail);
             return;
         }
 
-        const resultDiv = document.getElementById('lab-result');
-        const contentDiv = document.getElementById('lab-result-content');
+        // 1. Summary
+        document.getElementById('lab-summary').innerText = data.summary || "Analysis complete.";
 
-        // Simple Markdown cleaning
-        let formatted = (data.analysis || "No analysis returned.")
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\n\n/g, '<br><br>')
-            .replace(/\n-/g, '<br>•');
+        // 2. Findings
+        const findingsGrid = document.getElementById('lab-findings-grid');
+        findingsGrid.innerHTML = (data.findings || []).map(f => {
+            let color = '#64748b'; // default slate-500
+            let icon = 'fa-check-circle';
+            // Simple status check
+            const s = (f.status || "").toLowerCase();
 
-        contentDiv.innerHTML = formatted;
-        resultDiv.style.display = 'block';
+            if (s.includes('high')) { color = '#ef4444'; icon = 'fa-arrow-up'; }
+            else if (s.includes('low')) { color = '#3b82f6'; icon = 'fa-arrow-down'; }
+            else if (s.includes('concern')) { color = '#f59e0b'; icon = 'fa-exclamation-triangle'; }
+            else if (s.includes('optimal')) { color = '#10b981'; icon = 'fa-star'; }
+
+            return `
+            <div class="finding-card">
+                <div class="fc-status" style="color:${color}"><i class="fas ${icon}"></i></div>
+                <div class="fc-header">
+                    <span class="fc-metric">${f.metric}</span>
+                </div>
+                <div class="fc-value">${f.value}</div>
+                <div style="color:${color}; font-weight:600; font-size:0.9rem; margin-top:5px;">${f.status}</div>
+                <p class="fc-desc">${f.explanation}</p>
+            </div>
+            `;
+        }).join('');
+
+        // 3. Diet Advice
+        const dietList = document.getElementById('lab-diet-list');
+        dietList.innerHTML = (data.diet_advice || []).map(d => `
+            <div style="display:flex; gap:12px; margin-bottom:12px; align-items:flex-start;">
+                <div style="background:#dcfce7; color:#15803d; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i class="fas fa-leaf" style="font-size:0.8rem;"></i>
+                </div>
+                <div>
+                    <div style="font-weight:700; color:#166534;">${d.food}</div>
+                    <div style="font-size:0.9rem; color:#475569;">${d.benefits}</div>
+                </div>
+            </div>
+        `).join('');
+
+        // 4. Movement Advice
+        const moveList = document.getElementById('lab-movement-list');
+        moveList.innerHTML = (data.movement_advice || []).map(m => `
+            <div style="display:flex; gap:12px; margin-bottom:12px; align-items:flex-start;">
+                <div style="background:#e0f2fe; color:#0369a1; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i class="fas fa-walking" style="font-size:0.8rem;"></i>
+                </div>
+                <div>
+                    <div style="font-weight:700; color:#075985;">${m.activity}</div>
+                    <div style="font-size:0.9rem; color:#475569;">${m.benefits}</div>
+                </div>
+            </div>
+        `).join('');
 
     } catch (e) {
         document.getElementById('lab-loader').style.display = 'none';
