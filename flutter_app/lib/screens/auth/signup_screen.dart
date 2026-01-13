@@ -41,9 +41,10 @@ class _SignupScreenState extends State<SignupScreen> {
         }
       }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Error: $e")));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -98,7 +99,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       decoration: const InputDecoration(labelText: 'Password')),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
-                    value:
+                    initialValue:
                         _role, // Value is required for controlled component, ignoring deprecation as it is standard usage
                     decoration: const InputDecoration(labelText: 'Role'),
                     items: const [

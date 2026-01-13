@@ -13,7 +13,7 @@ class WearableSimulationScreen extends StatefulWidget {
 
 class _WearableSimulationScreenState extends State<WearableSimulationScreen> {
   Timer? _timer;
-  List<double> _heartRates = List.filled(30, 70.0); // Keep last 30 points
+  final List<double> _heartRates = List.filled(30, 70.0); // Keep last 30 points
   int _currentHeartRate = 72;
   final Random _random = Random();
 

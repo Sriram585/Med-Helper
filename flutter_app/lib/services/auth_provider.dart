@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
   Map<String, dynamic>? _currentUser;
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   Map<String, dynamic>? get currentUser => _currentUser;
   bool get isLoading => _isLoading;

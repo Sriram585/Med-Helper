@@ -33,18 +33,20 @@ class _LabAnalyserScreenState extends State<LabAnalyserScreen> {
           final data = await ApiService.uploadLabReport(bytes, name);
           setState(() => _results = data);
         } catch (e) {
-          if (mounted)
+          if (mounted) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text("Error: $e")));
+          }
         } finally {
           if (mounted) setState(() => _isLoading = false);
         }
       } else {
         // Fallback for native if bytes are null (though withData: true should provide them)
         // But since we removed dart:io, we must rely on bytes.
-        if (mounted)
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Error reading file data")));
+        }
       }
     }
   }

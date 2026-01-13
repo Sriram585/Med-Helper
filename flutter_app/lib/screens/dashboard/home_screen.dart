@@ -445,9 +445,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 const SizedBox(height: 15),
-                TextField(
+                const TextField(
                   maxLines: 4,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText:
                         "e.g. I have a severe headache, sensitivity to light...",
                     fillColor: Color(0xFFF1F5F9), // bg-slate-100
@@ -486,7 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 30),
 
           // Quick Tools Grid (Adding this for parity with the "Quick access" feel of the web dashboard)
-          Text("Quick Tools",
+          const Text("Quick Tools",
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

@@ -99,7 +99,7 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
     },
   ];
 
-  String _docStatus = 'Online';
+  final String _docStatus = 'Online';
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +232,8 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
               style:
                   const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           Text(title,
-              style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+              style:
+                  const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
         ],
       ),
     );

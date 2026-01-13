@@ -118,7 +118,7 @@ class _BmiScreenState extends State<BmiScreen> {
                 ),
                 child: Column(
                   children: [
-                    Text("Your BMI",
+                    const Text("Your BMI",
                         style: TextStyle(
                             color: AppTheme.textSecondary, fontSize: 16)),
                     const SizedBox(height: 8),

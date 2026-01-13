@@ -55,11 +55,11 @@ class AppTheme {
     color: glassBg,
     borderRadius: BorderRadius.circular(24),
     border: Border.all(color: glassBorder),
-    boxShadow: [
+    boxShadow: const [
       BoxShadow(
-        color: const Color(0x1A1F2687), // rgba(31, 38, 135, 0.1)
+        color: Color(0x1A1F2687), // rgba(31, 38, 135, 0.1)
         blurRadius: 32,
-        offset: const Offset(0, 8),
+        offset: Offset(0, 8),
       ),
     ],
   );
