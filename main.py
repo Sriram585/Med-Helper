@@ -485,5 +485,67 @@ async def read_assets(filename: str):
     raise HTTPException(status_code=404, detail="File not found")
 
     
+@app.post("/analyze_report_file")
+async def analyze_report_file(file: UploadFile = File(...)):
+    # 1. Extract Text
+    content = ""
+    try:
+        if file.filename.endswith(".pdf"):
+            pdf_reader = pypdf.PdfReader(io.BytesIO(await file.read()))
+            for page in pdf_reader.pages:
+                text = page.extract_text()
+                if text:
+                    content += text + "\n"
+        else:
+            # Assume Text
+            content = (await file.read()).decode("utf-8")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error reading file: {str(e)}")
+
+    if not content.strip():
+        raise HTTPException(status_code=400, detail="Empty file content")
+
+    # 2. AI Analysis
+    prompt = f"""
+    You are a functional medicine expert AI. Mission: "Let Food and Movement be thy Medicine."
+    Analyze this lab report text: "{content[:3000]}"
+
+    Goal: detailed wellness optimization.
+    Return a STRICT JSON object with this structure:
+    {{
+        "summary": "Short, reassuring summary (2 sentences).",
+        "findings": [
+            {{ "metric": "Vitamin D", "value": "20 ng/mL", "status": "Low", "explanation": "Crucial for bone health and immunity." }}
+        ],
+        "diet_advice": [
+            {{ "food": "Salmon", "benefits": "High in Vitamin D and Omega-3." }}
+        ],
+        "movement_advice": [
+            {{ "activity": "Morning Sunlight Walk", "benefits": "Natural Vitamin D synthesis and circadian rhythm reset." }}
+        ]
+    }}
+
+    - If values are normal, suggest optimization tips anyway.
+    - Status can be: "Optimal", "Normal", "High", "Low", "Concern".
+    - Provide at least 3 diet tips and 3 movement tips.
+    """
+
+    try:
+        chat = await client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama-3.3-70b-versatile",
+            response_format={"type": "json_object"}
+        )
+        res = json.loads(chat.choices[0].message.content)
+        return res
+    except Exception as e:
+        print(f"LLM Error: {e}")
+        return {
+            "summary": "Error processing report. Please try again.",
+            "findings": [],
+            "diet_advice": [],
+            "movement_advice": []
+        }
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

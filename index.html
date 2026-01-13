@@ -21,7 +21,7 @@
     <!-- LOGIN SCREEN - REFRESHED -->
     <!-- LOGIN SCREEN - RESTORED -->
     <div id="login-screen" class="login-container">
-    <div id="login-view" class="glass-panel login-box">
+        <div id="login-view" class="glass-panel login-box">
             <div class="brand" style="justify-content: center; margin-bottom: 30px;">
                 <div class="brand-logo"><i class="fas fa-heart-pulse"></i></div>
                 <span>MediMind</span>
@@ -708,33 +708,88 @@
 
             <!-- LAB REPORT ANALYZER -->
             <section id="view-lab" class="view-section" style="display: none">
-                <div class="glass-panel input-container">
-                    <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:15px;"><i
+                <div style="max-width: 1200px; margin: 0 auto;">
+                    <button class="btn-back" onclick="switchView('dashboard')" style="margin-bottom:20px;"><i
                             class="fas fa-arrow-left"></i> Back</button>
-                    <div class="input-header">
-                        <i class="fas fa-microscope"></i>
-                        <span>Lab Report Analyzer</span>
+
+                    <div class="premium-header">
+                        <div class="premium-title">"Let Food and Movement be thy Medicine"</div>
+                        <div class="premium-subtitle">Interpret reports not just for sickness, but for <strong
+                                style="color:var(--primary)">wellness optimization</strong>.</div>
                     </div>
+
                     <div class="upload-container" id="upload-box" onclick="document.getElementById('lab-file').click()">
                         <input type="file" id="lab-file" accept=".txt,.pdf" hidden onchange="handleFileSelect(this)">
-                        <div class="upload-icon"><i class="fas fa-paperclip"></i></div>
-                        <div class="upload-text" id="upload-label">Click to upload Lab Report (PDF/TXT)</div>
+                        <div class="upload-icon"><i class="fas fa-file-medical-alt"></i></div>
+                        <div class="upload-text" id="upload-label">Upload Lab Report (PDF/TXT)</div>
+                        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:10px;">Supported formats:
+                            PDF, Plain Text</p>
                     </div>
 
-                    <div class="input-actions" style="margin-top:20px; text-align:center;">
-                        <button class="btn-primary full-width" onclick="triggerLabAnalysis()">Analyze Report <i
-                                class="fas fa-magic"></i></button>
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <button class="btn-analysis" onclick="triggerLabAnalysis()">
+                            Run Analysis <i class="fas fa-magic"></i>
+                        </button>
                     </div>
-                </div>
 
-                <div id="lab-loader" class="loader" style="display:none;">
-                    <div class="spinner"></div>
-                    <span>AI is reading your report...</span>
-                </div>
+                    <div id="lab-loader" class="loader" style="display:none;">
+                        <div class="spinner"></div>
+                        <span style="font-size:1.1rem;">AI is analyzing your biomarkers...</span>
+                    </div>
 
-                <div id="lab-result" class="glass-panel" style="display:none; margin-top:20px; padding:25px;">
-                    <h3><i class="fas fa-file-medical-alt"></i> Analysis Result</h3>
-                    <div id="lab-result-content" style="line-height:1.6; color:var(--text-primary);"></div>
+                    <!-- RESULTS CONTAINER -->
+                    <div id="lab-result" style="display:none; animation: fadeIn 0.5s ease;">
+
+                        <!-- Summary -->
+                        <div class="glass-panel"
+                            style="padding: 30px; margin-bottom: 40px; border-left: 6px solid var(--secondary);">
+                            <h3 style="margin-bottom:15px; font-size:1.4rem; color:var(--text-main);">Wellness
+                                Interpretation</h3>
+                            <p id="lab-summary"
+                                style="line-height:1.8; color:var(--text-secondary); font-size:1.05rem;"></p>
+                        </div>
+
+                        <!-- Findings Grid -->
+                        <h3 style="margin-bottom:20px; font-weight:800; color:var(--text-main); font-size:1.5rem;">Key
+                            Biomarkers</h3>
+                        <div id="lab-findings-grid" class="lab-grid"></div>
+
+                        <!-- Rx Section -->
+                        <h3 style="margin:40px 0 20px; font-weight:800; color:var(--text-main); font-size:1.5rem;">Your
+                            Wellness Prescription</h3>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                            <!-- Diet -->
+                            <div class="glass-panel"
+                                style="padding: 24px; background: linear-gradient(145deg, rgba(255,255,255,0.6), rgba(220, 252, 231, 0.4)); border: 1px solid rgba(255,255,255,0.6);">
+                                <h3
+                                    style="color:#15803d; margin-bottom:15px; display:flex; align-items:center; gap:10px;">
+                                    <i class="fas fa-carrot"></i> Food as Medicine
+                                </h3>
+                                <div id="lab-diet-list"></div>
+                            </div>
+
+                            <!-- Movement -->
+                            <div id="movement-panel" class="glass-panel"
+                                style="padding: 24px; background: linear-gradient(145deg, rgba(255,255,255,0.6), rgba(224, 242, 254, 0.4)); border: 1px solid rgba(255,255,255,0.6); cursor: pointer; transition: 0.3s;"
+                                onmouseover="this.style.transform='scale(1.02)'"
+                                onmouseout="this.style.transform='scale(1)'" onclick="openMovementModal()">
+                                <h3
+                                    style="color:#0369a1; margin-bottom:15px; display:flex; align-items:center; gap:10px;">
+                                    <i class="fas fa-running"></i> Movement as Medicine <span
+                                        style="font-size:0.7rem; background:white; padding:2px 8px; border-radius:10px; color:#0369a1; box-shadow:0 2px 5px rgba(0,0,0,0.05);">Click
+                                        to view plan</span>
+                                </h3>
+                                <div id="lab-movement-list"></div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="text-align:center; margin-top:50px; font-size:0.85rem; color:var(--text-secondary); padding-bottom:30px;">
+                            <i class="fas fa-info-circle"></i> Disclaimer: This analysis is generated by AI for
+                            informational purposes only. It is not a medical diagnosis. Please consult a healthcare
+                            professional.
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -875,26 +930,30 @@
                     <div class="panel-header" style="margin-bottom: 20px;">
                         <h3><i class="fas fa-users-medical"></i> All Patients Directory</h3>
                         <div style="position: relative; width: 300px;">
-                            <input type="text" id="patient-search-full" placeholder="Search patients..." onkeyup="filterPatients('full')"
+                            <input type="text" id="patient-search-full" placeholder="Search patients..."
+                                onkeyup="filterPatients('full')"
                                 style="width:100%; padding: 10px 40px 10px 15px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 0.95rem;">
                             <i class="fas fa-search"
                                 style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
                         </div>
                     </div>
 
-                    <div id="full-patient-list" class="doctor-grid" style="grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));">
+                    <div id="full-patient-list" class="doctor-grid"
+                        style="grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));">
                         <!-- Populated by JS -->
-                    </div> 
-                </div> 
+                    </div>
+                </div>
             </section>
 
             <!-- SCHEDULE VIEW (CALENDAR) -->
             <section id="view-doc-schedule" class="view-section" style="display: none">
                 <div class="glass-panel" style="padding: 30px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
-                        <h2 id="cal-month-year" style="margin:0; font-size: 1.8rem; color:var(--text-main);">Month Year</h2>
+                        <h2 id="cal-month-year" style="margin:0; font-size: 1.8rem; color:var(--text-main);">Month Year
+                        </h2>
                         <div style="display:flex; gap:10px;">
-                            <button class="btn-outline" onclick="openEventModal()"><i class="fas fa-plus"></i> Add Event</button>
+                            <button class="btn-outline" onclick="openEventModal()"><i class="fas fa-plus"></i> Add
+                                Event</button>
                             <div style="display:flex; gap:5px;">
                                 <button class="btn-circle" onclick="changeMonth(-1)"><i
                                         class="fas fa-chevron-left"></i></button>
@@ -921,7 +980,7 @@
 
                     <div id="calendar-day-details"
                         style="margin-top:25px; border-top:1px solid #f1f5f9; padding-top:20px; min-height:50px;">
-                        
+
                     </div>
                 </div>
             </section>
@@ -1133,3 +1192,15 @@
 </body>
 
 </html>
+<!-- MOVEMENT PLAN MODAL -->
+<div id="movement-modal" class="step-modal-overlay" onclick="closeMovementModal(event)">
+    <div style="width:100%; height:100%; overflow-y:auto; display:flex; align-items:center; justify-content:center;">
+        <div class="step-scroll-container" id="movement-steps-container">
+            <!-- Steps injected here -->
+        </div>
+    </div>
+    <button onclick="closeMovementModal(event, true)"
+        style="position:absolute; top:30px; right:30px; background:white; border:none; width:50px; height:50px; border-radius:50%; font-weight:700; cursor:pointer; box-shadow:0 10px 30px rgba(0,0,0,0.2); color:var(--text-main); display:flex; align-items:center; justify-content:center; font-size:1.5rem; transition:0.3s;"
+        onmouseover="this.style.transform='rotate(90deg)'" onmouseout="this.style.transform='rotate(0deg)'"><i
+            class="fas fa-times"></i></button>
+</div>

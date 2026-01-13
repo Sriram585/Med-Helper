@@ -3,7 +3,60 @@
 let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial Load - Keep layout hidden until login
+    // Check for saved session
+    const savedSession = localStorage.getItem('medi_session');
+    if (savedSession) {
+        try {
+            currentUser = JSON.parse(savedSession);
+            console.log("Restoring session for:", currentUser.username);
+
+            // Hide Login
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-layout').style.display = 'flex';
+
+            // Setup App
+            setupSidebar(currentUser.role);
+
+            // Redirect based on role
+            if (currentUser.role === 'doctor') {
+                switchView('doctor-dashboard');
+            } else {
+                // Patient Init
+                loadSidebarHistory();
+                setupVoiceInput();
+
+                // --- NAVIGATION LOGIC ---
+                // Check URL Hash first (e.g. #lab)
+                const hashView = window.location.hash.replace('#', '');
+                const validViews = ['dashboard', 'medical-chat', 'history', 'profile', 'appointments', 'book-appointment',
+                    'diet', 'workout', 'wearables', 'habits', 'sleep', 'lab'];
+
+                if (hashView && validViews.includes(hashView)) {
+                    switchView(hashView, false); // Don't push duplicate history for initial load
+                } else {
+                    switchView('dashboard', false);
+                }
+
+                // Load other basics lightly
+                loadHabits();
+                updateDashboardWidgets();
+                loadProfile();
+            }
+        } catch (e) {
+            console.error("Session restore failed", e);
+            localStorage.removeItem('medi_session');
+        }
+    }
+});
+
+// Handle Back/Forward Buttons
+window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.view) {
+        switchView(event.state.view, false); // false = don't push state again
+    } else {
+        // Fallback or default
+        switchView('dashboard', false);
+    }
 });
 
 // const API_BASE = 'http://127.0.0.1:8000';
@@ -14,7 +67,13 @@ const API_BASE = (window.location.hostname === '127.0.0.1' || window.location.ho
 // --- NAVIGATION & VIEWS ---
 
 
-function switchView(viewId) {
+function switchView(viewId, updateHistory = true) {
+    // 0. Update Browser History (URL)
+    if (updateHistory) {
+        history.pushState({ view: viewId }, '', '#' + viewId);
+        localStorage.setItem('last_view', viewId); // Backup persistence
+    }
+
     // 1. Sidebar Active State
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
@@ -1077,25 +1136,72 @@ async function proceedAnalysis() {
             body: formData
         });
         const data = await res.json();
+        currentAnalysisData = data;
 
         document.getElementById('lab-loader').style.display = 'none';
+        document.getElementById('lab-result').style.display = 'block';
 
         if (data.detail) {
             alert("Error: " + data.detail);
             return;
         }
 
-        const resultDiv = document.getElementById('lab-result');
-        const contentDiv = document.getElementById('lab-result-content');
+        // 1. Summary
+        document.getElementById('lab-summary').innerText = data.summary || "Analysis complete.";
 
-        // Simple Markdown cleaning
-        let formatted = (data.analysis || "No analysis returned.")
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\n\n/g, '<br><br>')
-            .replace(/\n-/g, '<br>•');
+        // 2. Findings
+        const findingsGrid = document.getElementById('lab-findings-grid');
+        findingsGrid.innerHTML = (data.findings || []).map(f => {
+            let color = '#64748b'; // default slate-500
+            let icon = 'fa-check-circle';
+            // Simple status check
+            const s = (f.status || "").toLowerCase();
 
-        contentDiv.innerHTML = formatted;
-        resultDiv.style.display = 'block';
+            if (s.includes('high')) { color = '#ef4444'; icon = 'fa-arrow-up'; }
+            else if (s.includes('low')) { color = '#3b82f6'; icon = 'fa-arrow-down'; }
+            else if (s.includes('concern')) { color = '#f59e0b'; icon = 'fa-exclamation-triangle'; }
+            else if (s.includes('optimal')) { color = '#10b981'; icon = 'fa-star'; }
+
+            return `
+            <div class="finding-card">
+                <div class="fc-status" style="color:${color}"><i class="fas ${icon}"></i></div>
+                <div class="fc-header">
+                    <span class="fc-metric">${f.metric}</span>
+                </div>
+                <div class="fc-value">${f.value}</div>
+                <div style="color:${color}; font-weight:600; font-size:0.9rem; margin-top:5px;">${f.status}</div>
+                <p class="fc-desc">${f.explanation}</p>
+            </div>
+            `;
+        }).join('');
+
+        // 3. Diet Advice
+        const dietList = document.getElementById('lab-diet-list');
+        dietList.innerHTML = (data.diet_advice || []).map(d => `
+            <div style="display:flex; gap:12px; margin-bottom:12px; align-items:flex-start;">
+                <div style="background:#dcfce7; color:#15803d; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i class="fas fa-leaf" style="font-size:0.8rem;"></i>
+                </div>
+                <div>
+                    <div style="font-weight:700; color:#166534;">${d.food}</div>
+                    <div style="font-size:0.9rem; color:#475569;">${d.benefits}</div>
+                </div>
+            </div>
+        `).join('');
+
+        // 4. Movement Advice
+        const moveList = document.getElementById('lab-movement-list');
+        moveList.innerHTML = (data.movement_advice || []).map(m => `
+            <div style="display:flex; gap:12px; margin-bottom:12px; align-items:flex-start;">
+                <div style="background:#e0f2fe; color:#0369a1; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i class="fas fa-walking" style="font-size:0.8rem;"></i>
+                </div>
+                <div>
+                    <div style="font-weight:700; color:#075985;">${m.activity}</div>
+                    <div style="font-size:0.9rem; color:#475569;">${m.benefits}</div>
+                </div>
+            </div>
+        `).join('');
 
     } catch (e) {
         document.getElementById('lab-loader').style.display = 'none';
@@ -1507,6 +1613,9 @@ async function handleLogin() {
                 role: data.role
             };
 
+            // Save Session for Persistance
+            localStorage.setItem('medi_session', JSON.stringify(currentUser));
+
             // Update local profile name for UI consistency
             const currentProfile = JSON.parse(localStorage.getItem('mediProfile') || '{}');
             currentProfile.name = data.name;
@@ -1546,6 +1655,9 @@ async function handleLogin() {
 }
 
 function handleLogout() {
+    // Clear Session
+    localStorage.removeItem('medi_session');
+
     // Reset state
     currentUser = null;
     selectedRole = 'patient'; // Default reset
@@ -1612,7 +1724,6 @@ function loadDoctorDashboard() {
     document.getElementById('doc-stat-appt').innerText = MOCK_APPOINTMENTS.length;
     document.getElementById('doc-stat-review').innerText = MOCK_APPOINTMENTS.filter(a => a.type === 'review').length;
     document.getElementById('doc-stat-urgent').innerText = MOCK_APPOINTMENTS.filter(a => a.type === 'urgent').length;
-    document.getElementById('doc-stat-urgent').innerText = "3"; // Hardcoded in design
 
     // 2. Render All Upcoming by Default
     renderAppointmentGrid(MOCK_APPOINTMENTS);
@@ -2189,4 +2300,78 @@ function loadHabits() {
 /* --- DOCTOR DASHBOARD LOGIC --- */
 function loadDoctorAppointments() {
     // BLANK - WAITING FOR NEW IMPLEMENTATION
+}
+
+// --- 13. INTERACTIVE MOVEMENT PLAN ---
+let currentAnalysisData = null; // Store analysis data globally
+
+function openMovementModal() {
+    const modal = document.getElementById('movement-modal');
+    const container = document.getElementById('movement-steps-container');
+
+    // Check if we have data
+    if (!currentAnalysisData || !currentAnalysisData.movement_advice) {
+        // Fallback for demo if no live data
+        renderMockMovementSteps(container);
+    } else {
+        renderMovementSteps(currentAnalysisData.movement_advice, container);
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeMovementModal(event, force) {
+    if (force || event.target.id === 'movement-modal') {
+        document.getElementById('movement-modal').style.display = 'none';
+    }
+}
+
+function renderMovementSteps(adviceList, container) {
+    const getImg = (text) => {
+        text = text.toLowerCase();
+        // Use reliable source.unsplash.com with specific keywords or IDs to ensure availability
+        if (text.includes('walk') || text.includes('run') || text.includes('cardio')) return 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=600';
+        // Updated Yoga/Stretch URL to a clearer, more reliable one
+        if (text.includes('yoga') || text.includes('stretch') || text.includes('flexibility')) return 'https://plus.unsplash.com/premium_photo-1664109999537-088e7d964da2?auto=format&fit=crop&q=80&w=600';
+        if (text.includes('strength') || text.includes('weight') || text.includes('hiit')) return 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=600';
+        return 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=600';
+    };
+
+    container.innerHTML = adviceList.map((item, index) => `
+        <div class='step-card'>
+            <div class='step-circle'>${index + 1}</div>
+            <div>
+                <div class='step-header'>
+                    <div class='step-title'>${item.activity}</div>
+                    <div class='step-desc'>${item.benefits}</div>
+                </div>
+            </div>
+            <div class='step-img-container'>
+                <img src='${getImg(item.activity)}' class='step-img'>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderMockMovementSteps(container) {
+    const steps = [
+        { title: 'Morning Activation', desc: 'Start with a brisk 15-minute walk to jumpstart your metabolism.', img: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&q=80&w=600' },
+        { title: 'Strength Focus', desc: 'Perform bodyweight squats and lunges to build lower body resilience.', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=600' },
+        { title: 'Mindful Recovery', desc: 'End the day with 10 minutes of yoga or deep stretching to lower cortisol.', img: 'https://images.unsplash.com/photo-1544367563-12123d895951?auto=format&fit=crop&q=80&w=600' }
+    ];
+
+    container.innerHTML = steps.map((item, index) => `
+        <div class='step-card'>
+            <div class='step-circle'>${index + 1}</div>
+            <div>
+                <div class='step-header'>
+                    <div class='step-title'>${item.title}</div>
+                    <div class='step-desc'>${item.desc}</div>
+                </div>
+            </div>
+            <div class='step-img-container'>
+                <img src='${item.img}' class='step-img'>
+            </div>
+        </div>
+    `).join('');
 }
