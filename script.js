@@ -2338,16 +2338,18 @@ function renderMovementSteps(adviceList, container) {
     };
 
     container.innerHTML = adviceList.map((item, index) => `
-        <div class='step-card'>
-            <div class='step-circle'>${index + 1}</div>
-            <div>
-                <div class='step-header'>
-                    <div class='step-title'>${item.activity}</div>
-                    <div class='step-desc'>${item.benefits}</div>
+        <div class='step-card' onclick="this.classList.toggle('flipped')">
+            <div class='step-card-inner'>
+                <div class='step-face step-front'>
+                    <div class='step-circle'>${index + 1}</div>
+                    <div class='step-header'>
+                        <div class='step-title'>${item.activity}</div>
+                        <div class='step-desc'>${item.benefits}</div>
+                    </div>
                 </div>
-            </div>
-            <div class='step-img-container'>
-                <img src='${getImg(item.activity)}' class='step-img'>
+                <div class='step-face step-back'>
+                    <img src='${getImg(item.activity)}' class='step-img-full'>
+                </div>
             </div>
         </div>
     `).join('');
@@ -2361,16 +2363,18 @@ function renderMockMovementSteps(container) {
     ];
 
     container.innerHTML = steps.map((item, index) => `
-        <div class='step-card'>
-            <div class='step-circle'>${index + 1}</div>
-            <div>
-                <div class='step-header'>
-                    <div class='step-title'>${item.title}</div>
-                    <div class='step-desc'>${item.desc}</div>
+        <div class='step-card' onclick="this.classList.toggle('flipped')">
+            <div class='step-card-inner'>
+                <div class='step-face step-front'>
+                    <div class='step-circle'>${index + 1}</div>
+                    <div class='step-header'>
+                        <div class='step-title'>${item.title}</div>
+                        <div class='step-desc'>${item.desc}</div>
+                    </div>
                 </div>
-            </div>
-            <div class='step-img-container'>
-                <img src='${item.img}' class='step-img'>
+                <div class='step-face step-back'>
+                    <img src='${item.img}' class='step-img-full'>
+                </div>
             </div>
         </div>
     `).join('');

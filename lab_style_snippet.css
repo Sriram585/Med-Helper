@@ -1,4 +1,3 @@
-
 /* --- LAB ANALYZER PREMIUM UI --- */
 
 /* Header */
@@ -14,6 +13,7 @@
     font-size: 2.2rem;
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
     letter-spacing: -0.5px;
@@ -137,10 +137,11 @@
 }
 
 .rx-card {
-    background: white; /*Cleaner look than glass for dense info*/
+    background: white;
+    /*Cleaner look than glass for dense info*/
     border-radius: 24px;
     padding: 30px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
     border: 1px solid #f1f5f9;
 }
 
