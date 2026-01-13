@@ -3,7 +3,60 @@
 let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial Load - Keep layout hidden until login
+    // Check for saved session
+    const savedSession = localStorage.getItem('medi_session');
+    if (savedSession) {
+        try {
+            currentUser = JSON.parse(savedSession);
+            console.log("Restoring session for:", currentUser.username);
+
+            // Hide Login
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-layout').style.display = 'flex';
+
+            // Setup App
+            setupSidebar(currentUser.role);
+
+            // Redirect based on role
+            if (currentUser.role === 'doctor') {
+                switchView('doctor-dashboard');
+            } else {
+                // Patient Init
+                loadSidebarHistory();
+                setupVoiceInput();
+
+                // --- NAVIGATION LOGIC ---
+                // Check URL Hash first (e.g. #lab)
+                const hashView = window.location.hash.replace('#', '');
+                const validViews = ['dashboard', 'medical-chat', 'history', 'profile', 'appointments', 'book-appointment',
+                    'diet', 'workout', 'wearables', 'habits', 'sleep', 'lab'];
+
+                if (hashView && validViews.includes(hashView)) {
+                    switchView(hashView, false); // Don't push duplicate history for initial load
+                } else {
+                    switchView('dashboard', false);
+                }
+
+                // Load other basics lightly
+                loadHabits();
+                updateDashboardWidgets();
+                loadProfile();
+            }
+        } catch (e) {
+            console.error("Session restore failed", e);
+            localStorage.removeItem('medi_session');
+        }
+    }
+});
+
+// Handle Back/Forward Buttons
+window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.view) {
+        switchView(event.state.view, false); // false = don't push state again
+    } else {
+        // Fallback or default
+        switchView('dashboard', false);
+    }
 });
 
 // const API_BASE = 'http://127.0.0.1:8000';
@@ -14,7 +67,13 @@ const API_BASE = (window.location.hostname === '127.0.0.1' || window.location.ho
 // --- NAVIGATION & VIEWS ---
 
 
-function switchView(viewId) {
+function switchView(viewId, updateHistory = true) {
+    // 0. Update Browser History (URL)
+    if (updateHistory) {
+        history.pushState({ view: viewId }, '', '#' + viewId);
+        localStorage.setItem('last_view', viewId); // Backup persistence
+    }
+
     // 1. Sidebar Active State
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
@@ -1554,6 +1613,9 @@ async function handleLogin() {
                 role: data.role
             };
 
+            // Save Session for Persistance
+            localStorage.setItem('medi_session', JSON.stringify(currentUser));
+
             // Update local profile name for UI consistency
             const currentProfile = JSON.parse(localStorage.getItem('mediProfile') || '{}');
             currentProfile.name = data.name;
@@ -1593,6 +1655,9 @@ async function handleLogin() {
 }
 
 function handleLogout() {
+    // Clear Session
+    localStorage.removeItem('medi_session');
+
     // Reset state
     currentUser = null;
     selectedRole = 'patient'; // Default reset
@@ -2265,9 +2330,11 @@ function closeMovementModal(event, force) {
 function renderMovementSteps(adviceList, container) {
     const getImg = (text) => {
         text = text.toLowerCase();
+        // Use reliable source.unsplash.com with specific keywords or IDs to ensure availability
         if (text.includes('walk') || text.includes('run') || text.includes('cardio')) return 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=600';
-        if (text.includes('yoga') || text.includes('stretch') || text.includes('flexibility')) return 'https://images.unsplash.com/photo-1599447421405-0e5a879d3744?auto=format&fit=crop&q=80&w=600';
-        if (text.includes('strength') || text.includes('weight') || text.includes('hiit')) return 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=600';
+        // Updated Yoga/Stretch URL to a clearer, more reliable one
+        if (text.includes('yoga') || text.includes('stretch') || text.includes('flexibility')) return 'https://plus.unsplash.com/premium_photo-1664109999537-088e7d964da2?auto=format&fit=crop&q=80&w=600';
+        if (text.includes('strength') || text.includes('weight') || text.includes('hiit')) return 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=600';
         return 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=600';
     };
 

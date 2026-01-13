@@ -358,6 +358,31 @@ textarea:focus {
     animation: pulse 1.5s infinite;
 }
 
+.btn-analysis {
+    margin-top: 30px;
+    /* Added gap as requested */
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    padding: 14px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.5px;
+}
+
+.btn-analysis:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 35px -5px rgba(99, 102, 241, 0.5);
+    filter: brightness(1.1);
+}
+
 .btn-primary {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: white;
@@ -2250,21 +2275,25 @@ select {
 }
 
 .step-scroll-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    padding: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 40px;
+    /* Increased gap for better spacing */
+    padding: 50px 40px;
+    /* More vertical padding */
     width: 95%;
     max-width: 1400px;
+    margin: 0 auto;
+    /* Center container */
     justify-content: center;
-    /* Centers the last item if alone */
+    /* Center tracks */
 }
 
 .step-card {
     background: white;
     border-radius: 30px;
-    width: 300px;
-    /* Fixed width for better centering */
+    width: 100%;
+    /* Fill grid cell */
     min-height: 400px;
     padding: 30px;
     box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.1);
