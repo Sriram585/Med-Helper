@@ -2433,49 +2433,96 @@ function renderMockMovementSteps(container) {
     `).join('');
 }
 
-// --- LANDING PAGE LOGIC ---
+// --- 14. LANDING PAGE LOGIC ---
+
+let authIntent = 'login'; // 'login' or 'signup'
+
+function goToRoleSelection(intent) {
+    authIntent = intent || 'login';
+
+    const mainLanding = document.getElementById('main-landing-view');
+    const roleLanding = document.getElementById('landing-view');
+
+    if (mainLanding) {
+        mainLanding.style.opacity = '0';
+        setTimeout(() => mainLanding.style.display = 'none', 300);
+    }
+
+    if (roleLanding) {
+        // Update Title based on Intent? Optional but nice.
+        // const title = roleLanding.querySelector('h2');
+        // if(title) title.innerText = authIntent === 'signup' ? "Join as a..." : "Welcome Back";
+
+        roleLanding.style.display = 'flex';
+        setTimeout(() => roleLanding.style.opacity = '1', 10);
+    }
+}
 
 function selectInitialRole(role) {
     // 1. Hide Landing View
     const landing = document.getElementById('landing-view');
     if (landing) {
         landing.style.opacity = '0';
-        setTimeout(() => landing.style.display = 'none', 300); // Fade out effect
+        setTimeout(() => landing.style.display = 'none', 300);
     }
 
-    // 2. Show Login Screen
-    const login = document.getElementById('login-screen');
-    if (login) {
-        login.style.display = 'flex';
-        // Add fade in animation
-        login.style.opacity = '0';
-        login.style.transition = 'opacity 0.3s ease';
-        setTimeout(() => login.style.opacity = '1', 10);
+    // 2. Select View based on Intent
+    const targetViewId = authIntent === 'signup' ? 'signup-view' : 'login-screen';
+    const targetView = document.getElementById(targetViewId);
+
+    if (targetView) {
+        if (authIntent === 'signup') {
+            // Ensure Signup is visible and login container is hidden if mostly using shared styles
+            // The structure is: login-screen (container) -> login-view (box) AND signup-view (box)
+            // Wait, looking at index.html:
+            // <div id="login-screen" class="login-container"> contains BOTH <div id="login-view"> and <div id="signup-view">
+
+            document.getElementById('login-screen').style.display = 'flex'; // Show container
+            document.getElementById('login-view').style.display = 'none';   // Hide login box
+            document.getElementById('signup-view').style.display = 'block'; // Show signup box
+
+            // Sync Role for Signup
+            const regRoleInput = document.getElementById('reg-role');
+            if (regRoleInput) regRoleInput.value = role;
+
+        } else {
+            // Login Mode
+            document.getElementById('login-screen').style.display = 'flex'; // Show container
+            document.getElementById('login-view').style.display = 'block';  // Show login box
+            document.getElementById('signup-view').style.display = 'none';  // Hide signup box
+
+            // Sync Role for Login
+            setLoginRole(role);
+        }
+
+        // Animation
+        document.getElementById('login-screen').style.opacity = '0';
+        document.getElementById('login-screen').style.transition = 'opacity 0.3s ease';
+        setTimeout(() => document.getElementById('login-screen').style.opacity = '1', 10);
     }
 
-    // 3. Pre-select Role
-    setLoginRole(role);
+    // Remember role globally
+    selectedRole = role;
 }
 
-// Modify Login Check to show Landing Page if no session
+// Modify Login Check to show Main Landing Page if no session
 document.addEventListener('DOMContentLoaded', () => {
     // Override existing auto-show login behavior if needed
     const session = localStorage.getItem('medi_session');
 
     if (session) {
-        // Already logged in logic (handled by existing code?)
+        // Already logged in
+        document.getElementById('main-landing-view').style.display = 'none';
         document.getElementById('landing-view').style.display = 'none';
         document.getElementById('login-screen').style.display = 'none';
-        // App layout is shown by existing session check or needs to be forced?
-        // Let's assume existing code handles it, but just in case:
-        const appLayout = document.getElementById('app-layout');
-        if (appLayout && appLayout.style.display !== 'flex') {
-            // Existing logic should handle it. Don't interfere aggressively.
-        }
+        // App layout logic handles itself
     } else {
-        // No session: Show Landing, Hide Login
-        const landing = document.getElementById('landing-view');
-        if (landing) landing.style.display = 'flex';
+        // No session: Show Main Landing
+        const mainLanding = document.getElementById('main-landing-view');
+        if (mainLanding) mainLanding.style.display = 'flex';
+
+        const roleLanding = document.getElementById('landing-view');
+        if (roleLanding) roleLanding.style.display = 'none';
 
         const login = document.getElementById('login-screen');
         if (login) login.style.display = 'none';
@@ -2485,14 +2532,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Update Logout to return to Landing
-// We hook into the existing handleLogout if possible, or just overwrite it if it's defined globally.
-// Since we are appending, we can redefine if it's a window method, or wrap it.
-// script.js defines it as 'function handleLogout()'. 
-// In JS, redefining a function later in the same scope (global) overwrites it.
-
-window.handleLogoutOriginal = window.handleLogout; // Backup if needed (though undefined if not purely global object attached)
-
+// Update Logout to return to Main Landing
 function handleLogout() {
     // Clear Session
     localStorage.removeItem('medi_session');
@@ -2507,7 +2547,7 @@ function handleLogout() {
 
     const loginScreen = document.getElementById('login-screen');
     if (loginScreen) {
-        loginScreen.style.display = 'none'; // Ensure login is hidden
+        loginScreen.style.display = 'none';
         // Reset inputs
         const u = document.getElementById('login-user');
         const p = document.getElementById('login-pass');
@@ -2515,11 +2555,15 @@ function handleLogout() {
         if (p) p.value = '';
     }
 
-    // Show Landing
-    const landing = document.getElementById('landing-view');
-    if (landing) {
-        landing.style.display = 'flex';
-        landing.style.opacity = '1';
+    // Hide Role Landing if visible
+    const roleLanding = document.getElementById('landing-view');
+    if (roleLanding) roleLanding.style.display = 'none';
+
+    // Show Main Landing
+    const mainLanding = document.getElementById('main-landing-view');
+    if (mainLanding) {
+        mainLanding.style.display = 'flex';
+        mainLanding.style.opacity = '1';
     }
 
     // Reset Role Selection UI
