@@ -4,8 +4,12 @@ from sqlalchemy.orm import sessionmaker
 
 import os
 
-# 1. Get DB URL from Env (Prod) or fallback to SQLite (Local)
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./sql_app.db")
+# 1. Get DB URL from Env (Prod)
+# If running in Vercel and no DATABASE_URL is set, fallback to /tmp/sql_app.db (writable but ephemeral)
+if os.environ.get("VERCEL") and not os.environ.get("DATABASE_URL"):
+    SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/sql_app.db"
+else:
+    SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./sql_app.db")
 
 # Fix for some cloud providers (like Heroku/Vercel) returning 'postgres://' instead of 'postgresql://'
 if SQLALCHEMY_DATABASE_URL and SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
