@@ -1873,20 +1873,31 @@ function renderFullPatientList() {
     const list = document.getElementById('full-patient-list');
     if (!list) return;
 
+    // Use single column for better detail view, or responsive grid if preferred.
+    // The previous CSS had grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    // We'll keep the grid layout but making cards look better.
+
     list.innerHTML = mockPatients.map(p => {
         const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
         return `
-        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('patient', ${mockPatients.indexOf(p)})">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=48" style="border-radius:48%;">
-                <div>
-                    <div style="font-weight:700; font-size:1.1rem; color:var(--text-primary);">${p.name}</div>
-                    <div style="font-size:0.9rem; color:var(--text-secondary);"><i class="fas fa-notes-medical"></i> ${p.condition} • Age: ${p.age}</div>
+        <div class="patient-card" onclick="viewPatientDetails('patient', ${mockPatients.indexOf(p)})">
+            <div class="patient-card-left">
+                <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=128" class="patient-avatar-lg">
+                <div class="patient-info">
+                    <h3>${p.name}</h3>
+                    <div style="margin-bottom:6px;"><span class="patient-condition-badge"><i class="fas fa-notes-medical"></i> ${p.condition}</span></div>
+                    <div class="patient-meta">
+                         <span><i class="fas fa-birthday-cake"></i> Age: ${p.age}</span>
+                         <span><i class="fas fa-venus-mars"></i> ID: #849${mockPatients.indexOf(p)}</span>
+                    </div>
                 </div>
             </div>
-            <div style="text-align:right;">
-                <div style="font-size:0.85rem; color:var(--text-secondary);">Last Visit: ${p.lastVisit}</div>
-                <button class="btn-outline" style="margin-top:5px; padding: 4px 10px; font-size:0.8rem;" onclick="event.stopPropagation(); viewPatientDetails('patient', ${mockPatients.indexOf(p)})">Profile</button>
+            
+            <div class="patient-card-right">
+                <div class="last-visit">Last Visit: ${p.lastVisit}</div>
+                <button class="btn-profile-glass" onclick="event.stopPropagation(); viewPatientDetails('patient', ${mockPatients.indexOf(p)})">
+                    Profile
+                </button>
             </div>
         </div>
     `}).join('');
@@ -1903,18 +1914,44 @@ function filterPatients(source) {
     targetList.innerHTML = filtered.map(p => {
         // Find original index
         const originalIndex = mockPatients.indexOf(p);
-        return `
-        <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('patient', ${originalIndex})">
-            <div style="display:flex; align-items:center; gap:${source === 'mini' ? '12px' : '15px'};">
-                <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=${source === 'mini' ? '32' : '48'}" style="border-radius:50%;">
-                <div>
-                    <div style="font-weight:700; font-size:${source === 'mini' ? '0.9rem' : '1.1rem'};">${p.name}</div>
-                    <div style="font-size:${source === 'mini' ? '0.75rem' : '0.9rem'}; color:var(--text-secondary);">${p.condition}</div>
+
+        if (source === 'mini') {
+            // keep old style for mini
+            return `
+            <div class="doc-card-clean" style="cursor: pointer;" onclick="viewPatientDetails('patient', ${originalIndex})">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=32" style="border-radius:50%;">
+                    <div>
+                        <div style="font-weight:700; font-size:0.9rem;">${p.name}</div>
+                        <div style="font-size:0.75rem; color:var(--text-secondary);">${p.condition}</div>
+                    </div>
                 </div>
-            </div>
-             ${source === 'full' ? `<div style="text-align:right; font-size:0.85rem; color:var(--text-secondary);">Last Visit: ${p.lastVisit}</div>` : `<i class="fas fa-chevron-right" style="color: #cbd5e1; font-size:0.8rem;"></i>`}
-        </div>
-    `}).join('');
+                <i class="fas fa-chevron-right" style="color: #cbd5e1; font-size:0.8rem;"></i>
+            </div>`;
+        } else {
+            // New Full Style
+            return `
+            <div class="patient-card" onclick="viewPatientDetails('patient', ${originalIndex})">
+                <div class="patient-card-left">
+                    <img src="https://ui-avatars.com/api/?name=${p.name}&background=random&color=fff&size=128" class="patient-avatar-lg">
+                    <div class="patient-info">
+                        <h3>${p.name}</h3>
+                        <div style="margin-bottom:6px;"><span class="patient-condition-badge"><i class="fas fa-notes-medical"></i> ${p.condition}</span></div>
+                        <div class="patient-meta">
+                             <span><i class="fas fa-birthday-cake"></i> Age: ${p.age}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="patient-card-right">
+                    <div class="last-visit">Last Visit: ${p.lastVisit}</div>
+                    <button class="btn-profile-glass" onclick="event.stopPropagation(); viewPatientDetails('patient', ${originalIndex})">
+                        Profile
+                    </button>
+                </div>
+            </div>`;
+        }
+    }).join('');
 
     if (filtered.length === 0) {
         targetList.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-secondary);">No patients found.</div>`;
