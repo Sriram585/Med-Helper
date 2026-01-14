@@ -2504,3 +2504,85 @@ select {
     background: var(--primary);
     color: white;
 }
+
+/* --- LANDING PAGE STYLES (DARK THEME) --- */
+.landing-card {
+    background: #0f172a;
+    /* Slate 900 - Darker */
+    padding: 50px 70px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid #1e293b;
+    animation: fadeIn 0.5s ease-out;
+    max-width: 500px;
+    width: 90%;
+}
+
+.landing-options {
+    display: flex;
+    gap: 25px;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.landing-role-btn {
+    width: 150px;
+    height: 160px;
+    background: #1e293b;
+    /* Slate 800 */
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid #334155;
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-role-btn:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    border-color: #8b5cf6;
+    /* Purple/Violet Accent */
+    background: #2563eb10;
+    /* Slight blue tint */
+}
+
+.landing-role-btn:active {
+    transform: translateY(-2px);
+}
+
+.landing-role-btn .icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #94a3b8;
+    transition: 0.2s;
+    margin-bottom: 15px;
+}
+
+.landing-role-btn:hover .icon-circle {
+    background: #8b5cf6;
+    color: white;
+}
+
+/* Ensure text inside button (if any added later) or surrounding text is handled */
+.landing-role-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    transition: 0.2s;
+}
+
+.landing-role-btn:hover .landing-role-title {
+    color: white;
+}

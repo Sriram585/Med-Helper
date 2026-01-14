@@ -19,24 +19,36 @@
     </div>
 
     <!-- LOGIN SCREEN - REFRESHED -->
+    <!-- LANDING / ROLE SELECTION SCREEN -->
+    <div id="landing-view"
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; z-index: 2000;">
+        <div class="landing-card">
+            <h2 style="color: white; margin-bottom: 10px; font-weight: 700;">Welcome to MediMind</h2>
+            <p style="color: #94a3b8; margin-bottom: 30px;">Please select your role to continue</p>
+
+            <div class="landing-options">
+                <div class="landing-role-btn" onclick="selectInitialRole('patient')">
+                    <div class="icon-circle">
+                        <i class="fas fa-user-injured"></i>
+                    </div>
+                    <div class="landing-role-title">Patient</div>
+                </div>
+                <div class="landing-role-btn" onclick="selectInitialRole('doctor')">
+                    <div class="icon-circle">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div class="landing-role-title">Doctor</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- LOGIN SCREEN - RESTORED -->
-    <div id="login-screen" class="login-container">
+    <div id="login-screen" class="login-container" style="display: none;">
         <div id="login-view" class="glass-panel login-box">
             <div class="brand" style="justify-content: center; margin-bottom: 30px;">
                 <div class="brand-logo"><i class="fas fa-heart-pulse"></i></div>
                 <span>MediMind</span>
-            </div>
-
-            <!-- Role Selection -->
-            <div class="login-toggle-row">
-                <div class="role-card active" id="role-patient" onclick="setLoginRole('patient')">
-                    <i class="fas fa-user-injured"></i>
-                    <span>Patient Login</span>
-                </div>
-                <div class="role-card" id="role-doctor" onclick="setLoginRole('doctor')">
-                    <i class="fas fa-user-md"></i>
-                    <span>Doctor Login</span>
-                </div>
             </div>
 
             <h3 style="text-align: center; margin-bottom: 20px; color: var(--text-main); font-size:1.1rem;"

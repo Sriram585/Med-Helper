@@ -1396,8 +1396,12 @@ function setLoginRole(role) {
     selectedRole = role;
 
     // UI Update
-    document.querySelectorAll('.role-card').forEach(el => el.classList.remove('active'));
-    document.getElementById(`role-${role}`).classList.add('active');
+    const roleCards = document.querySelectorAll('.role-card');
+    if (roleCards.length > 0) {
+        roleCards.forEach(el => el.classList.remove('active'));
+        const activeCard = document.getElementById(`role-${role}`);
+        if (activeCard) activeCard.classList.add('active');
+    }
 
     // Text Update
     const subtitle = document.getElementById('login-subtitle');
@@ -2415,4 +2419,97 @@ function renderMockMovementSteps(container) {
             </div>
         </div>
     `).join('');
+}
+
+// --- LANDING PAGE LOGIC ---
+
+function selectInitialRole(role) {
+    // 1. Hide Landing View
+    const landing = document.getElementById('landing-view');
+    if (landing) {
+        landing.style.opacity = '0';
+        setTimeout(() => landing.style.display = 'none', 300); // Fade out effect
+    }
+
+    // 2. Show Login Screen
+    const login = document.getElementById('login-screen');
+    if (login) {
+        login.style.display = 'flex';
+        // Add fade in animation
+        login.style.opacity = '0';
+        login.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => login.style.opacity = '1', 10);
+    }
+
+    // 3. Pre-select Role
+    setLoginRole(role);
+}
+
+// Modify Login Check to show Landing Page if no session
+document.addEventListener('DOMContentLoaded', () => {
+    // Override existing auto-show login behavior if needed
+    const session = localStorage.getItem('medi_session');
+
+    if (session) {
+        // Already logged in logic (handled by existing code?)
+        document.getElementById('landing-view').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'none';
+        // App layout is shown by existing session check or needs to be forced?
+        // Let's assume existing code handles it, but just in case:
+        const appLayout = document.getElementById('app-layout');
+        if (appLayout && appLayout.style.display !== 'flex') {
+            // Existing logic should handle it. Don't interfere aggressively.
+        }
+    } else {
+        // No session: Show Landing, Hide Login
+        const landing = document.getElementById('landing-view');
+        if (landing) landing.style.display = 'flex';
+
+        const login = document.getElementById('login-screen');
+        if (login) login.style.display = 'none';
+
+        const app = document.getElementById('app-layout');
+        if (app) app.style.display = 'none';
+    }
+});
+
+// Update Logout to return to Landing
+// We hook into the existing handleLogout if possible, or just overwrite it if it's defined globally.
+// Since we are appending, we can redefine if it's a window method, or wrap it.
+// script.js defines it as 'function handleLogout()'. 
+// In JS, redefining a function later in the same scope (global) overwrites it.
+
+window.handleLogoutOriginal = window.handleLogout; // Backup if needed (though undefined if not purely global object attached)
+
+function handleLogout() {
+    // Clear Session
+    localStorage.removeItem('medi_session');
+
+    // Reset Globals
+    if (typeof currentUser !== 'undefined') currentUser = null;
+    if (typeof selectedRole !== 'undefined') selectedRole = 'patient';
+
+    // UI Reset
+    const appLayout = document.getElementById('app-layout');
+    if (appLayout) appLayout.style.display = 'none';
+
+    const loginScreen = document.getElementById('login-screen');
+    if (loginScreen) {
+        loginScreen.style.display = 'none'; // Ensure login is hidden
+        // Reset inputs
+        const u = document.getElementById('login-user');
+        const p = document.getElementById('login-pass');
+        if (u) u.value = '';
+        if (p) p.value = '';
+    }
+
+    // Show Landing
+    const landing = document.getElementById('landing-view');
+    if (landing) {
+        landing.style.display = 'flex';
+        landing.style.opacity = '1';
+    }
+
+    // Reset Role Selection UI
+    setLoginRole('patient');
 }
