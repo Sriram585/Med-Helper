@@ -578,6 +578,7 @@ function loadProfile() {
     // Update Form
     if (document.getElementById('p-name')) document.getElementById('p-name').value = profile.name || '';
     if (document.getElementById('p-age')) document.getElementById('p-age').value = profile.age || '';
+    if (document.getElementById('p-mobile')) document.getElementById('p-mobile').value = profile.mobile || '';
     if (document.getElementById('p-blood')) document.getElementById('p-blood').value = profile.blood || '';
     if (document.getElementById('p-email')) document.getElementById('p-email').value = profile.email || '';
     if (document.getElementById('p-notes')) document.getElementById('p-notes').value = profile.notes || '';
@@ -1447,6 +1448,12 @@ function toggleAuthMode(mode) {
     if (mode === 'signup') {
         document.getElementById('login-view').style.display = 'none';
         document.getElementById('signup-view').style.display = 'block';
+
+        // Sync Role
+        const role = selectedRole || 'patient';
+        const regRoleInput = document.getElementById('reg-role');
+        if (regRoleInput) regRoleInput.value = role;
+
     } else {
         document.getElementById('login-view').style.display = 'block';
         document.getElementById('signup-view').style.display = 'none';
@@ -1623,6 +1630,11 @@ async function handleLogin() {
             // Update local profile name for UI consistency
             const currentProfile = JSON.parse(localStorage.getItem('mediProfile') || '{}');
             currentProfile.name = data.name;
+            currentProfile.email = data.email;
+            currentProfile.mobile = data.mobile; // If you want to store mobile
+            if (data.role === 'doctor' && data.specialty) {
+                currentProfile.specialty = data.specialty;
+            }
             localStorage.setItem('mediProfile', JSON.stringify(currentProfile));
 
             // Hide Login

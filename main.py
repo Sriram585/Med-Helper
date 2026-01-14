@@ -136,7 +136,14 @@ async def login(request: LoginRequest, db: Session = Depends(get_db)):
     if not Hash.verify(request.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Incorrect Password")
         
-    return {"name": user.name, "username": user.username, "role": request.role}
+    return {
+        "name": user.name, 
+        "username": user.username, 
+        "role": request.role,
+        "email": user.email,
+        "mobile": user.mobile,
+        "specialty": getattr(user, "specialty", None)
+    }
 
 
 # ==========================================
