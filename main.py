@@ -18,7 +18,8 @@ from fastapi import Depends, status
 import models
 from database import engine, get_db
 from hashing import Hash
-# Create Tables automatically
+
+# Create Tables automatically (Using SQLAlchemy to creating tables in Supabase)
 models.Base.metadata.create_all(bind=engine)
 
 load_dotenv()

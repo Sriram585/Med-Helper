@@ -1,27 +1,24 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 
-# 1. Get DB URL from Env (Prod)
-# If running in Vercel and no DATABASE_URL is set, fallback to /tmp/sql_app.db (writable but ephemeral)
-if os.environ.get("VERCEL") and not os.environ.get("DATABASE_URL"):
-    SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/sql_app.db"
-else:
-    SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./sql_app.db")
+# 1. Get DB URL from Env
+# We expect a Cloud DB URL (e.g. Supabase Postgres)
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not SQLALCHEMY_DATABASE_URL:
+    # Fail loud if no DB is provided, or provide a dummy default if strictness varies
+    # User asked to "remove local db logic", so we shouldn't default to sqlite.
+    raise ValueError("DATABASE_URL is not set. Please set it to your Cloud DB URL (e.g. Supabase).")
 
 # Fix for some cloud providers (like Heroku/Vercel) returning 'postgres://' instead of 'postgresql://'
-if SQLALCHEMY_DATABASE_URL and SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
+if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
     SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 # 2. Create the Engine
-# SQLite needs "check_same_thread", Postgres/others do NOT.
-connect_args = {}
-if "sqlite" in SQLALCHEMY_DATABASE_URL:
-    connect_args = {"check_same_thread": False}
-
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=connect_args)
+# Postgres does NOT need "check_same_thread"
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 # 3. Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
