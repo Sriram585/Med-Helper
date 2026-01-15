@@ -2569,3 +2569,126 @@ function handleLogout() {
     // Reset Role Selection UI
     setLoginRole('patient');
 }
+
+// --- 8. LANDING PAGE VIEW ALL LOGIC ---
+
+const ALL_FEATURES = [
+    {
+        icon: 'fas fa-stethoscope',
+        bg: '#fff7ed',
+        color: '#f97316',
+        title: 'Symptom Check',
+        desc: 'AI Diagnosis',
+        badge: 'TRY',
+        badgeBg: '#ffedd5',
+        badgeColor: '#c2410c'
+    },
+    {
+        icon: 'fas fa-carrot',
+        bg: '#f5f3ff',
+        color: '#8b5cf6',
+        title: 'Diet Plans',
+        desc: 'Nutrition AI',
+        badge: 'PLAN',
+        badgeBg: '#ede9fe',
+        badgeColor: '#6d28d9'
+    },
+    {
+        icon: 'fas fa-user-md',
+        bg: '#eff6ff',
+        color: '#3b82f6',
+        title: 'Find Doctors',
+        desc: 'Near You',
+        badge: 'BOOK',
+        badgeBg: '#dbeafe',
+        badgeColor: '#1d4ed8'
+    },
+    {
+        icon: 'fas fa-brain',
+        bg: '#f0fdf4',
+        color: '#16a34a',
+        title: 'Mental Health',
+        desc: 'Mindfulness & CBT',
+        badge: 'CALM',
+        badgeBg: '#dcfce7',
+        badgeColor: '#15803d'
+    },
+    {
+        icon: 'fas fa-bed',
+        bg: '#e0e7ff',
+        color: '#4338ca',
+        title: 'Sleep Tracker',
+        desc: 'Optimize Rest',
+        badge: 'REST',
+        badgeBg: '#c7d2fe',
+        badgeColor: '#3730a3'
+    },
+    {
+        icon: 'fas fa-heart-pulse',
+        bg: '#fef2f2',
+        color: '#dc2626',
+        title: 'Activity Log',
+        desc: 'Track Fitness',
+        badge: 'TRACK',
+        badgeBg: '#fee2e2',
+        badgeColor: '#b91c1c'
+    }
+];
+
+const ALL_CLINICS = [
+    { icon: 'fas fa-heartbeat', color: '#ef4444', title: 'Cardiology' },
+    { icon: 'fas fa-tooth', color: '3b82f6', title: 'Dental' },
+    { icon: 'fas fa-baby', color: '#10b981', title: 'Pediatric' },
+    { icon: 'fas fa-brain', color: '#8b5cf6', title: 'Neurology' },
+    { icon: 'fas fa-bone', color: '#f97316', title: 'Orthopedic' },
+    { icon: 'fas fa-allergies', color: '#ec4899', title: 'Dermatology' },
+    { icon: 'fas fa-eye', color: '#06b6d4', title: 'Ophthalmology' },
+    { icon: 'fas fa-notes-medical', color: '#14b8a6', title: 'General' }
+];
+
+let areFeaturesExpanded = false;
+let areClinicsExpanded = false;
+
+function toggleFeatures(btn) {
+    const container = document.getElementById('feature-container');
+    if (!container) return;
+
+    areFeaturesExpanded = !areFeaturesExpanded;
+    const itemsToShow = areFeaturesExpanded ? ALL_FEATURES : ALL_FEATURES.slice(0, 3);
+
+    // Update Button Text
+    btn.innerText = areFeaturesExpanded ? "View Less" : "View All";
+
+    // Re-render
+    container.innerHTML = itemsToShow.map(item => `
+        <div class="feature-card" onclick="goToRoleSelection('signup')">
+            <div
+                style="width:50px; height:50px; background:${item.bg}; color:${item.color}; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:20px; font-size:1.2rem;">
+                <i class="${item.icon}"></i>
+            </div>
+            <h3 style="font-size:1.1rem; margin-bottom:5px; color:#1e293b; font-weight:800;">${item.title}</h3>
+            <p style="font-size:0.9rem; color:#64748b; margin-bottom:15px;">${item.desc}</p>
+            <span
+                style="font-size:0.75rem; font-weight:700; background:${item.badgeBg}; color:${item.badgeColor}; padding:4px 10px; border-radius:20px;">${item.badge}</span>
+        </div>
+    `).join('');
+}
+
+function toggleClinics(btn) {
+    const container = document.getElementById('clinic-container');
+    if (!container) return;
+
+    areClinicsExpanded = !areClinicsExpanded;
+    const itemsToShow = areClinicsExpanded ? ALL_CLINICS : ALL_CLINICS.slice(0, 4);
+
+    // Update Button Text
+    btn.innerText = areClinicsExpanded ? "Show Less" : "Show All";
+
+    // Re-render
+    container.innerHTML = itemsToShow.map(item => `
+        <div class="clinic-card">
+            <i class="${item.icon}" style="font-size:1.5rem; color:${item.color}; margin-bottom:10px;"></i>
+            <div style="font-weight:700; font-size:0.85rem; color:#334155;">${item.title}</div>
+        </div>
+    `).join('');
+}
