@@ -11,7 +11,14 @@ class Hash:
         
     @staticmethod
     def verify(plain_password, hashed_password):
-        pwd_bytes = plain_password.encode('utf-8')
-        # hashed_password might be string from DB, encode to bytes
-        hash_bytes = hashed_password.encode('utf-8')
-        return bcrypt.checkpw(pwd_bytes, hash_bytes)
+        if not hashed_password:
+            return False
+            
+        try:
+            pwd_bytes = plain_password.encode('utf-8')
+            # hashed_password might be string from DB, encode to bytes
+            hash_bytes = hashed_password.encode('utf-8')
+            return bcrypt.checkpw(pwd_bytes, hash_bytes)
+        except Exception as e:
+            print(f"Hashing Error: {e} | stored_hash: {hashed_password}")
+            return False

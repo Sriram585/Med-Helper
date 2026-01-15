@@ -2,6 +2,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # 1. Get DB URL from Env
 # We expect a Cloud DB URL (e.g. Supabase Postgres)
